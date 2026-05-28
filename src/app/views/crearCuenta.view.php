@@ -13,6 +13,9 @@
     <?php require 'parts/header.view.php'; ?>
     <main>
         <h2>Crear cuenta</h2>
+        <?php if (!empty($error)): ?>
+            <p style="color:var(--rojo); margin-bottom:1rem; font-weight:600;"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
         <form action="/crearCuenta" method="post">
             <fieldset>
                 <legend>Datos personales:</legend>

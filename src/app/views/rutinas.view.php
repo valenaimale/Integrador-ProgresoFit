@@ -78,11 +78,6 @@
         </section>
     </main>
     <?php require 'parts/footer.view.php'; ?>
-<<<<<<< HEAD
-
-</body>
-=======
 </body>
 
 </html>
->>>>>>> a3f37004ca6dd46e56569e8e1f004226ed487d18

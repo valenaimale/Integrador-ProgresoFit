@@ -13,7 +13,8 @@
     "autoload": {
         "psr-4": {
             "PAW\\": "src/"
-        }
+        },
+        "classmap": ["src/"]
     },
     "config": {
         "optimize-autoloader": true,

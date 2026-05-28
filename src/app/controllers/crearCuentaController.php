@@ -2,18 +2,20 @@
 
 namespace PAW\app\controllers;
 
+use PAW\app\services\ApiClient;
 
-class crearCuentaController
+class CrearCuentaController
 {
     public string $viewsDir;
+    private ApiClient $api;
 
     public function __construct()
     {
         $this->viewsDir = __DIR__ . '/../views/';
-
+        $this->api = new ApiClient();
     }
 
-    public function crearCuenta($procesado = false)
+    public function crearCuenta()
     {
         require $this->viewsDir . 'crearCuenta.view.php';
     }
@@ -23,23 +25,31 @@ class crearCuentaController
         require $this->viewsDir . 'crearCuentaCreada.view.php';
     }
 
-
     public function crearCuentaProcess()
     {
-        $nombre_apellido = $_POST['nombre_apellido'];
-        $email = $_POST['email'];
-        $telefono = $_POST['telefono'];
-        $contraseña = $_POST['contraseña'];
-        $ccontraseña = $_POST['ccontraseña'];
-        $tipo_cuenta = $_POST['tipo_cuenta'];
+        $nombre     = $_POST['nombre_apellido'] ?? '';
+        $email      = $_POST['email'] ?? '';
+        $contraseña = $_POST['contraseña'] ?? '';
+        $ccontraseña = $_POST['ccontraseña'] ?? '';
 
         if ($contraseña !== $ccontraseña) {
-            die('Las contraseñas no coinciden');
+            $error = 'Las contraseñas no coinciden';
+            require $this->viewsDir . 'crearCuenta.view.php';
+            exit;
         }
 
-        // lógica para guardar los datos en la base de datos
+        $response = $this->api->post('/usuarios/alumno', [
+            'nombre'   => $nombre,
+            'email'    => $email,
+            'password' => $contraseña,
+        ]);
 
-        $this->cuentaCreada();
+        if ($response['ok']) {
+            header('Location: /crearCuentaCreada');
+            exit;
+        }
+
+        $error = $response['data']['message'] ?? 'Error al crear la cuenta. El email puede ya estar registrado.';
+        require $this->viewsDir . 'crearCuenta.view.php';
     }
-
 }

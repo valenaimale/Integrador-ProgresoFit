@@ -3,7 +3,7 @@
 namespace PAW\app\controllers;
 
 
-class indexController
+class IndexController
 {
     public string $viewsDir;
 
