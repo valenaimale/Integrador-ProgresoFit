@@ -21,12 +21,12 @@ export async function findById(id) {
   return rows[0];
 }
 
-export async function create({ nombre, direccion, horarios }) {
+export async function create({ nombre, direccion, horarios, telefono, email, descripcion, servicios }) {
   const [result] = await pool.query(
-    'INSERT INTO gimnasios (nombre, direccion, horarios) VALUES (?, ?, ?)',
-    [nombre, direccion, horarios]
+    'INSERT INTO gimnasios (nombre, direccion, horarios, telefono, email, descripcion, servicios) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    [nombre, direccion || null, horarios || null, telefono || null, email || null, descripcion || null, servicios || null]
   );
-  return { id: result.insertId, nombre, direccion, horarios, activo: true };
+  return { id: result.insertId, nombre, direccion, horarios, telefono, email, descripcion, servicios, activo: true };
 }
 
 export async function update(id, { nombre, direccion, horarios }) {

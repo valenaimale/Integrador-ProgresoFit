@@ -26,6 +26,21 @@ export async function createAlumno({ nombre, email, password }) {
   return await usuarioRepository.create({ nombre, email, password: hashed, rol: 'ALUMNO' });
 }
 
+export async function updateProfile(requestingUser, targetId, { nombre, email, password }) {
+  // Users can only edit their own profile; admins can edit anyone
+  if (requestingUser.rol !== 'ADMIN' && requestingUser.id !== Number(targetId)) {
+    throw new Error('Solo podés editar tu propio perfil');
+  }
+
+  const fields = {};
+  if (nombre)   fields.nombre = nombre;
+  if (email)    fields.email  = email;
+  if (password) fields.password = await bcrypt.hash(password, SALT_ROUNDS);
+
+  await usuarioRepository.updateProfile(targetId, fields);
+  return await usuarioRepository.findById(targetId);
+}
+
 export async function getProfile(id) {
   const user = await usuarioRepository.findById(id);
   if (!user) throw new Error('Usuario no encontrado');

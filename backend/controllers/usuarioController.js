@@ -20,6 +20,16 @@ export async function createAlumno(req, res) {
   }
 }
 
+export async function updateProfile(req, res) {
+  try {
+    const { nombre, email, password } = req.body;
+    const user = await usuarioService.updateProfile(req.user, req.params.id, { nombre, email, password });
+    res.json({ message: 'Perfil actualizado', user });
+  } catch (error) {
+    res.status(403).json({ error: error.message });
+  }
+}
+
 export async function getProfile(req, res) {
   try {
     const user = await usuarioService.getProfile(req.params.id);
