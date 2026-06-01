@@ -8,22 +8,24 @@ CREATE TABLE IF NOT EXISTS usuarios (
   nombre     VARCHAR(255) DEFAULT NULL,
   email      VARCHAR(255) NOT NULL,
   password   VARCHAR(255) NOT NULL,
-  rol        ENUM('ADMIN','ENTRENADOR','ALUMNO') NOT NULL DEFAULT 'ALUMNO',
+  rol        ENUM('ADMIN','ENTRENADOR','ALUMNO','GIMNASIO') NOT NULL DEFAULT 'ALUMNO',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY email (email)
 );
 
 CREATE TABLE IF NOT EXISTS gimnasios (
-  id         INT AUTO_INCREMENT PRIMARY KEY,
-  nombre     VARCHAR(255) NOT NULL,
-  direccion  TEXT,
-  horarios   TEXT,
-  telefono   VARCHAR(50),
-  email      VARCHAR(255),
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id  INT UNIQUE DEFAULT NULL,
+  nombre      VARCHAR(255) NOT NULL,
+  direccion   TEXT,
+  horarios    TEXT,
+  telefono    VARCHAR(50),
+  email       VARCHAR(255),
   descripcion TEXT,
-  servicios  TEXT,
-  activo     TINYINT(1) DEFAULT 1,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  servicios   TEXT,
+  activo      TINYINT(1) DEFAULT 1,
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS entrenadores (
