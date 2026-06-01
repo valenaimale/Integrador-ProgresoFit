@@ -97,3 +97,17 @@ ALTER TABLE gimnasios
   ADD COLUMN email       VARCHAR(255),
   ADD COLUMN descripcion TEXT,
   ADD COLUMN servicios   TEXT;
+
+-- ============================================================
+-- Migration: gimnasios as accounts (GIMNASIO role)
+-- Run ONLY on existing DBs. New DBs get this via 01-schema.sql.
+-- ============================================================
+
+-- Add GIMNASIO to usuarios role enum
+ALTER TABLE usuarios
+  MODIFY COLUMN rol ENUM('ADMIN','ENTRENADOR','ALUMNO','GIMNASIO') NOT NULL DEFAULT 'ALUMNO';
+
+-- Link gimnasios to their owner user account
+ALTER TABLE gimnasios
+  ADD COLUMN usuario_id INT UNIQUE DEFAULT NULL,
+  ADD CONSTRAINT fk_gimnasio_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL;

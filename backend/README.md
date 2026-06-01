@@ -62,16 +62,17 @@ API REST para la plataforma de gestión de gimnasios, rutinas y usuarios. Desarr
 
 ### Usuarios de ejemplo
 
-El seed carga **3 usuarios** listos para usar. Password de TODOS: **123456**
+El seed carga **4 usuarios** listos para usar. Password de TODOS: **123456**
 
 | Email | Rol | Qué podés hacer |
 |-------|-----|-----------------|
 | `admin@progresofit.com` | **ADMIN** | CRUD de gimnasios, crear entrenadores, todo |
 | `carlos@test.com` | **ENTRENADOR** | Crear y editar rutinas, asignar a alumnos |
 | `maria@test.com` | **ALUMNO** | Ver rutinas asignadas, suscribirse a planes |
+| `gimnasio@gimnasiocentral.com` | **GIMNASIO** | Ver y editar su perfil de gimnasio (`/gimnasios/me`) |
 
 Además:
-- **Gimnasio**: `Gimnasio Central` (id: 1)
+- **Gimnasio**: `Gimnasio Central` (id: 1) — vinculado al usuario GIMNASIO (usuario_id: 4)
 - **Rutina**: `Rutina Fuerza Total` con 3 días y 5 ejercicios precargados
 - **Suscripción**: premium activa para María
 - **Asignación**: la rutina de fuerza ya está asignada a María
@@ -88,7 +89,7 @@ La API usa **JSON Web Tokens**. El flujo es:
    Authorization: Bearer <TOKEN>
    ```
 
-Los roles posibles son `ADMIN`, `ENTRENADOR` y `ALUMNO`. Cada endpoint indica qué roles tienen acceso.
+Los roles posibles son `ADMIN`, `ENTRENADOR`, `ALUMNO` y `GIMNASIO`. Cada endpoint indica qué roles tienen acceso.
 
 ---
 
@@ -119,12 +120,13 @@ El Controller nunca escribe SQL. El Repository nunca verifica roles.
 ### Auth — `/auth`
 
 #### `POST /auth/register`
-Registra un usuario. Útil para crear el primer ADMIN en desarrollo.
+Registra un usuario. Si `rol = "GIMNASIO"` también crea el perfil del gimnasio en una sola operación.
 
 - **Protegido**: NO
 - **Body**: `{ "email", "password", "rol" }` — `rol` es opcional, por defecto `ALUMNO`
-- **Respuesta 201**: `{ "message", "user": { id, email, rol } }`
-- **Errores**: `400` email ya registrado, email o password faltante
+- **Body extra para rol GIMNASIO**: `"nombre"` (obligatorio), `"direccion"`, `"horarios"`, `"telefono"`, `"descripcion"`, `"servicios"`
+- **Respuesta 201**: `{ "message", "user": { id, email, rol, gimnasio_id }, "gimnasio_id" }`
+- **Errores**: `400` email ya registrado, email o password faltante, nombre del gimnasio faltante
 
 #### `POST /auth/login`
 Devuelve un token JWT.
@@ -176,13 +178,20 @@ Edita el perfil. Un usuario solo puede editar el suyo propio; un ADMIN puede edi
 
 ### Gimnasios — `/gimnasios`
 
-#### `POST /gimnasios/registrar`
-Registro público de un gimnasio. No requiere autenticación.
+#### `GET /gimnasios/me`
+Devuelve el perfil del gimnasio del usuario autenticado (basado en el `gimnasio_id` del JWT).
 
-- **Protegido**: NO
-- **Body**: `{ "nombre", "direccion", "horarios", "telefono", "email", "descripcion", "servicios" }`
-- **Respuesta 201**: `{ "message", "gimnasio": { id, nombre, ...campos } }`
-- **Errores**: `400` nombre faltante
+- **Protegido**: SÍ + **Rol GIMNASIO**
+- **Respuesta 200**: `{ id, usuario_id, nombre, direccion, horarios, telefono, email, descripcion, servicios, activo }`
+- **Errores**: `403` no tenés perfil de gimnasio asociado
+
+#### `PUT /gimnasios/me`
+Edita el perfil del gimnasio del usuario autenticado.
+
+- **Protegido**: SÍ + **Rol GIMNASIO**
+- **Body**: `{ "nombre", "direccion", "horarios", "telefono", "descripcion", "servicios" }` — todos opcionales
+- **Respuesta 200**: perfil actualizado
+- **Errores**: `403` no tenés perfil de gimnasio asociado
 
 #### `GET /gimnasios`
 Lista todos los gimnasios activos.
@@ -776,27 +785,27 @@ public function agregarEjercicio() {
 
 ### Feature 8 — Registro de gimnasio
 
-**`Router.php`**:
-```php
-$this->register('GET@/crearcuenta-gym',  'CrearcuentaGymController@crear');
-$this->register('POST@/crearcuenta-gym', 'CrearcuentaGymController@registrar'); // nuevo
-```
+El alta de gimnasios ahora va por `POST /auth/register` con `rol: "GIMNASIO"`.
+El frontend debe enviar los datos del formulario a la misma ruta que el registro de alumnos, incluyendo los campos del gimnasio.
 
-**`CrearcuentaGymController.php`** — agregá el método `registrar()`:
+**`CrearcuentaGymController.php`**:
 ```php
 public function registrar() {
     $this->api = new ApiClient();
-    $response  = $this->api->post('/gimnasios/registrar', [
+    $response  = $this->api->post('/auth/register', [
+        'email'       => $_POST['email'],
+        'password'    => $_POST['password'],
+        'rol'         => 'GIMNASIO',
         'nombre'      => $_POST['nombre'],
         'direccion'   => $_POST['direccion']   ?? '',
         'horarios'    => $_POST['horarios']    ?? '',
         'telefono'    => $_POST['telefono']    ?? '',
-        'email'       => $_POST['email']       ?? '',
         'descripcion' => $_POST['descripcion'] ?? '',
         'servicios'   => $_POST['servicios']   ?? '',
     ]); // sin token — endpoint público
 
     if ($response['ok']) {
+        // `gimnasio_id` viene en la respuesta raíz y en user.gimnasio_id
         header('Location: /inicio-sesion');
         exit;
     }
@@ -806,7 +815,7 @@ public function registrar() {
 }
 ```
 
-El formulario `crearcuenta-gym.view.php` solo necesita `method="POST" action="/crearcuenta-gym"` con los campos correctos.
+El formulario `crearcuenta-gym.view.php` ahora debe incluir `email` y `password` además de los datos del gimnasio.
 
 ---
 
@@ -828,7 +837,7 @@ El formulario `crearcuenta-gym.view.php` solo necesita `method="POST" action="/c
 | 5. Suscribirse | `PagosuscripcionController::suscribirse` | `post()` | `POST /suscripciones` |
 | 6. Asignar rutina | `PanelEntrenadorController::asignarRutina` | `post()` | `POST /rutinas/{id}/asignar` |
 | 7. Panel entrenador | `PanelEntrenadorController` (varios) | `post()` | `POST /rutinas`, `/dias`, `/ejercicios` |
-| 8. Registro gimnasio | `CrearcuentaGymController::registrar` | `post()` | `POST /gimnasios/registrar` |
+| 8. Registro gimnasio | `CrearcuentaGymController::registrar` | `post()` | `POST /auth/register` con `rol: GIMNASIO` |
 
 **Orden recomendado de implementación**: 8 → 3 → 1 → 2 → 4 → 5 → 6 → 7. Empezás por lo más simple (formularios sin roles) y terminás por lo más complejo (panel del entrenador).
 
