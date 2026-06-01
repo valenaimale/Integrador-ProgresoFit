@@ -13,6 +13,20 @@ export async function findByEmail(email) {
   return rows[0];
 }
 
+export async function updateProfile(id, fields) {
+  const setClauses = [];
+  const params = [];
+
+  if (fields.nombre !== undefined) { setClauses.push('nombre = ?');   params.push(fields.nombre); }
+  if (fields.email  !== undefined) { setClauses.push('email = ?');    params.push(fields.email); }
+  if (fields.password !== undefined) { setClauses.push('password = ?'); params.push(fields.password); }
+
+  if (setClauses.length === 0) return;
+
+  params.push(id);
+  await pool.query(`UPDATE usuarios SET ${setClauses.join(', ')} WHERE id = ?`, params);
+}
+
 export async function create({ nombre, email, password, rol }) {
   const [result] = await pool.query(
     'INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, ?, ?)',

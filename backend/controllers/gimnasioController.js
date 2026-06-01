@@ -1,5 +1,17 @@
 import * as gimnasioService from '../services/gimnasioService.js';
 
+export async function registrar(req, res) {
+  try {
+    const { nombre, direccion, horarios, telefono, email, descripcion, servicios } = req.body;
+    if (!nombre) return res.status(400).json({ error: 'El nombre es obligatorio' });
+
+    const nuevo = await gimnasioService.registrarGimnasio({ nombre, direccion, horarios, telefono, email, descripcion, servicios });
+    res.status(201).json({ message: 'Gimnasio registrado exitosamente', gimnasio: nuevo });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
+
 export async function getAll(req, res){
     try{
         const search = req.query.search;

@@ -1,5 +1,9 @@
 import * as gimnasioRepository from '../repositories/gimnasioRepository.js';
 
+export async function registrarGimnasio(data) {
+  return await gimnasioRepository.create(data);
+}
+
 export async function getAllGimnasios(user, search){
     //Cualquier usuario logueado puede listar 
     return await gimnasioRepository.findAll(search);

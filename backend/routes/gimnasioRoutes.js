@@ -5,6 +5,9 @@ import { authenticateToken, checkRole } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
+// Public gym registration (no auth required — gyms sign up on their own)
+router.post('/registrar', gimnasioController.registrar);
+
 //Cualquier logueado puede ver la lista y el detalle
 router.get('/', authenticateToken, gimnasioController.getAll);
 router.get('/:id', authenticateToken, gimnasioController.getById);
