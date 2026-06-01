@@ -24,25 +24,31 @@ API REST para la plataforma de gestión de gimnasios, rutinas y usuarios. Desarr
    ```
    Si no responde: `docker compose logs backend`
 
-3. **Restaurar la base de datos base** (tablas `usuarios` y `gimnasios`)
-   ```bash
-   tail -n +2 backend/backup_progresofit.sql | \
-     docker exec -i progresofit-mysql bash -c "mysql -uroot -proot_password progresofit"
-   ```
-   > El `tail -n +2` saltea la primera línea del dump que contiene un warning de mysqldump que no es SQL válido.
+3. **Crear tablas y cargar datos de ejemplo** (automático en la primera vez)
+   En un entorno **nuevo** (primer `docker compose up` o después de `docker compose down -v`),
+   MySQL ejecuta automáticamente los scripts de `backend/database/init/`:
+   - `01-schema.sql` → crea las 9 tablas
+   - `02-seed.sql` → inserta datos de ejemplo en todas las tablas
 
-4. **Ejecutar la migración** (crea las 6 tablas nuevas y columnas en `gimnasios`)
-   ```bash
-   cat backend/database/migrations/create_tables.sql | \
-     docker exec -i progresofit-mysql bash -c "mysql -uroot -proot_password progresofit"
-   ```
-
-5. **Verificar las tablas**
+4. **Verificar las tablas**
    ```bash
    docker exec progresofit-mysql bash -c \
      "mysql -uroot -proot_password progresofit -e 'SHOW TABLES;' 2>/dev/null"
    ```
    Deben aparecer 9 tablas: `alumno_rutinas`, `ejercicios`, `entrenadores`, `entrenamiento_ejercicios`, `entrenamientos`, `gimnasios`, `rutinas`, `suscripciones`, `usuarios`.
+
+5. **Verificar los datos de ejemplo**
+   ```bash
+   docker exec progresofit-mysql bash -c \
+     "mysql -uroot -proot_password progresofit -e 'SELECT id, email, rol FROM usuarios;' 2>/dev/null"
+   ```
+
+> **⚠️ Si ya tenés la base de datos corriendo** (porque hiciste `docker compose up` antes de agregar los seeds),
+> ejecutá manualmente el seed:
+> ```bash
+> cat backend/database/migrations/seed.sql | \
+>   docker exec -i progresofit-mysql bash -c "mysql -uroot -proot_password progresofit"
+> ```
 
 ### Credenciales de Docker
 
@@ -53,6 +59,22 @@ API REST para la plataforma de gestión de gimnasios, rutinas y usuarios. Desarr
 | MySQL | `localhost:3306` | `progresofit_user` | `progresofit_pass` |
 | MySQL (root) | `localhost:3306` | `root` | `root_password` |
 | Base de datos | `progresofit` | — | — |
+
+### Usuarios de ejemplo
+
+El seed carga **3 usuarios** listos para usar. Password de TODOS: **123456**
+
+| Email | Rol | Qué podés hacer |
+|-------|-----|-----------------|
+| `admin@progresofit.com` | **ADMIN** | CRUD de gimnasios, crear entrenadores, todo |
+| `carlos@test.com` | **ENTRENADOR** | Crear y editar rutinas, asignar a alumnos |
+| `maria@test.com` | **ALUMNO** | Ver rutinas asignadas, suscribirse a planes |
+
+Además:
+- **Gimnasio**: `Gimnasio Central` (id: 1)
+- **Rutina**: `Rutina Fuerza Total` con 3 días y 5 ejercicios precargados
+- **Suscripción**: premium activa para María
+- **Asignación**: la rutina de fuerza ya está asignada a María
 
 ---
 
