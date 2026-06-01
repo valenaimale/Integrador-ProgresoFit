@@ -10,7 +10,7 @@
 
         <div class="nav-acciones">
             <?php if (!empty($_SESSION['user'])): ?>
-                <a href="/perfil-user"><?= htmlspecialchars($_SESSION['user']['nombre'] ?? 'Mi perfil') ?></a>
+                <a href="/perfil"><?= htmlspecialchars($_SESSION['user']['nombre'] ?? 'Mi perfil') ?></a>
                 <a href="/cerrar-sesion">Cerrar sesión</a>
             <?php else: ?>
                 <a href="/crearCuenta">Registro</a>

@@ -13,4 +13,4 @@ RUN mkdir -p logs && chmod 777 logs
 
 EXPOSE 8000
 
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public/"]
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public/", "public/router.php"]
