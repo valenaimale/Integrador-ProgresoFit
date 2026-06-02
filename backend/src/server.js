@@ -10,7 +10,7 @@ import entrenadorRoutes from '../routes/entrenadorRoutes.js';
 import suscripcionRoutes from '../routes/suscripcionRoutes.js';
 
 dotenv.config();
-
+//todas las peticiones al back end se reciben aca
 const app = express();
 
 //Middlewares
