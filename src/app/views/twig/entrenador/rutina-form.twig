@@ -1,0 +1,37 @@
+{% extends "base.twig" %}
+
+{% block title %}{{ rutina is defined ? 'Editar rutina' : 'Nueva rutina' }} - ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/formularios.css">
+{% endblock %}
+
+{% block content %}
+    <h2>{{ rutina is defined ? 'Editar rutina' : 'Nueva rutina' }}</h2>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form action="{{ rutina is defined ? '/entrenador/rutinas/editar' : '/entrenador/rutinas/nueva' }}" method="post">
+        {% if rutina is defined %}
+            <input type="hidden" name="id" value="{{ rutina.id }}">
+        {% endif %}
+
+        <label for="titulo">Título *</label>
+        <input type="text" id="titulo" name="titulo" value="{{ rutina.titulo ?? '' }}" required>
+
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion">{{ rutina.descripcion ?? '' }}</textarea>
+
+        <label for="objetivo">Objetivo</label>
+        <input type="text" id="objetivo" name="objetivo" value="{{ rutina.objetivo ?? '' }}" placeholder="Ej: Hipertrofia, Fuerza, Resistencia">
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {{ rutina is defined ? 'Guardar cambios' : 'Crear rutina' }}
+            </button>
+            <a href="/entrenador/rutinas" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+{% endblock %}

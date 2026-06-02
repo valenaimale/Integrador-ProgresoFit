@@ -4,6 +4,8 @@
 -- Hash generado con bcrypt (cost=10)
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 -- Usuarios de ejemplo
 INSERT IGNORE INTO usuarios (id, nombre, email, password, rol) VALUES
 (1, 'Admin ProgresoFit', 'admin@progresofit.com',          '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ADMIN'),
@@ -96,6 +98,10 @@ INSERT IGNORE INTO entrenamiento_ejercicios (id, entrenamiento_id, ejercicio_id,
 -- Suscripción activa para María
 INSERT IGNORE INTO suscripciones (id, usuario_id, plan, precio, estado, fecha_inicio, fecha_fin) VALUES
 (1, 3, 'premium', 4999.00, 'activa', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 30 DAY));
+
+-- Relación entrenador-alumno (Carlos entrena a María)
+INSERT IGNORE INTO entrenador_alumnos (id, entrenador_id, alumno_id) VALUES
+(1, 2, 3);
 
 -- Asignación: Carlos le asigna la rutina de fuerza a María
 INSERT IGNORE INTO alumno_rutinas (id, alumno_id, rutina_id, asignado_por) VALUES

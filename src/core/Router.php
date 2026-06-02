@@ -82,7 +82,8 @@ class Router {
         $this->register('GET@/crearCuenta', 'CrearCuentaController@crearCuenta');
         $this->register('POST@/crearCuenta', 'CrearCuentaController@crearCuentaProcess');
         $this->register('GET@/crearCuentaCreada', 'CrearCuentaController@cuentaCreada');
-        $this->register('GET@/crearcuenta-gym', 'CrearcuentaGymController@crear');
+        $this->register('GET@/crearcuenta-gym',  'CrearcuentaGymController@crear');
+        $this->register('POST@/crearcuenta-gym', 'CrearcuentaGymController@crearGym');
 
         // Inicio de sesión
         $this->register('GET@/inicio-sesion', 'InicioSesionController@index');
@@ -103,6 +104,27 @@ class Router {
         // Suscripción
         $this->register('GET@/pagos-suscripcion', 'PagosuscripcionController@mostrar');
 
+
+        // Panel del entrenador — rutinas
+        $this->register('GET@/entrenador/rutinas',              'EntrenadorRutinaController@listar');
+        $this->register('GET@/entrenador/rutinas/nueva',        'EntrenadorRutinaController@nueva');
+        $this->register('POST@/entrenador/rutinas/nueva',       'EntrenadorRutinaController@crear');
+        $this->register('GET@/entrenador/rutinas/editar',       'EntrenadorRutinaController@editar');
+        $this->register('POST@/entrenador/rutinas/editar',      'EntrenadorRutinaController@actualizar');
+        $this->register('POST@/entrenador/rutinas/eliminar',    'EntrenadorRutinaController@eliminar');
+        $this->register('GET@/entrenador/rutinas/gestionar',    'EntrenadorRutinaController@gestionar');
+        $this->register('POST@/entrenador/rutinas/agregar-dia', 'EntrenadorRutinaController@agregarDia');
+        $this->register('POST@/entrenador/rutinas/eliminar-dia','EntrenadorRutinaController@eliminarDia');
+        $this->register('POST@/entrenador/rutinas/agregar-ejercicio',  'EntrenadorRutinaController@agregarEjercicio');
+        $this->register('POST@/entrenador/rutinas/eliminar-ejercicio', 'EntrenadorRutinaController@eliminarEjercicio');
+        $this->register('GET@/entrenador/ejercicios/buscar',           'EntrenadorRutinaController@buscarEjercicios');
+        $this->register('POST@/entrenador/rutinas/asignar',            'EntrenadorRutinaController@asignar');
+        $this->register('POST@/entrenador/rutinas/desasignar',         'EntrenadorRutinaController@desasignar');
+
+        // Entrenadores (lista pública + suscripción para alumnos)
+        $this->register('GET@/entrenadores',              'EntrenadoresController@listar');
+        $this->register('POST@/entrenadores/suscribirse', 'EntrenadoresController@suscribirse');
+        $this->register('POST@/entrenadores/desuscribirse','EntrenadoresController@desuscribirse');
 
         // Gimnasios
         $this->register('GET@/gimnasios', 'GymController@listar');

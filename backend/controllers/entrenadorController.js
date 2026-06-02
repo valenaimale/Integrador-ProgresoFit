@@ -1,4 +1,5 @@
 import * as entrenadorService from '../services/entrenadorService.js';
+import * as entrenadorRepository from '../repositories/entrenadorRepository.js';
 
 export async function getAll(req, res) {
   try {
@@ -15,6 +16,27 @@ export async function getById(req, res) {
     res.json(entrenador);
   } catch (error) {
     res.status(404).json({ error: error.message });
+  }
+}
+
+export async function suscribirse(req, res) {
+  try {
+    if (req.user.rol !== 'ALUMNO') {
+      return res.status(403).json({ error: 'Solo los alumnos pueden suscribirse a un entrenador' });
+    }
+    await entrenadorRepository.suscribir(req.params.id, req.user.id);
+    res.json({ message: 'Suscripción exitosa' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
+
+export async function desuscribirse(req, res) {
+  try {
+    await entrenadorRepository.desuscribir(req.params.id, req.user.id);
+    res.json({ message: 'Suscripción cancelada' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 }
 

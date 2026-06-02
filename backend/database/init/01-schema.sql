@@ -3,6 +3,8 @@
 -- Runs automatically on first `docker compose up` via init dir.
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS usuarios (
   id         INT AUTO_INCREMENT PRIMARY KEY,
   nombre     VARCHAR(255) DEFAULT NULL,
@@ -92,6 +94,16 @@ CREATE TABLE IF NOT EXISTS suscripciones (
   fecha_fin    DATE NOT NULL,
   created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS entrenador_alumnos (
+  id              INT AUTO_INCREMENT PRIMARY KEY,
+  entrenador_id   INT NOT NULL,
+  alumno_id       INT NOT NULL,
+  fecha_registro  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY unique_relacion (entrenador_id, alumno_id),
+  FOREIGN KEY (entrenador_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+  FOREIGN KEY (alumno_id)     REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS alumno_rutinas (

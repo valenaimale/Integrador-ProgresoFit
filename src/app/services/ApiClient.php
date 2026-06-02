@@ -21,8 +21,14 @@ class ApiClient
         return $this->request('POST', $path, $data, $token);
     }
     
-    public function put(string $path, array $data, ?string $token = null): array{
+    public function put(string $path, array $data, ?string $token = null): array
+    {
         return $this->request('PUT', $path, $data, $token);
+    }
+
+    public function delete(string $path, ?string $token = null): array
+    {
+        return $this->request('DELETE', $path, null, $token);
     }
 
     private function request(string $method, string $path, ?array $data, ?string $token): array

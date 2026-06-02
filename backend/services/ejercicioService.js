@@ -26,8 +26,9 @@ function transformExercise(raw) {
   };
 }
 
-export async function listarEjercicios({ limit = 20, offset = 0 } = {}) {
-  const url = `${WGER_BASE}/exerciseinfo/?format=json&language=2&limit=${limit}&offset=${offset}`;
+export async function listarEjercicios({ limit = 20, offset = 0, q = '' } = {}) {
+  let url = `${WGER_BASE}/exerciseinfo/?format=json&language=2&limit=${limit}&offset=${offset}`;
+  if (q) url += `&name=${encodeURIComponent(q)}`;
   const response = await fetch(url);
   if (!response.ok) throw new Error('Error al contactar la API de ejercicios');
 

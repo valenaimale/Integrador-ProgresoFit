@@ -28,6 +28,33 @@ export async function findByUsuarioId(usuarioId) {
   return row;
 }
 
+export async function suscribir(entrenadorId, alumnoId) {
+  const [result] = await pool.query(
+    'INSERT IGNORE INTO entrenador_alumnos (entrenador_id, alumno_id) VALUES (?, ?)',
+    [entrenadorId, alumnoId]
+  );
+  return result.affectedRows > 0;
+}
+
+export async function desuscribir(entrenadorId, alumnoId) {
+  await pool.query(
+    'DELETE FROM entrenador_alumnos WHERE entrenador_id = ? AND alumno_id = ?',
+    [entrenadorId, alumnoId]
+  );
+}
+
+export async function findMisEntrenadores(alumnoId) {
+  const [rows] = await pool.query(
+    `SELECT u.id, u.nombre, e.especialidad, e.descripcion, e.horario
+     FROM entrenador_alumnos ea
+     INNER JOIN usuarios u ON u.id = ea.entrenador_id
+     LEFT JOIN entrenadores e ON e.usuario_id = u.id
+     WHERE ea.alumno_id = ?`,
+    [alumnoId]
+  );
+  return rows;
+}
+
 export async function upsertPerfil(usuarioId, { especialidad, descripcion, horario, gimnasio_id }) {
   await pool.query(
     `INSERT INTO entrenadores (usuario_id, especialidad, descripcion, horario, gimnasio_id)

@@ -1,0 +1,56 @@
+{% extends "base.twig" %}
+
+{% block title %}Crear cuenta de gimnasio - ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/formularios.css">
+{% endblock %}
+
+{% block content %}
+    <h2>Crear cuenta de gimnasio</h2>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form action="/crearcuenta-gym" method="post">
+        <fieldset>
+            <legend>Datos de la cuenta</legend>
+
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" value="{{ form.email ?? '' }}" required>
+
+            <label for="contraseña">Contraseña *</label>
+            <input type="password" id="contraseña" name="contraseña" required>
+
+            <label for="ccontraseña">Confirmar contraseña *</label>
+            <input type="password" id="ccontraseña" name="ccontraseña" required>
+        </fieldset>
+
+        <fieldset>
+            <legend>Datos del gimnasio</legend>
+
+            <label for="nombre">Nombre del gimnasio *</label>
+            <input type="text" id="nombre" name="nombre" value="{{ form.nombre ?? '' }}" required>
+
+            <label for="direccion">Dirección *</label>
+            <input type="text" id="direccion" name="direccion" value="{{ form.direccion ?? '' }}" required>
+
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" value="{{ form.telefono ?? '' }}">
+
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion">{{ form.descripcion ?? '' }}</textarea>
+
+            <label for="horarios">Horarios</label>
+            <input type="text" id="horarios" name="horarios" value="{{ form.horarios ?? '' }}" placeholder="Ej: Lun-Vie 7:00-22:00">
+
+            <label for="servicios">Servicios</label>
+            <input type="text" id="servicios" name="servicios" value="{{ form.servicios ?? '' }}" placeholder="Ej: Musculación, Cardio, Pilates">
+        </fieldset>
+
+        <button type="submit">Crear cuenta de gimnasio</button>
+    </form>
+
+    <p><a href="/inicio-sesion">¿Ya tenés cuenta? Iniciá sesión</a></p>
+{% endblock %}

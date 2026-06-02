@@ -1,0 +1,66 @@
+{% extends "base.twig" %}
+
+{% block title %}Mis rutinas - ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/rutinas.css">
+{% endblock %}
+
+{% block content %}
+    <div class="panel-header">
+        <h2>Mis rutinas</h2>
+        <a href="/entrenador/rutinas/nueva" class="btn btn-primary">+ Nueva rutina</a>
+    </div>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if rutinas is empty %}
+        <p class="text-muted">Todavía no creaste ninguna rutina.</p>
+    {% else %}
+        <ul class="grid-rutinas">
+            {% for rutina in rutinas %}
+                <li>
+                    <article class="card-rutina-panel">
+                        <div class="card-rutina-info">
+                            <h3>{{ rutina.titulo }}</h3>
+                            {% if rutina.descripcion %}
+                                <p class="text-muted">{{ rutina.descripcion }}</p>
+                            {% endif %}
+                            {% if rutina.objetivo %}
+                                <span class="tag-objetivo">{{ rutina.objetivo }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="card-acciones">
+                            <a href="/entrenador/rutinas/gestionar?id={{ rutina.id }}" class="btn btn-primary btn-sm">Días y ejercicios</a>
+                            <a href="/entrenador/rutinas/editar?id={{ rutina.id }}" class="btn btn-secondary btn-sm">Editar</a>
+                            <form action="/entrenador/rutinas/eliminar" method="post" onsubmit="return confirm('¿Eliminar esta rutina?')">
+                                <input type="hidden" name="id" value="{{ rutina.id }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </div>
+
+                        {% if alumnos is not empty %}
+                            <div class="card-asignar">
+                                <form action="/entrenador/rutinas/asignar" method="post" class="form-asignar">
+                                    <input type="hidden" name="rutina_id" value="{{ rutina.id }}">
+                                    <select name="alumno_id" required>
+                                        <option value="">Asignar a un alumno...</option>
+                                        {% for alumno in alumnos %}
+                                            <option value="{{ alumno.id }}">{{ alumno.nombre ?? alumno.email }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-dorado btn-sm">Asignar</button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <p class="sin-ejercicios" style="margin-top:12px">No tenés alumnos registrados aún.</p>
+                        {% endif %}
+                    </article>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

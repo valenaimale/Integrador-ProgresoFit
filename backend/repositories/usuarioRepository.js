@@ -33,6 +33,18 @@ export async function updateProfile(id, fields) {
   await pool.query(`UPDATE usuarios SET ${setClauses.join(', ')} WHERE id = ?`, params);
 }
 
+export async function findMisAlumnos(entrenadorId) {
+  const [rows] = await pool.query(
+    `SELECT u.id, u.nombre, u.email
+     FROM entrenador_alumnos ea
+     INNER JOIN usuarios u ON u.id = ea.alumno_id
+     WHERE ea.entrenador_id = ?
+     ORDER BY u.nombre`,
+    [entrenadorId]
+  );
+  return rows;
+}
+
 export async function create({ nombre, email, password, rol }) {
   const [result] = await pool.query(
     'INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, ?, ?)',
