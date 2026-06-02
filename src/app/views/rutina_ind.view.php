@@ -14,121 +14,51 @@
     
     <main>
         <header class="rutina-header">
-            <h2>Rutina #X</h2>
+            <h2><?= htmlspecialchars($rutina['titulo']) ?></h2>
             <div class="rutina-meta">
-                <span class="rutina-autor">Entrenador</span>
-                <div class="rutina-fechas">
-                    <time datetime="2026-04-07">Inicio: 07/04</time>
-                    <time datetime="2026-04-12">Fin: 12/04</time>
-                </div>
-                <span class="rutina-objetivo">Objetivo: Reforzar tren superior</span>
+                <span class="rutina-autor">Entrenador: <?= htmlspecialchars($rutina['entrenador_nombre'] ?? 'Sistema') ?></span>
+                <span class="rutina-objetivo">Objetivo: <?= htmlspecialchars($rutina['objetivo'] ?? 'No especificado') ?></span>
             </div>
+            <?php if (!empty($rutina['descripcion'])): ?>
+                <p class="rutina-desc"><?= nl2br(htmlspecialchars($rutina['descripcion'])) ?></p>
+            <?php endif; ?>
         </header>
 
         <section class="grid-entrenamientos">
-            <article class="card-entrenamiento">
-                <div class="card-header">
-                    <h3>Día 1 - Pecho</h3>
-                    <div class="card-meta-badges">
-                        <span class="badge-duracion">30 min</span>
-                        <span class="badge-ejercicios">3 ejercicios</span>
-                        <span class="badge-grupo">Pecho</span>
-                    </div>
-                </div>
+            <?php if (empty($rutina['dias'])): ?>
+                <p>Esta rutina aún no tiene ejercicios cargados.</p>
+            <?php else: ?>
+                <?php foreach ($rutina['dias'] as $dia): ?>
+                    <article class="card-entrenamiento">
+                        <div class="card-header">
+                            <h3><?= htmlspecialchars($dia['nombre_dia']) ?> - <?= htmlspecialchars($dia['grupo_muscular'] ?? 'General') ?></h3>
+                            <div class="card-meta-badges">
+                                <span class="badge-duracion"><?= $dia['duracion_minutos'] ?? '-' ?> min</span>
+                                <span class="badge-ejercicios"><?= count($dia['ejercicios']) ?> ejercicios</span>
+                            </div>
+                        </div>
 
-                <div class="lista-ejercicios">
-                    <div class="ejercicio-item">
-                        <div>
-                            <div class="ejercicio-nombre">Press de banca con barra</div>
-                            <div class="ejercicio-series">4x10</div>
+                        <div class="lista-ejercicios">
+                            <?php foreach ($dia['ejercicios'] as $ej): ?>
+                                <div class="ejercicio-item">
+                                    <div>
+                                        <div class="ejercicio-nombre"><?= htmlspecialchars($ej['nombre']) ?></div>
+                                        <div class="ejercicio-series"><?= htmlspecialchars($ej['series_repeticiones'] ?? '-') ?></div>
+                                    </div>
+                                    <div class="ejercicio-acciones">
+                                        <!-- Enlace a la vista de ejercicio detalle si existiera, o directo a video -->
+                                        <?php if (!empty($ej['video_url'])): ?>
+                                            <a href="<?= htmlspecialchars($ej['video_url']) ?>" target="_blank" class="btn-video" aria-label="Ver video">
+                                                <img src="/assets/img/logoyoutube.JPG" alt="Video">
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
-                        <div class="ejercicio-acciones">
-                            <a href="/press-de-banca" class="btn-ver">Ver</a>
-                            <a href="https://youtube.com/prees-de-banca" class="btn-video" aria-label="Ver video en YouTube">
-                                <img src="/logoyoutube.JPG" alt="Video">
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="ejercicio-item">
-                        <div>
-                            <div class="ejercicio-nombre">Press inclinado</div>
-                            <div class="ejercicio-series">4x12</div>
-                        </div>
-                        <div class="ejercicio-acciones">
-                            <a href="/press-inclidado" class="btn-ver">Ver</a>
-                            <a href="https://youtube.com/prees-inclinado" class="btn-video" aria-label="Ver video en YouTube">
-                                <img src="/logoyoutube.JPG" alt="Video">
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="ejercicio-item">
-                        <div>
-                            <div class="ejercicio-nombre">Aperturas en polea</div>
-                            <div class="ejercicio-series">3x8-10</div>
-                        </div>
-                        <div class="ejercicio-acciones">
-                            <a href="/apertura-de-polea" class="btn-ver">Ver</a>
-                            <a href="https://youtube.com/apertura-de-polea" class="btn-video" aria-label="Ver video en YouTube">
-                                <img src="/logoyoutube.JPG" alt="Video">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <article class="card-entrenamiento">
-                <div class="card-header">
-                    <h3>Día 2 - Pecho</h3>
-                    <div class="card-meta-badges">
-                        <span class="badge-duracion">30 min</span>
-                        <span class="badge-ejercicios">3 ejercicios</span>
-                        <span class="badge-grupo">Pecho</span>
-                    </div>
-                </div>
-
-                <div class="lista-ejercicios">
-                    <div class="ejercicio-item">
-                        <div>
-                            <div class="ejercicio-nombre">Press de banca con barra</div>
-                            <div class="ejercicio-series">4x10</div>
-                        </div>
-                        <div class="ejercicio-acciones">
-                            <a href="/press-de-banca" class="btn-ver">Ver</a>
-                            <a href="https://youtube.com/prees-de-banca" class="btn-video" aria-label="Ver video en YouTube">
-                                <img src="/logoyoutube.JPG" alt="Video">
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="ejercicio-item">
-                        <div>
-                            <div class="ejercicio-nombre">Press inclinado</div>
-                            <div class="ejercicio-series">4x12</div>
-                        </div>
-                        <div class="ejercicio-acciones">
-                            <a href="/press-inclidado" class="btn-ver">Ver</a>
-                            <a href="https://youtube.com/prees-inclinado" class="btn-video" aria-label="Ver video en YouTube">
-                                <img src="/logoyoutube.JPG" alt="Video">
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="ejercicio-item">
-                        <div>
-                            <div class="ejercicio-nombre">Aperturas en polea</div>
-                            <div class="ejercicio-series">3x8-10</div>
-                        </div>
-                        <div class="ejercicio-acciones">
-                            <a href="/apertura-de-polea" class="btn-ver">Ver</a>
-                            <a href="https://youtube.com/apertura-de-polea" class="btn-video" aria-label="Ver video en YouTube">
-                                <img src="/logoyoutube.JPG" alt="Video">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </article>
+                    </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </section>
     </main>
     

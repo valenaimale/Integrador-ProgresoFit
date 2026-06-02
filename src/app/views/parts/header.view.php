@@ -1,4 +1,4 @@
-<header>
+<header class="site-header">
     <img src="Logo.JPG" alt="Logo ProgresoFit">
     <h1><a href="/">progresoFit</a></h1>
     <nav>

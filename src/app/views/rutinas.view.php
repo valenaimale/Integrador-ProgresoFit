@@ -14,45 +14,49 @@
     
     <main>
         <section class="seccion-rutinas">
-            <h2>Elige tu programa según tu objetivo</h2>
-            <ul class="grid-rutinas">
-                <li>
-                    <a href="/rutina1" class="card-rutina">
-                        <article>
-                            <h3>Rutina #1</h3>
-                            <div class="card-info">
-                                <span class="card-autor">Entrenador</span>
-                                <time datetime="2026-05-01/2026-06-01" class="card-fechas">01 May - 01 Jun</time>
-                                <span class="card-objetivo">Objetivo: Hipertrofia</span>
-                            </div>
-                        </article>
-                    </a>
-                </li>
-                <li>
-                    <a href="/rutina2" class="card-rutina">
-                        <article>
-                            <h3>Rutina #2</h3>
-                            <div class="card-info">
-                                <span class="card-autor">Entrenador</span>
-                                <time datetime="2026-05-15/2026-06-15" class="card-fechas">15 May - 15 Jun</time>
-                                <span class="card-objetivo">Objetivo: Resistencia</span>
-                            </div>
-                        </article>
-                    </a>
-                </li>
-                <li>
-                    <a href="/rutina3" class="card-rutina">
-                        <article>
-                            <h3>Rutina #3</h3>
-                            <div class="card-info">
-                                <span class="card-autor">Entrenador</span>
-                                <time datetime="2026-06-01/2026-07-01" class="card-fechas">01 Jun - 01 Jul</time>
-                                <span class="card-objetivo">Objetivo: Fuerza</span>
-                            </div>
-                        </article>
-                    </a>
-                </li>
-            </ul>
+            <h2><?= in_array($user['rol'], ['ENTRENADOR', 'ADMIN']) ? 'Gestión de Rutinas' : 'Mis Rutinas Asignadas' ?></h2>
+            
+            <?php if (isset($_GET['mensaje'])): ?>
+                <p class="exito"><?= htmlspecialchars($_GET['mensaje']) ?></p>
+            <?php endif; ?>
+            <?php if (isset($_GET['error'])): ?>
+                <p class="error"><?= htmlspecialchars($_GET['error']) ?></p>
+            <?php endif; ?>
+
+            <?php if (empty($rutinas)): ?>
+                <p>No hay rutinas para mostrar en este momento.</p>
+            <?php else: ?>
+                <ul class="grid-rutinas">
+                    <?php foreach ($rutinas as $rutina): ?>
+                        <li class="card-rutina-container">
+                            <a href="/rutina?id=<?= $rutina['id'] ?>" class="card-rutina">
+                                <article>
+                                    <h3><?= htmlspecialchars($rutina['titulo']) ?></h3>
+                                    <div class="card-info">
+                                        <span class="card-autor"><?= htmlspecialchars($rutina['entrenador_nombre'] ?? 'Sistema') ?></span>
+                                        <span class="card-objetivo">Objetivo: <?= htmlspecialchars($rutina['objetivo'] ?? 'General') ?></span>
+                                    </div>
+                                </article>
+                            </a>
+                            
+                            <?php if (in_array($user['rol'], ['ENTRENADOR', 'ADMIN'])): ?>
+                                <div class="admin-actions">
+                                    <form action="/rutinas/asignar" method="post" class="form-asignar">
+                                        <input type="hidden" name="rutina_id" value="<?= $rutina['id'] ?>">
+                                        <select name="alumno_id" required>
+                                            <option value="">Asignar a alumno...</option>
+                                            <?php foreach ($alumnos as $alumno): ?>
+                                                <option value="<?= $alumno['id'] ?>"><?= htmlspecialchars($alumno['nombre']) ?> (<?= htmlspecialchars($alumno['email']) ?>)</option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <button type="submit" class="btn-asignar">Asignar</button>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
         </section>
 
         <section class="seccion-especial">
