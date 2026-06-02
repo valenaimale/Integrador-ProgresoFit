@@ -2,7 +2,7 @@ import { Router } from 'express';
 import * as gimnasioController from '../controllers/gimnasioController.js';
 import { authenticateToken, checkRole } from '../middleware/authMiddleware.js';
 
-const router = Router();
+const router = Router();//mini router de la clase Express de Node.js
 
 // Any logged-in user can list and view detail
 router.get('/', authenticateToken, gimnasioController.getAll);
@@ -18,3 +18,5 @@ router.put('/:id', authenticateToken, checkRole(['ADMIN']), gimnasioController.u
 router.delete('/:id', authenticateToken, checkRole(['ADMIN']), gimnasioController.remove);
 
 export default router;
+//cada metodo de router recibe la ruta relativa, un middleware (una funcion opcional que se 
+//ejecuta antes del handler) y el handler (la funcion del controlador que maneja la request)
