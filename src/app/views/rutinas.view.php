@@ -15,44 +15,30 @@
     <main>
         <section class="seccion-rutinas">
             <h2>Elige tu programa según tu objetivo</h2>
-            <ul class="grid-rutinas">
-                <li>
-                    <a href="/rutina1" class="card-rutina">
-                        <article>
-                            <h3>Rutina #1</h3>
-                            <div class="card-info">
-                                <span class="card-autor">Entrenador</span>
-                                <time datetime="2026-05-01/2026-06-01" class="card-fechas">01 May - 01 Jun</time>
-                                <span class="card-objetivo">Objetivo: Hipertrofia</span>
-                            </div>
-                        </article>
-                    </a>
-                </li>
-                <li>
-                    <a href="/rutina2" class="card-rutina">
-                        <article>
-                            <h3>Rutina #2</h3>
-                            <div class="card-info">
-                                <span class="card-autor">Entrenador</span>
-                                <time datetime="2026-05-15/2026-06-15" class="card-fechas">15 May - 15 Jun</time>
-                                <span class="card-objetivo">Objetivo: Resistencia</span>
-                            </div>
-                        </article>
-                    </a>
-                </li>
-                <li>
-                    <a href="/rutina3" class="card-rutina">
-                        <article>
-                            <h3>Rutina #3</h3>
-                            <div class="card-info">
-                                <span class="card-autor">Entrenador</span>
-                                <time datetime="2026-06-01/2026-07-01" class="card-fechas">01 Jun - 01 Jul</time>
-                                <span class="card-objetivo">Objetivo: Fuerza</span>
-                            </div>
-                        </article>
-                    </a>
-                </li>
-            </ul>
+            <?php if (empty($rutinas)): ?>
+                <p class="sin-resultados">No hay rutinas disponibles.</p>
+            <?php else: ?>
+                <ul class="grid-rutinas">
+                    <?php foreach ($rutinas as $rutina): ?>
+                        <li>
+                            <a href="/rutina?id=<?= $rutina['id'] ?>" class="card-rutina">
+                                <article>
+                                    <h3><?= htmlspecialchars($rutina['titulo']) ?></h3>
+                                    <div class="card-info">
+                                        <span class="card-autor"><?= htmlspecialchars($rutina['entrenador_nombre'] ?? 'Entrenador') ?></span>
+                                        <?php if (!empty($rutina['descripcion'])): ?>
+                                            <p class="card-descripcion"><?= htmlspecialchars($rutina['descripcion']) ?></p>
+                                        <?php endif; ?>
+                                        <?php if (!empty($rutina['objetivo'])): ?>
+                                            <span class="card-objetivo">Objetivo: <?= htmlspecialchars($rutina['objetivo']) ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                </article>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
         </section>
 
         <section class="seccion-especial">

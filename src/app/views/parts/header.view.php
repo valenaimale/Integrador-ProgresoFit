@@ -14,6 +14,15 @@
                 <?php if (($_SESSION['user']['rol'] ?? '') === 'ENTRENADOR'): ?>
                     <a href="/entrenador/rutinas">Mis rutinas</a>
                 <?php endif; ?>
+                <?php if (($_SESSION['user']['rol'] ?? '') === 'ALUMNO'): ?>
+                    <a href="/mi-qr">Mi QR de acceso</a>
+                <?php endif; ?>
+                <?php if (in_array($_SESSION['user']['rol'] ?? '', ['ADMIN', 'ENTRENADOR'])): ?>
+                    <a href="/aforo">Aforo del gimnasio</a>
+                <?php endif; ?>
+                <?php if (($_SESSION['user']['rol'] ?? '') === 'ADMIN'): ?>
+                    <a href="/escanear">Escanear QR</a>
+                <?php endif; ?>
                 <a href="/perfil"><?= htmlspecialchars($_SESSION['user']['nombre'] ?? 'Mi perfil') ?></a>
                 <a href="/cerrar-sesion">Cerrar sesión</a>
             <?php else: ?>

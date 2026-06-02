@@ -54,35 +54,35 @@ INSERT IGNORE INTO ejercicios (id, nombre, descripcion, dificultad, musculos, eq
  'media',
  'Pectoral mayor, Hombro anterior, Tríceps',
  'Barra, Banco plano, Discos',
- '011'),
+ '11'),
 (2,
  'Dominadas',
  'Colgate de la barra con agarre prono y elevá tu cuerpo hasta que la barbilla pase la barra.',
  'media',
  'Dorsal ancho, Bíceps, Hombro posterior',
  'Barra de dominadas',
- '015'),
+ '15'),
 (3,
  'Sentadilla',
  'Con la barra en los hombros, flexioná rodillas y cadera como si te sentaras en una silla, y volvé a subir.',
  'media',
  'Cuádriceps, Glúteos, Femorales, Core',
  'Barra, Soporte de sentadilla',
- '012'),
+ '12'),
 (4,
  'Press militar',
  'De pie, presioná la barra desde los hombros hacia arriba hasta extender completamente los brazos.',
  'media',
  'Hombros, Tríceps, Core',
  'Barra, Discos',
- '024'),
+ '24'),
 (5,
  'Remo con barra',
  'Inclinado con el torso a 45°, traccioná la barra hacia el abdomen manteniendo la espalda recta.',
  'media',
  'Espalda media, Dorsal, Bíceps',
  'Barra, Discos',
- '017');
+ '17');
 
 -- Asignación de ejercicios a cada día
 INSERT IGNORE INTO entrenamiento_ejercicios (id, entrenamiento_id, ejercicio_id, series_repeticiones, orden) VALUES
@@ -106,3 +106,7 @@ INSERT IGNORE INTO entrenador_alumnos (id, entrenador_id, alumno_id) VALUES
 -- Asignación: Carlos le asigna la rutina de fuerza a María
 INSERT IGNORE INTO alumno_rutinas (id, alumno_id, rutina_id, asignado_por) VALUES
 (1, 3, 1, 2);
+
+-- Aforo inicial del gimnasio
+INSERT IGNORE INTO gimnasio_aforo (gimnasio_id, capacidad_maxima, ocupacion_actual) VALUES
+(1, 50, 0);

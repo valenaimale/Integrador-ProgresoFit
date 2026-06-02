@@ -1,4 +1,5 @@
 import * as ejercicioService from '../services/ejercicioService.js';
+import * as ejercicioRepository from '../repositories/ejercicioRepository.js';
 
 export async function getAll(req, res) {
   try {
@@ -18,5 +19,15 @@ export async function getById(req, res) {
     res.json(ejercicio);
   } catch (error) {
     res.status(404).json({ error: error.message });
+  }
+}
+
+export async function getLocalById(req, res) {
+  try {
+    const ejercicio = await ejercicioRepository.findById(req.params.id);
+    if (!ejercicio) return res.status(404).json({ error: 'Ejercicio no encontrado' });
+    res.json(ejercicio);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 }

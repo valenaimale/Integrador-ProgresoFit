@@ -41,7 +41,7 @@ export async function findById(id) {
   const [rows] = await pool.query(
     `SELECT
        e.id AS dia_id, e.nombre_dia, e.grupo_muscular, e.duracion_minutos, e.orden AS dia_orden,
-       ej.id AS ejercicio_id, ej.nombre AS ejercicio_nombre, ej.musculos,
+       ej.id AS ejercicio_id, ej.api_id, ej.nombre AS ejercicio_nombre, ej.musculos,
        ej.equipamiento, ej.dificultad,
        ee.id AS pivot_id, ee.series_repeticiones, ee.orden AS ej_orden
      FROM entrenamientos e
@@ -69,6 +69,7 @@ export async function findById(id) {
       diasMap.get(row.dia_id).ejercicios.push({
         pivot_id: row.pivot_id,
         id: row.ejercicio_id,
+        api_id: row.api_id,
         nombre: row.ejercicio_nombre,
         musculos: row.musculos,
         equipamiento: row.equipamiento,

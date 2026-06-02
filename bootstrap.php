@@ -12,6 +12,7 @@ require __DIR__ . '/src/config.php';
 
 // 3. Iniciar sesiones
 session_start();
+header('Content-Type: text/html; charset=utf-8');
 
 // 4. Configurar manejo de errores (Whoops)
 try {

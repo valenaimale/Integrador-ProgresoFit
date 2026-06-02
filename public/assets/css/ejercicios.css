@@ -1,0 +1,120 @@
+/* ===================================
+   ProgresoFit — ejercicios.css
+   =================================== */
+
+.seccion-ejercicios {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Grid de cards ──────────────────── */
+
+.grid-ejercicios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-ejercicio {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 24px;
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--crema-dark);
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+  height: 100%;
+}
+
+.card-ejercicio:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sombra);
+  border-color: var(--rojo);
+}
+
+.card-ejercicio h3 {
+  font-family: var(--font-titulo);
+  font-size: 1.1rem;
+  color: var(--negro);
+  margin-bottom: 12px;
+  letter-spacing: .3px;
+}
+
+.card-ejercicio-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ── Badges ─────────────────────────── */
+
+.badge-musculo {
+  font-size: .72rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--crema-dark);
+  color: var(--negro);
+  font-weight: 600;
+}
+
+.badge-dificultad {
+  font-size: .72rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badge-dificultad--baja  { background: #d1fae5; color: #065f46; }
+.badge-dificultad--media { background: var(--dorado); color: var(--negro); }
+.badge-dificultad--alta  { background: var(--rojo); color: var(--blanco); }
+
+.card-equipamiento {
+  font-size: .72rem;
+  color: var(--gris);
+  padding: 3px 0;
+}
+
+/* ── Paginación ─────────────────────── */
+
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.btn-pagina {
+  background: var(--rojo);
+  color: var(--blanco);
+  padding: 8px 20px;
+  border-radius: var(--radio);
+  font-size: .9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .2s;
+}
+
+.btn-pagina:hover {
+  background: var(--rojo-dark, #b91c1c);
+}
+
+.paginacion-info {
+  font-size: .88rem;
+  color: var(--gris);
+}
+
+/* ── Responsive ─────────────────────── */
+
+@media (max-width: 640px) {
+  .grid-ejercicios {
+    grid-template-columns: 1fr;
+  }
+}

@@ -26,6 +26,7 @@ class PerfilUserController
         $response = $this->api->get("/usuarios/{$userId}", $_SESSION['jwt']);
 
         $userData = $response['ok'] ? $response['data'] : $_SESSION['user'];
+        $error    = null;
 
         require $this->viewsDir . 'perfilUser.view.php';
     }*/
@@ -243,5 +244,32 @@ class PerfilUserController
                 header('Location: /');
                 exit;
         }
+    }
+
+    public function actualizar()
+    {
+        if (empty($_SESSION['user'])) {
+            header('Location: /inicio-sesion');
+            exit;
+        }
+
+        $userId = $_SESSION['user']['id'];
+        $data   = array_filter([
+            'nombre'   => $_POST['nombre']   ?? '',
+            'email'    => $_POST['email']    ?? '',
+            'password' => $_POST['password'] ?? '',
+        ]);
+
+        $response = $this->api->put("/usuarios/{$userId}", $data, $_SESSION['jwt']);
+
+        if ($response['ok']) {
+            $_SESSION['user'] = array_merge($_SESSION['user'], $data);
+            header('Location: /perfil-user');
+            exit;
+        }
+
+        $error    = $response['data']['error'] ?? 'Error al actualizar el perfil';
+        $userData = $_SESSION['user'];
+        require $this->viewsDir . 'perfilUser.view.php';
     }
 }

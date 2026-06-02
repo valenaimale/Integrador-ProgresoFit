@@ -69,13 +69,12 @@ class Router {
         // Catálogo y Rutinas
         $this->register('GET@/catalogo', 'CatalogoController@listar');
         $this->register('GET@/rutinas', 'RutinasController@listar');
-        $this->register('GET@/rutina1', 'RutinaIndController@mostrar');
-        $this->register('GET@/rutina2', 'RutinaIndController@mostrar');
-        $this->register('GET@/rutina3', 'RutinaIndController@mostrar');
-        $this->register('GET@/rutina4', 'RutinaIndController@mostrar');
+        $this->register('GET@/rutina',  'RutinaIndController@mostrar');
 
-        // Ejercicio
-        $this->register('GET@/ejercicio', 'EjercicioController@mostrar');
+        // Ejercicios
+        $this->register('GET@/ejercicios',       'EjercicioController@listar');
+        $this->register('GET@/ejercicio',         'EjercicioController@mostrar');
+        $this->register('GET@/ejercicio-local',   'EjercicioController@mostrarLocal');
 
 
         // Crear cuenta
@@ -100,7 +99,10 @@ class Router {
         $this->register('GET@/perfil', 'PerfilUserController@mostrarPerfil');
         $this->register('GET@/editar-perfil', 'PerfilUserController@mostrarEditar');
         $this->register('POST@/editar-perfil', 'PerfilUserController@perfilEditado');
-
+        $this->register('GET@/perfil-gimnasio', 'PerfilGimnasioController@mostrar');
+        $this->register('GET@/perfil-user',  'PerfilUserController@mostrar');
+        $this->register('POST@/perfil-user', 'PerfilUserController@actualizar');
+        $this->register('GET@/perfil-entrenador', 'PerfilEntrenadorController@mostrar');
 
         // Formulario de compra e Historial
         $this->register('GET@/formulario', 'FormularioController@index');
@@ -137,6 +139,13 @@ class Router {
 
         // Nosotros
         $this->register('GET@/nosotros', 'NosotrosController@mostrar_nosotros');
+
+        // Acceso por QR
+        $this->register('GET@/mi-qr',            'MiQrController@mostrar');
+        $this->register('POST@/mi-qr/regenerar', 'MiQrController@regenerar');
+        $this->register('GET@/aforo',            'AforoController@mostrar');
+        $this->register('GET@/escanear',         'EscanearQrController@mostrar');
+        $this->register('POST@/escanear-proxy',  'EscanearProxyController@procesar');
 
     }
         

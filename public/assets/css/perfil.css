@@ -69,9 +69,60 @@
   text-decoration: underline;
 }
 
-/* ── Formulario dentro de info-lista ────────────────────── */
+/* ── Header de sección con botón editar ────────────── */
 
-.info-lista label {
+.info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.info-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--negro);
+  margin: 0;
+}
+
+#btn-editar {
+  background: var(--rojo);
+  color: #fff;
+  border: none;
+  border-radius: var(--radio);
+  padding: 6px 18px;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+#btn-editar:hover {
+  background: var(--rojo-dark, #b91c1c);
+}
+
+/* ── Formulario de edición ──────────────────────────── */
+
+.perfil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--crema-dark);
+  padding-top: 16px;
+}
+
+.perfil-form[hidden] {
+  display: none;
+}
+
+.perfil-form h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--negro);
+  margin: 0 0 4px;
+}
+
+.perfil-form label {
   font-size: .8rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -96,6 +147,114 @@
   border-color: var(--rojo);
 }
 
+.perfil-form input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--crema-dark);
+  border-radius: var(--radio);
+  font-size: .95rem;
+  box-sizing: border-box;
+}
+
+.perfil-form input:focus {
+  outline: 2px solid var(--rojo);
+  border-color: transparent;
+}
+
+.form-acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.form-acciones button[type="submit"] {
+  background: var(--rojo);
+  color: #fff;
+  border: none;
+  border-radius: var(--radio);
+  padding: 8px 20px;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.form-acciones button[type="submit"]:hover {
+  background: var(--rojo-dark, #b91c1c);
+}
+
+.form-acciones button[type="button"] {
+  background: transparent;
+  color: var(--negro);
+  border: 1px solid var(--crema-dark);
+  border-radius: var(--radio);
+  padding: 8px 20px;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+
+.form-acciones button[type="button"]:hover {
+  border-color: var(--rojo);
+  color: var(--rojo);
+}
+
+.error-msg {
+  color: var(--rojo);
+  font-size: .9rem;
+  margin: 0;
+}
+
+/* ── Aforo inline en perfil de gimnasio ────────────── */
+
+.aforo-inline {
+  border-top: 1px solid var(--crema-dark);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aforo-label {
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--rojo);
+  letter-spacing: .5px;
+}
+
+.aforo-numeros {
+  font-size: 1.1rem;
+  color: var(--negro);
+}
+
+.aforo-numeros strong {
+  font-size: 1.4rem;
+}
+
+.aforo-inline .aforo-barra-wrap {
+  width: 100%;
+  height: 10px;
+  background: var(--crema-dark, #e5e7eb);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.aforo-inline .aforo-barra {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+  background: #4ade80;
+}
+
+.aforo-moderado .aforo-barra { background: #facc15; }
+.aforo-lleno    .aforo-barra { background: #f87171; }
+
+.aforo-pct {
+  font-size: .85rem;
+  color: var(--negro);
+  opacity: .7;
+}
 
 /* ── Responsive ────────────────────── */
 
@@ -104,7 +263,7 @@
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  
+
   .perfil-hero {
     aspect-ratio: auto;
     height: 220px;

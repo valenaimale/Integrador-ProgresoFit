@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS ejercicios (
   musculos     VARCHAR(255),
   equipamiento VARCHAR(255),
   video_url    VARCHAR(500),
-  api_id       VARCHAR(100),
+  api_id       INT,
   created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -117,3 +117,40 @@ CREATE TABLE IF NOT EXISTS alumno_rutinas (
   FOREIGN KEY (rutina_id)    REFERENCES rutinas(id)  ON DELETE CASCADE,
   FOREIGN KEY (asignado_por) REFERENCES usuarios(id)
 );
+
+-- ============================================================
+-- Sistema de acceso por QR
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS gym_tokens (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id  INT NOT NULL,
+  token       VARCHAR(64) NOT NULL,
+  expires_at  DATETIME NOT NULL,
+  usado       TINYINT(1) NOT NULL DEFAULT 0,
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_token (token),
+  UNIQUE KEY uq_usuario_activo (usuario_id),
+  INDEX idx_expires (expires_at),
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS accesos_gimnasio (
+  id            INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id    INT NOT NULL,
+  gimnasio_id   INT NOT NULL,
+  tipo          ENUM('ENTRADA','SALIDA') NOT NULL,
+  registrado_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_usuario (usuario_id),
+  INDEX idx_gimnasio_tipo (gimnasio_id, tipo),
+  INDEX idx_fecha (registrado_at),
+  FOREIGN KEY (usuario_id)  REFERENCES usuarios(id)  ON DELETE CASCADE,
+  FOREIGN KEY (gimnasio_id) REFERENCES gimnasios(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS gimnasio_aforo (
+  gimnasio_id      INT NOT NULL PRIMARY KEY,
+  capacidad_maxima INT NOT NULL DEFAULT 50,
+  ocupacion_actual INT NOT NULL DEFAULT 0,
+  FOREIGN KEY (gimnasio_id) REFERENCES gimnasios(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
