@@ -73,6 +73,7 @@ input:focus {
   border-color: var(--rojo);
 }
 
+
 fieldset fieldset {
   margin-top: 1rem;
   padding-left: 0;
@@ -121,4 +122,19 @@ button[type="submit"]:hover {
 
 .form-link a:hover {
   text-decoration: underline;
+}
+input.input-error{
+  border: 2px solid #C0392B !important;
+  background-color: #fdecea !important;
+}
+
+input.input-ok{
+  border: 2px solid #27ae60 !important;
+}
+
+.mensaje-error {
+    color: #C0392B;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 0.8rem;
 }
