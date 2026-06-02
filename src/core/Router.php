@@ -90,8 +90,10 @@ class Router {
         $this->register('GET@/cerrar-sesion', 'InicioSesionController@logout');
 
         // Perfiles
-        $this->register('GET@/perfil', 'PerfilUserController@mostrar');
-        $this->register('GET@/editar-perfil', 'PerfilUserController@editar');
+        $this->register('GET@/perfil', 'PerfilUserController@mostrarPerfil');
+        $this->register('GET@/editar-perfil', 'PerfilUserController@mostrarEditar');
+        $this->register('POST@/editar-perfil', 'PerfilUserController@perfilEditado');
+
 
         // Formulario de compra e Historial
         $this->register('GET@/formulario', 'FormularioController@index');

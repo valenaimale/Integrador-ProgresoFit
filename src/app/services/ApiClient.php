@@ -20,6 +20,10 @@ class ApiClient
     {
         return $this->request('POST', $path, $data, $token);
     }
+    
+    public function put(string $path, array $data, ?string $token = null): array{
+        return $this->request('PUT', $path, $data, $token);
+    }
 
     private function request(string $method, string $path, ?array $data, ?string $token): array
     {

@@ -22,8 +22,9 @@ export async function createAlumno(req, res) {
 
 export async function updateProfile(req, res) {
   try {
-    const { nombre, email, password } = req.body;
-    const user = await usuarioService.updateProfile(req.user, req.params.id, { nombre, email, password });
+    // contra_actual se usa para verificar la contraseña antes de cambiarla
+    const { nombre, email, password, contra_actual } = req.body;
+    const user = await usuarioService.updateProfile(req.user, req.params.id, { nombre, email, password, contra_actual });
     res.json({ message: 'Perfil actualizado', user });
   } catch (error) {
     res.status(403).json({ error: error.message });

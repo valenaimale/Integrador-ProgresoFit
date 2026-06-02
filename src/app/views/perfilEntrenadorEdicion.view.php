@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/perfil.css">
+    <link rel="stylesheet" href="/assets/css/formularios.css">
 
 </head>
 
@@ -26,15 +27,14 @@
             <div>
                 <dl class="info-lista">
                     <dt>Email</dt>
-                    <dd><a href="mailto:<?= htmlspecialchars($userData['email'] ?? '') ?>"><?= htmlspecialchars($userData['email'] ?? '-') ?></a></dd>
+                    <dd><a href="mailto:<?= htmlspecialchars($userData['email'] ?? '') ?>"><?= htmlspecialchars($userData['email'] ?? '') ?></a></dd>
 
                     <dt>Miembro desde</dt>
-                    <dd><?= !empty($userData['created_at']) ? date('d/m/Y', strtotime($userData['created_at'])) : '-' ?></dd>
+                    <dd><?= !empty($userData['created_at']) ? date('d/m/Y', strtotime($userData['created_at'])) : '' ?></dd>
                 </dl>
 
             <form method="POST" action="/editar-perfil" class="info-lista" novalidate>
                 <fieldset>
-                    <legend>Datos personales:</legend>
                     <label for="nombre">Nombre y apellido</label>
                     <input type="text" id="nombre" name="nombre" value="<?= htmlspecialchars($userData['nombre'] ?? '') ?>" placeholder="ej.: Maria Perez">
                     <label for="especialidad">Especialidad</label>
@@ -49,7 +49,10 @@
                     <input type="password" id="contra_nueva" name="contra_nueva">
                     <label for="contra_nueva_repetida"> Repetir nueva Contraseña</label>
                     <input type="password" id="contra_nueva_repetida" name="contra_nueva_repetida">
-                </fieldset>
+                </fieldset> 
+                <?php if (!empty($error)): ?>
+                    <p class="text-rojo"><?= htmlspecialchars($error) ?></p>
+                <?php endif; ?>
                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
             </form>
             </div>

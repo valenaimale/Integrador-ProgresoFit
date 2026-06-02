@@ -69,6 +69,33 @@
   text-decoration: underline;
 }
 
+/* ── Formulario dentro de info-lista ────────────────────── */
+
+.info-lista label {
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--rojo);
+  letter-spacing: .5px;
+}
+
+.info-lista textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.info-lista textarea:focus {
+  outline: none;
+  border-color: var(--rojo);
+}
+
 /* ── Responsive ────────────────────── */
 
 @media (max-width: 768px) {

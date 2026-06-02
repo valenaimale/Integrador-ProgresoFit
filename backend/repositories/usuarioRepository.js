@@ -13,6 +13,12 @@ export async function findByEmail(email) {
   return rows[0];
 }
 
+// obtiene solo el hash de la contraseña — se usa exclusivamente para verificar la contraseña actual antes de cambiarla
+export async function findPasswordById(id) {
+  const [rows] = await pool.query('SELECT password FROM usuarios WHERE id = ?', [id]);
+  return rows[0]?.password;
+}
+
 export async function updateProfile(id, fields) {
   const setClauses = [];
   const params = [];
