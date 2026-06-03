@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/perfil.css">
     <link rel="stylesheet" href="/assets/css/formularios.css">
-
+    <script src="/assets/js/constructorElementos.js"></script>
+    <script src="/assets/js/editar-perfil-entrenador.js"></script>
 </head>
 
 <body>
@@ -33,7 +34,7 @@
                     <dd><?= !empty($userData['created_at']) ? date('d/m/Y', strtotime($userData['created_at'])) : '' ?></dd>
                 </dl>
 
-            <form method="POST" action="/editar-perfil" class="info-lista" novalidate>
+            <form method="POST" action="/editar-perfil" id="form-editar-perfil-entrenador" class="info-lista" novalidate>
                 <fieldset>
                     <label for="nombre">Nombre y apellido</label>
                     <input type="text" id="nombre" name="nombre" value="<?= htmlspecialchars($userData['nombre'] ?? '') ?>" placeholder="ej.: Maria Perez">

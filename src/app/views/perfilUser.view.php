@@ -33,8 +33,8 @@
                     <dt>Miembro desde</dt>
                     <dd><?= !empty($userData['created_at']) ? date('d/m/Y', strtotime($userData['created_at'])) : '-' ?></dd>
                 </dl>
+                <a href="/editar-perfil" class="btn btn-primary">Editar perfil</a>
             </section>
-            <a href="/editar-perfil" class="btn btn-primary">Editar perfil</a>
         </div>
     </main>
     <?php require 'parts/footer.view.php'; ?>
