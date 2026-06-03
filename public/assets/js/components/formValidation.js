@@ -28,11 +28,12 @@ class FormValidation{
             for(const regla in this.reglas){
             let span=ConstructorElementos.nuevoElemento("span" , "", {id:"error-"+regla, class:"mensaje-error"});//creo el span vacio ("") para posibles mensajes de error futuros
             let input = this.form.querySelector("#" + regla);//obtengo el input con el id del mismo (regla)
-            input.insertAdjacentElement("afterend", span);//inserto el span debajo de cada input
-            if(input.type === "file")
-                input.addEventListener("change",()=>this.validacionIndividual(regla));
-            else
-                input.addEventListener("blur", ()=>this.validacionIndividual(regla));//le agrego el event listener a cada input 
+            // si el input está dentro de un drag-drop-area, insertar el span después del div contenedor
+            // para evitar que quede dentro del área de drag & drop junto al span del nombre de archivo
+            const contenedor = input.closest(".drag-drop-area") ?? input;
+            contenedor.insertAdjacentElement("afterend", span);
+            // file inputs escuchan blur porque DragDrop despacha blur tanto al seleccionar como al arrastrar
+            input.addEventListener("blur", ()=>this.validacionIndividual(regla));//le agrego el event listener a cada input 
                 //"blur", cuando el usuario abandona el campo se verifica que lo que fue ingresado es correcto o no
                 //al abandonar el campo se ejecuta el metodo validacion que justamente se encarga de verificar lo ingresado
             }
