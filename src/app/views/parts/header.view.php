@@ -17,7 +17,7 @@
                 <a href="/perfil"><?= htmlspecialchars($_SESSION['user']['nombre'] ?? 'Mi perfil') ?></a>
                 <a href="/cerrar-sesion">Cerrar sesión</a>
             <?php else: ?>
-                <a href="/crearCuenta">Registro</a>
+                <a href="/preCrearCuenta">Registro</a>
                 <a href="/inicio-sesion">Iniciar sesión</a>
             <?php endif; ?>
         </div>

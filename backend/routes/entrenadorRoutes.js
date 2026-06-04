@@ -12,6 +12,9 @@ router.get('/:id', authenticateToken, entrenadorController.getById);
 router.post('/:id/suscribirse',   authenticateToken, entrenadorController.suscribirse);
 router.delete('/:id/suscribirse', authenticateToken, entrenadorController.desuscribirse);
 
+// Registrar un entrenador
+router.post('/registrar', entrenadorController.registrar);
+
 // Trainers update their own profile; admins can update any trainer's profile
 router.put('/:id', authenticateToken, checkRole(['ENTRENADOR', 'ADMIN']), entrenadorController.upsertPerfil);
 

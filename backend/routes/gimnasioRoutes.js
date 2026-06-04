@@ -17,6 +17,8 @@ router.post('/', authenticateToken, checkRole(['ADMIN']), gimnasioController.cre
 router.put('/:id', authenticateToken, checkRole(['ADMIN']), gimnasioController.update);
 router.delete('/:id', authenticateToken, checkRole(['ADMIN']), gimnasioController.remove);
 
+//IMPLEMENTACION PARA ALTA DE GIMNASIO LIBRE (PUEDE CREARLO CUALQUIERA)
+router.post('/registrar', gimnasioController.registrar);
 export default router;
 //cada metodo de router recibe la ruta relativa, un middleware (una funcion opcional que se 
 //ejecuta antes del handler) y el handler (la funcion del controlador que maneja la request)

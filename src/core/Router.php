@@ -79,11 +79,17 @@ class Router {
 
 
         // Crear cuenta
-        $this->register('GET@/crearCuenta', 'CrearCuentaController@crearCuenta');
-        $this->register('POST@/crearCuenta', 'CrearCuentaController@crearCuentaProcess');
-        $this->register('GET@/crearCuentaCreada', 'CrearCuentaController@cuentaCreada');
+        $this->register('GET@/preCrearCuenta', 'CrearCuentaController@mostrarPreCrearCuenta');
+        $this->register('GET@/crearCuenta', 'CrearCuentaController@mostrarCrearCuentaAlumno');
+        $this->register('POST@/crearCuenta', 'CrearCuentaController@crearCuentaProcessAlumno');
+        $this->register('GET@/crearCuentaEntrenador', 'CrearCuentaController@mostrarCrearCuentaEntrenador');
+        $this->register('POST@/crearCuentaEntrenador', 'CrearCuentaController@crearCuentaProcessEntrenador');
+        $this->register('GET@/crearCuentaGym', 'CrearCuentaController@mostrarCrearCuentaGym');
+        $this->register('POST@/crearCuentaGym', 'CrearCuentaController@crearCuentaProcessGym');
+
+        /*$this->register('GET@/crearCuentaCreada', 'CrearCuentaController@cuentaCreada');
         $this->register('GET@/crearcuenta-gym',  'CrearcuentaGymController@crear');
-        $this->register('POST@/crearcuenta-gym', 'CrearcuentaGymController@crearGym');
+        $this->register('POST@/crearcuenta-gym', 'CrearcuentaGymController@crearGym');*/
 
         // Inicio de sesión
         $this->register('GET@/inicio-sesion', 'InicioSesionController@index');

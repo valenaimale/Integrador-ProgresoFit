@@ -44,7 +44,7 @@ class ApiClient
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_CUSTOMREQUEST  => $method,
-            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_TIMEOUT        => 15,
         ]);
 
         if ($data !== null) {

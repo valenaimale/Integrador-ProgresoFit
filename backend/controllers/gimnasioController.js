@@ -39,6 +39,16 @@ export async function create(req, res) {
         res.status(403).json({ error: error.message });
     }
 }
+//usuario_id, nombre, direccion, horarios, telefono, email, descripcion, servicios
+export async function registrar(req, res) {
+  try {
+    const {nombre, email, password, direccion, horarios, telefono, descripcion, servicios} = req.body;
+    const user = await gimnasioService.registrarGimnasio({nombre, email, password, direccion, horarios, telefono, descripcion, servicios});
+    res.status(201).json({ message: 'Gimnasio registrado exitosamente', user });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
 
 export async function update(req, res) {
     try {

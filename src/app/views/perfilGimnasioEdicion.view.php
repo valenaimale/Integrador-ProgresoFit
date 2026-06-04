@@ -37,7 +37,7 @@
             <form method="POST" id="form-editar-perfil-gim" action="/editar-perfil" class="info-lista" novalidate>
                 <fieldset>
                     <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" name="nombre" value="<?= htmlspecialchars($userData['nombre'] ?? '') ?>" placeholder="Ej.: Sport Club">
+                    <input type="text" id="nombre" name="nombre" value="<?= htmlspecialchars($userData['nombre'] ?? '') ?>" placeholder="Ej.: Sport Club Lujan">
                     <label for="telefono">Telefono (opcional) </label>
                     <input type="tel" id="telefono" name="telefono" value="<?= htmlspecialchars($userData['telefono'] ?? '') ?>" placeholder="Ej.: 11 3703 4068">
                     <label for="direccion">Direccion</label>
@@ -45,11 +45,11 @@
                     <label for="horarios">Horarios (opcional)</label>
                     <input type="text" id="horarios" name="horarios" value="<?= htmlspecialchars($userData['horarios'] ?? '') ?>" placeholder="Ej.: 9hs a 12hs">
                     <label for="logo">Logo (opcional)</label>
-                    <input type="file" id="logo" name="logo" value="<?= htmlspecialchars($userData['logo'] ?? '') ?>"accept="image/jpeg, image/png, image/webp">
+                    <input type="file" id="logo" name="logo" value="<?= htmlspecialchars($userData['logo'] ?? '') ?>" accept="image/jpeg, image/png, image/webp">
                     <label for="descripcion">Descripcion (opcional)</label>
                     <textarea id="descripcion" name="descripcion"><?= htmlspecialchars($userData['descripcion'] ?? '') ?></textarea>
                     <label for="servicios"> Servicios (opcional)</label>
-                    <input type="tel" id="servicios" name="servicios" value="<?= htmlspecialchars($userData['servicios'] ?? '') ?>" placeholder="Ej.: Funcional, clases de pileta y maquinas">
+                    <input type="tel" id="servicios" name="servicios" value="<?= htmlspecialchars($userData['servicios'] ?? '') ?>" placeholder="Ej.: clases de pileta, funcional, zumba y musculacion">
                     <label for="contra_actual"> Contraseña actual</label>
                     <input type="password" id="contra_actual" name="contra_actual">
                     <label for="contra_nueva"> Nueva Contraseña</label>

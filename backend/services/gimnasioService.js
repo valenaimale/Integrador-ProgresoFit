@@ -1,4 +1,7 @@
 import * as gimnasioRepository from '../repositories/gimnasioRepository.js';
+import * as usuarioRepository from '../repositories/usuarioRepository.js';
+import bcrypt from 'bcrypt';
+
 
 export async function getAllGimnasios(user, search) {
     return await gimnasioRepository.findAll(search);
@@ -22,6 +25,18 @@ export async function createGimnasio(user, data) {
         throw new Error('No tenés permiso para crear gimnasios');
     }
     return await gimnasioRepository.create(data);
+}
+export async function registrarGimnasio({nombre, email, password, direccion, horarios, telefono, descripcion, servicios}){
+
+    if (!email || !password) throw new Error('Email y password son obligatorios');
+    
+    const existing = await usuarioRepository.findByEmail(email);
+    if (existing) throw new Error('El correo ya está registrado');
+    
+    const hashed = await bcrypt.hash(password, 10);
+    const usuario = await usuarioRepository.create({ nombre, email, password: hashed, rol: 'GIMNASIO' });
+    const gimnasio = await gimnasioRepository.create({usuario_id: usuario.id, nombre, direccion, horarios, telefono, email, descripcion, servicios }); 
+    return gimnasio
 }
 
 export async function updateGimnasio(user, id, data) {

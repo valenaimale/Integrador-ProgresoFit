@@ -2,18 +2,21 @@
 <html lang="es">
 
 <head>
-    <title>crear-cuenta</title>
+    <title>Crear cuenta para gimnasio</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/crear-cuenta.css">
+    <link rel="stylesheet" href="/assets/css/formularios.css">
 </head>
 
 <body>
     <?php require 'parts/header.view.php'; ?>
     <main>
         <h2>Crear cuenta de gimnasio</h2>
-        <form action="/crearCuenta" id="form-alta-gim" method="post" novalidate>
+        <?php if (!empty($error)): ?>
+            <p style="color:var(--rojo); margin-bottom:1rem; font-weight:600;"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
+        <form action="/crearCuentaGym" id="form-alta-gim" method="post" novalidate>
             <fieldset>
                 <legend>Datos del gimnasio:</legend>
                 <label for="email">Email</label>
@@ -29,7 +32,7 @@
                 <label for="logo">Logo (opcional)</label>
                 <input type="file" id="logo" name="logo" accept="image/jpeg, image/png, image/webp">
                 <label for="descripcion">Descripcion (opcional)</label>
-                <textarea id="descripcion" name="descripcion">
+                <textarea id="descripcion" name="descripcion"></textarea>
                 <label for="servicios">Servicios (opcional)</label>
                 <input type="text" id="servicios" name="servicios" placeholder="Ej.: clases de pileta, funcional, zumba y musculacion">    
                 <label for="contra_nueva">Contraseña</label>

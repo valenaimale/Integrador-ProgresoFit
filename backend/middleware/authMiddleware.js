@@ -26,7 +26,6 @@ export function checkRole(allowedRoles){
         if (!req.user){
             return res.status(401).json({ error: 'Usuario no autenticado'});
         }
-
         if (!allowedRoles.includes(req.user.rol)){
             return res.status(403).json({ error: 'No tenes permiso para acceder a este recurso'});
         }

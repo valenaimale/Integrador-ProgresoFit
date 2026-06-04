@@ -53,3 +53,13 @@ export async function upsertPerfil(req, res) {
     res.status(403).json({ error: error.message });
   }
 }
+
+export async function registrar(req, res) {
+  try {
+    const {nombre, email, password, horario, descripcion} = req.body;
+    const user = await entrenadorService.registrarEntrenador({nombre, email, password, horario, descripcion});
+    res.status(201).json({ message: 'Entrenador registrado exitosamente', user });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}

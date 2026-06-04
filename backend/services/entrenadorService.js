@@ -22,3 +22,7 @@ export async function actualizarPerfil(user, usuarioId, data) {
   await entrenadorRepository.upsertPerfil(usuarioId, data);
   return await entrenadorRepository.findByUsuarioId(usuarioId);
 }
+export async function registrarEntrenador({nombre, email, password, horario, descripcion}){
+
+  
+}

@@ -38,6 +38,8 @@
                 <fieldset>
                     <label for="nombre">Nombre</label>
                     <input type="text" id="nombre" name="nombre" value="<?= htmlspecialchars($userData['nombre'] ?? '') ?>" placeholder="ej.: Sport Club">
+                    <label for="fotoperfil">Foto de perfil (opcional)</label>
+                    <input type="file" id="fotoperfil" name="fotoperfil" value="<?= htmlspecialchars($userData['fotoperfil'] ?? '') ?>" accept="image/jpeg, image/png, image/webp">
                     <label for="contra_actual"> Contraseña actual</label>
                     <input type="password" id="contra_actual" name="contra_actual">
                     <label for="contra_nueva"> Nueva Contraseña</label>
