@@ -2,7 +2,7 @@
 <html lang="es">
 
 <head>
-    <title><?= htmlspecialchars($gimnasio['nombre'] ?? 'Perfil del Gimnasio') ?> - ProgresoFit</title>
+    <title><?= htmlspecialchars($userData['nombre'] ?? 'Perfil del Gimnasio') ?> - ProgresoFit</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/assets/css/style.css">
@@ -12,35 +12,39 @@
 <body>
     <?php require 'parts/header.view.php'; ?>
     <main>
-        <?php if ($gimnasio === null): ?>
-            <p class="text-muted">No se encontró el gimnasio.</p>
-        <?php else: ?>
-            <div class="perfil-grid">
-                <section class="perfil-hero">
-                    <figure>
-                        <img src="/assets/img/imagenUser.jpg" alt="Foto del gimnasio">
-                    </figure>
-                </section>
+        <div class="perfil-grid">
+            <section class="perfil-hero">
+                <figure>
+                    <img src="/assets/img/imagenUser.jpg" alt="Foto del gimnasio">
+                </figure>
+            </section>
 
-                <section class="info-lista">
-                    <dl>
-                        <dt>Nombre</dt>
-                        <dd><?= htmlspecialchars($gimnasio['nombre']) ?></dd>
+            <section class="info-lista">
+                <dl>
+                    <dt>Nombre</dt>
+                    <dd><?= htmlspecialchars($userData['nombre'] ?? 'Sin nombre') ?></dd>
 
-                        <?php if (!empty($gimnasio['direccion'])): ?>
-                            <dt>Dirección</dt>
-                            <dd><?= htmlspecialchars($gimnasio['direccion']) ?></dd>
-                        <?php endif; ?>
+                    <dt>Email</dt>
+                    <dd><a href="mailto:<?= htmlspecialchars($userData['email'] ?? '') ?>"><?= htmlspecialchars($userData['email'] ?? '-') ?></a></dd>
 
-                        <?php if (!empty($gimnasio['horarios'])): ?>
-                            <dt>Horarios</dt>
-                            <dd><?= htmlspecialchars($gimnasio['horarios']) ?></dd>
-                        <?php endif; ?>
-                    </dl>
-                    <a href="/gimnasios" class="btn btn-outline">← Volver a gimnasios</a>
-                </section>
-            </div>
-        <?php endif; ?>
+                    <dt>Dirección</dt>
+                    <dd><?= htmlspecialchars($userData['direccion'] ?? '-') ?></dd>
+
+                    <dt>Horarios</dt>
+                    <dd><?= htmlspecialchars($userData['horarios'] ?? '-') ?></dd>
+
+                    <dt>Teléfono</dt>
+                    <dd><?= htmlspecialchars($userData['telefono'] ?? '-') ?></dd>
+
+                    <dt>Descripción</dt>
+                    <dd><?= htmlspecialchars($userData['descripcion'] ?? '-') ?></dd>
+
+                    <dt>Servicios</dt>
+                    <dd><?= htmlspecialchars($userData['servicios'] ?? '-') ?></dd>
+                </dl>
+                <a href="/editar-perfil" class="btn btn-primary">Editar perfil</a>
+            </section>
+        </div>
     </main>
     <?php require 'parts/footer.view.php'; ?>
 </body>

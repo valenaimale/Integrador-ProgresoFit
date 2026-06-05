@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mi Perfil — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/perfil.css">
+{% endblock %}
+
+{% block content %}
+<div class="perfil-grid">
+    <section class="perfil-hero">
+        <figure>
+            <img src="/assets/img/imagenUser.jpg" alt="Foto del usuario">
+        </figure>
+    </section>
+
+    <section class="info-lista">
+        <div class="info-header">
+            <h2>Mis datos</h2>
+            <button type="button" id="btn-editar">Editar</button>
+        </div>
+
+        <dl>
+            <dt>Nombre</dt>
+            <dd>{{ userData.nombre|default('Sin nombre') }}</dd>
+
+            <dt>Email</dt>
+            <dd><a href="mailto:{{ userData.email|default('') }}">{{ userData.email|default('') }}</a></dd>
+
+            <dt>Rol</dt>
+            <dd>{{ userData.rol|default('ALUMNO') }}</dd>
+
+            <dt>Miembro desde</dt>
+            <dd>{{ userData.created_at ? userData.created_at|date('d/m/Y') : '-' }}</dd>
+        </dl>
+
+        {% if error %}
+            <p class="error-msg">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="/perfil-user" class="perfil-form"
+              id="form-editar" {% if not error %}hidden{% endif %}>
+            <h3>Editar perfil</h3>
+
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre"
+                   value="{{ userData.nombre|default('') }}"
+                   placeholder="Tu nombre">
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email"
+                   value="{{ userData.email|default('') }}"
+                   placeholder="Tu email">
+
+            <label for="password">Nueva contraseña</label>
+            <input type="password" id="password" name="password"
+                   placeholder="Dejá vacío para no cambiarla">
+
+            <label for="password_confirm">Confirmar contraseña</label>
+            <input type="password" id="password_confirm" name="password_confirm"
+                   placeholder="Repetí la nueva contraseña">
+
+            <p id="pass-error" class="error-msg" hidden>Las contraseñas no coinciden</p>
+
+            <div class="form-acciones">
+                <button type="submit">Guardar cambios</button>
+                <button type="button" id="btn-cancelar">Cancelar</button>
+            </div>
+        </form>
+    </section>
+
+    {% if userData.rol == 'ALUMNO' %}
+    <section class="info-lista suscripcion-card">
+        <div class="info-header">
+            <h2>Mi Suscripción</h2>
+        </div>
+        {% if suscripcionActiva %}
+            <div class="sub-status activa">
+                <p class="plan-nombre">{{ suscripcionActiva.plan|upper }}</p>
+                <div class="sub-fechas">
+                    <span><strong>Inicio:</strong> {{ suscripcionActiva.fecha_inicio|date('d/m/Y') }}</span>
+                    <span><strong>Vence:</strong> {{ suscripcionActiva.fecha_fin|date('d/m/Y') }}</span>
+                </div>
+                <p class="precio-tag">${{ suscripcionActiva.precio|number_format(2, ',', '.') }}</p>
+                <span class="badge-status">Activa</span>
+            </div>
+        {% else %}
+            <div class="sub-status vacia">
+                <p>No tenés una suscripción activa.</p>
+                <a href="/pago-suscripcion" class="btn-suscribirse">Suscribirse ahora</a>
+            </div>
+        {% endif %}
+    </section>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const btnEditar   = document.getElementById('btn-editar');
+    const btnCancelar = document.getElementById('btn-cancelar');
+    const form        = document.getElementById('form-editar');
+
+    btnEditar.addEventListener('click', () => {
+        form.removeAttribute('hidden');
+        btnEditar.setAttribute('hidden', '');
+    });
+
+    btnCancelar.addEventListener('click', () => {
+        form.setAttribute('hidden', '');
+        btnEditar.removeAttribute('hidden');
+    });
+
+    form.addEventListener('submit', (e) => {
+        const pass        = document.getElementById('password').value;
+        const passConfirm = document.getElementById('password_confirm').value;
+        const passError   = document.getElementById('pass-error');
+
+        if (pass !== passConfirm) {
+            e.preventDefault();
+            passError.removeAttribute('hidden');
+        } else {
+            passError.setAttribute('hidden', '');
+        }
+    });
+</script>
+{% endblock %}

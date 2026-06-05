@@ -98,6 +98,13 @@
   font-size: 1rem;
   font-weight: 700;
   color: var(--negro);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+a.ejercicio-nombre:hover {
+  color: var(--rojo);
+  text-decoration: underline;
 }
 
 .ejercicio-series {
@@ -207,6 +214,13 @@
   max-width: 850px;
   position: static;
   border-bottom: 1px solid var(--crema);
+}
+
+.rutina-descripcion {
+  font-size: .9rem;
+  color: var(--gris);
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* ── RESPONSIVE ───────────────────── */

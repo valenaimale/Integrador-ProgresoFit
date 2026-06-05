@@ -2,16 +2,16 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 use PAW\app\services\ApiClient;
 
-class PagosuscripcionController
+class PagosuscripcionController extends Controller
 {
-    public string $viewsDir;
     private ApiClient $api;
 
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
         $this->api = new ApiClient();
     }
 
@@ -25,7 +25,11 @@ class PagosuscripcionController
         $resPlanes = $this->api->get('/suscripciones/planes', $_SESSION['jwt']);
         $planes = $resPlanes['ok'] ? $resPlanes['data'] : [];
 
-        require $this->viewsDir . 'pagosuscripcion.view.php';
+        $this->render('pagosuscripcion.html.twig', [
+            'planes' => $planes,
+            'mensaje' => $_GET['mensaje'] ?? null,
+            'error'   => $_GET['error'] ?? null
+        ]);
     }
 
     public function suscribir()
@@ -45,7 +49,7 @@ class PagosuscripcionController
         $response = $this->api->post('/suscripciones', ['plan' => $plan], $_SESSION['jwt']);
 
         if ($response['ok']) {
-            header('Location: /perfil-user?mensaje=Suscripción exitosa');
+            header('Location: /perfil?mensaje=Suscripción exitosa');
         } else {
             $error = $response['data']['error'] ?? 'Error al procesar la suscripción';
             header("Location: /pago-suscripcion?error=" . urlencode($error));

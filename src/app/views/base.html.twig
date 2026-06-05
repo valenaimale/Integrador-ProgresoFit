@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ProgresoFit{% endblock %}</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    {% block styles %}{% endblock %}
+    {% block head_scripts %}{% endblock %}
+</head>
+<body>
+    {% include 'parts/header.html.twig' %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'parts/footer.html.twig' %}
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ProgresoFit{% endblock %}</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <header>
+        <h1><a href="/">progresoFit</a></h1>
+        <nav>
+            <ul>
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/rutinas">Rutinas</a></li>
+                <li><a href="/gimnasios">Gimnasios</a></li>
+                <li><a href="/entrenadores">Entrenadores</a></li>
+            </ul>
+            <div class="nav-acciones">
+                {% if session.user is defined %}
+                    {% if session.user.rol == 'ENTRENADOR' %}
+                        <a href="/entrenador/rutinas">Mis rutinas</a>
+                    {% endif %}
+                    <a href="/perfil">{{ session.user.nombre ?? 'Mi perfil' }}</a>
+                    <a href="/cerrar-sesion">Cerrar sesión</a>
+                {% else %}
+                    <a href="/crearCuenta">Registro</a>
+                    <a href="/inicio-sesion">Iniciar sesión</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; {{ "now"|date("Y") }} ProgresoFit</p>
+    </footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -169,3 +169,551 @@
     gap: 16px;
   }
 }
+
+/* ── Cards del panel del entrenador ─── */
+
+.card-rutina-panel {
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 20px 24px;
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--crema-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: box-shadow .2s;
+}
+
+.card-rutina-panel:hover {
+  box-shadow: var(--sombra);
+}
+
+.card-rutina-info h3 {
+  font-family: var(--font-titulo);
+  font-size: 1.4rem;
+  color: var(--negro);
+  margin-bottom: 4px;
+}
+
+.tag-objetivo {
+  display: inline-block;
+  background: var(--crema-dark);
+  color: var(--gris);
+  font-size: .75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+.card-asignar {
+  border-top: 1px solid var(--crema-dark);
+  padding-top: 12px;
+}
+
+.form-asignar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.form-asignar select {
+  flex: 1;
+  min-width: 180px;
+  padding: 7px 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-sm);
+  font-size: .88rem;
+  font-family: inherit;
+}
+
+/* ── Panel entrenador ───────────────── */
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.card-acciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--crema-dark);
+}
+
+.card-acciones form { margin: 0; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--radio-sm);
+  font-weight: 600;
+  font-size: .85rem;
+  border: 2px solid var(--negro);
+  background: transparent;
+  color: var(--negro);
+  transition: background .2s, color .2s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-secondary:hover {
+  background: var(--negro);
+  color: var(--crema);
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--radio-sm);
+  font-weight: 600;
+  font-size: .85rem;
+  border: none;
+  background: transparent;
+  color: var(--rojo);
+  border: 2px solid var(--rojo);
+  transition: background .2s, color .2s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-danger:hover {
+  background: var(--rojo);
+  color: var(--blanco);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: .8rem;
+}
+
+.btn-xs {
+  padding: 2px 8px;
+  font-size: .8rem;
+  border-radius: 4px;
+}
+
+/* ── Días de entrenamiento ──────────── */
+
+.dia-card {
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 20px;
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--crema-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dia-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dia-header h3 {
+  font-family: var(--font-titulo);
+  font-size: 1.2rem;
+  color: var(--negro);
+}
+
+.lista-ejercicios {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 0;
+}
+
+.lista-ejercicios li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .88rem;
+  color: var(--gris);
+  background: var(--crema);
+  padding: 8px 12px;
+  border-radius: var(--radio-sm);
+}
+
+.lista-ejercicios li strong {
+  color: var(--negro);
+}
+
+.sin-ejercicios {
+  font-size: .85rem;
+  color: var(--gris);
+  font-style: italic;
+}
+
+.seccion-form {
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 20px;
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--crema-dark);
+}
+
+.seccion-form h3 {
+  font-family: var(--font-titulo);
+  font-size: 1.2rem;
+  margin-bottom: 14px;
+}
+
+.form-ejercicio {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 2fr auto;
+  align-items: end;
+  gap: 10px;
+  background: var(--crema);
+  padding: 14px;
+  border-radius: var(--radio-sm);
+}
+
+.form-ejercicio label {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--gris);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.form-ejercicio input,
+.form-ejercicio select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-sm);
+  font-size: .85rem;
+  font-family: inherit;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.error {
+  background: #fdecea;
+  color: var(--rojo-dark);
+  border: 1px solid var(--rojo);
+  padding: 10px 14px;
+  border-radius: var(--radio-sm);
+  font-size: .9rem;
+}
+
+/* ── Override de formularios.css en el panel ── */
+
+.seccion-form form,
+.dia-card form,
+.agregar-ejercicio form,
+.card-acciones form {
+  background: none;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+  max-width: none;
+  width: auto;
+}
+
+.seccion-form button[type="submit"],
+.dia-card button[type="submit"],
+.agregar-ejercicio button[type="submit"],
+.card-acciones button[type="submit"] {
+  width: auto;
+  padding: 6px 14px;
+  font-size: .82rem;
+  font-family: inherit;
+  letter-spacing: 0;
+}
+
+/* ── Buscador de ejercicios ─────────── */
+
+.agregar-ejercicio {
+  border-top: 1px solid var(--crema-dark);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.agregar-ejercicio h4 {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--gris);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.buscador-ejercicio {
+  position: relative;
+}
+
+.buscador-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-sm);
+  font-size: .9rem;
+  font-family: inherit;
+}
+
+.buscador-input:focus {
+  outline: none;
+  border-color: var(--rojo);
+}
+
+.buscador-resultados {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: var(--blanco);
+  border: 1px solid var(--crema-dark);
+  border-radius: var(--radio-sm);
+  box-shadow: var(--sombra);
+  z-index: 50;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.resultado-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: background .15s;
+}
+
+.resultado-item:hover { background: var(--crema); }
+
+.resultado-item strong { font-size: .9rem; color: var(--negro); }
+.resultado-item span   { font-size: .78rem; color: var(--gris); }
+
+.sin-resultados {
+  padding: 10px 14px;
+  font-size: .85rem;
+  color: var(--gris);
+}
+
+.ejercicio-seleccionado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--crema);
+  border: 1px solid var(--rojo);
+  border-radius: var(--radio-sm);
+  padding: 6px 12px;
+  font-size: .88rem;
+}
+
+.nombre-seleccionado { font-weight: 600; flex: 1; }
+
+.btn-limpiar-ej {
+  background: none;
+  border: none;
+  color: var(--rojo);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.form-ejercicio-fila {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.form-ejercicio-fila > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-ejercicio-fila label {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--gris);
+}
+
+.form-ejercicio-fila input[type="number"] {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-sm);
+  font-size: .88rem;
+  font-family: inherit;
+}
+
+.form-inline-dia {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.form-inline-dia > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-inline-dia label {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--gris);
+}
+
+.form-inline-dia input {
+  padding: 7px 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-sm);
+  font-size: .9rem;
+  font-family: inherit;
+}
+
+/* ── Lista de entrenadores ──────────── */
+
+.grid-entrenadores-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.card-entrenador-lista {
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 20px 24px;
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--crema-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  transition: box-shadow .2s;
+}
+
+.card-entrenador-lista:hover { box-shadow: var(--sombra); }
+
+.entrenador-info { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+
+.entrenador-info h3 {
+  font-family: var(--font-titulo);
+  font-size: 1.3rem;
+  color: var(--negro);
+}
+
+.entrenador-accion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-suscripto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--radio-sm);
+  font-weight: 600;
+  font-size: .85rem;
+  border: 2px solid #aaa;
+  background: #f0f0f0;
+  color: #666;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .2s, border-color .2s, color .2s;
+  min-width: 110px;
+}
+
+.btn-suscripto .label-hover { display: none; }
+.btn-suscripto .label-default { display: inline; }
+
+.btn-suscripto:hover {
+  background: #fdecea;
+  border-color: var(--rojo);
+  color: var(--rojo);
+}
+
+.btn-suscripto:hover .label-default { display: none; }
+.btn-suscripto:hover .label-hover   { display: inline; }
+
+/* ── Lista de alumnos ──────────── */
+
+.lista-alumnos-asignados {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.lista-alumnos-asignados li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--crema);
+  padding: 8px 12px;
+  border-radius: var(--radio-sm);
+  font-size: .88rem;
+}
+
+.form-inline-dia select {
+  padding: 7px 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-sm);
+  font-size: .9rem;
+  font-family: inherit;
+  min-width: 220px;
+}
+
+.ej-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ej-series {
+  background: var(--rojo);
+  color: var(--blanco);
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+@media (max-width: 640px) {
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-inline-dia,
+  .form-ejercicio-fila {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-ejercicio-fila input[type="number"] {
+    width: 100%;
+  }
+}

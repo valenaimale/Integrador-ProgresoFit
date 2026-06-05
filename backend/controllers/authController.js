@@ -1,41 +1,42 @@
 import * as authService from '../services/authService.js';
 
-export async function registerController(req, res){
-    try{
-        const { email, password, rol } = req.body;
-        
-        //Validacion basica
-        if (!email || !password){
+export async function registerController(req, res) {
+    try {
+        const { email, password, rol, nombre, direccion, horarios, telefono, descripcion, servicios } = req.body;
+
+        if (!email || !password) {
             return res.status(400).json({ error: 'Email y password son obligatorios' });
         }
 
-        const user = await authService.register(email, password, rol);
+        const gymData = { nombre, direccion, horarios, telefono, descripcion, servicios };
+        const user = await authService.register(email, password, rol, gymData);
 
         res.status(201).json({
             message: 'Usuario registrado exitosamente',
-            user
+            user,
+            ...(user.gimnasio_id && { gimnasio_id: user.gimnasio_id }),
         });
-    } catch (error){
+    } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
 
-export async function loginController(req, res){
-    try{
+export async function loginController(req, res) {
+    try {
         const { email, password } = req.body;
 
-        if(!email || !password){
+        if (!email || !password) {
             return res.status(400).json({ error: 'Email y password son obligatorios' });
         }
 
         const result = await authService.login(email, password);
 
         res.json(result);
-    } catch(error){
+    } catch (error) {
         res.status(401).json({ error: error.message });
     }
 }
 
 export async function logoutController(req, res) {
-    res.json({ message: 'Logout exitoso. Eliminá el token del cliente'});
+    res.json({ message: 'Logout exitoso. Eliminá el token del cliente' });
 }

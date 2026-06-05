@@ -1,0 +1,229 @@
+{% extends "base.twig" %}
+
+{% block title %}Gestionar — {{ rutina.titulo }} - ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/rutinas.css">
+{% endblock %}
+
+{% block content %}
+    <div class="panel-header">
+        <h2>{{ rutina.titulo }}</h2>
+        <a href="/entrenador/rutinas" class="btn btn-secondary btn-sm">← Volver</a>
+    </div>
+
+    {% if rutina.descripcion %}
+        <p class="text-muted">{{ rutina.descripcion }}</p>
+    {% endif %}
+
+    {# ── Asignar a alumnos ───────────────────────────────── #}
+    <section class="seccion-form">
+        <h3>Alumnos asignados</h3>
+
+        {% if rutina.alumnos_asignados is not empty %}
+            <ul class="lista-alumnos-asignados">
+                {% for alumno in rutina.alumnos_asignados %}
+                    <li>
+                        <span>{{ alumno.nombre ?? alumno.email }}</span>
+                        <form action="/entrenador/rutinas/desasignar" method="post">
+                            <input type="hidden" name="rutina_id" value="{{ rutina.id }}">
+                            <input type="hidden" name="alumno_id" value="{{ alumno.id }}">
+                            <button type="submit" class="btn btn-danger btn-xs">Quitar</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="sin-ejercicios">Ningún alumno asignado todavía.</p>
+        {% endif %}
+
+        {% if alumnos is empty %}
+            <p class="sin-ejercicios">No tenés alumnos registrados. Pedile a un alumno que se registre en la plataforma.</p>
+        {% else %}
+            {% set asignados_ids = [] %}
+            {% for a in rutina.alumnos_asignados %}
+                {% set asignados_ids = asignados_ids|merge([a.id]) %}
+            {% endfor %}
+
+            <form action="/entrenador/rutinas/asignar" method="post" class="form-inline-dia" style="margin-top:12px">
+                <input type="hidden" name="rutina_id" value="{{ rutina.id }}">
+                <div>
+                    <label for="alumno_id">Asignar rutina a</label>
+                    <select id="alumno_id" name="alumno_id" required>
+                        <option value="">— Seleccioná un alumno —</option>
+                        {% for alumno in alumnos %}
+                            {% if alumno.id not in asignados_ids %}
+                                <option value="{{ alumno.id }}">{{ alumno.nombre ?? alumno.email }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm" style="align-self:flex-end">Asignar</button>
+            </form>
+        {% endif %}
+    </section>
+
+    {# ── Agregar día ─────────────────────────────────────── #}
+    <section class="seccion-form">
+        <h3>Agregar día de entrenamiento</h3>
+        <form action="/entrenador/rutinas/agregar-dia" method="post" class="form-inline-dia">
+            <input type="hidden" name="rutina_id" value="{{ rutina.id }}">
+            <div>
+                <label for="nombre_dia">Nombre del día *</label>
+                <input type="text" id="nombre_dia" name="nombre_dia" placeholder="Ej: Lunes — Piernas" required>
+            </div>
+            <div>
+                <label for="orden">Orden</label>
+                <input type="number" id="orden" name="orden" value="1" min="1" style="width:70px">
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm" style="align-self:flex-end">Agregar día</button>
+        </form>
+    </section>
+
+    {# ── Días ────────────────────────────────────────────── #}
+    {% if rutina.dias is empty %}
+        <p class="text-muted">Esta rutina todavía no tiene días. Agregá uno arriba.</p>
+    {% else %}
+        {% for dia in rutina.dias %}
+            <section class="dia-card">
+                <div class="dia-header">
+                    <h3>{{ dia.nombre_dia }}</h3>
+                    <form action="/entrenador/rutinas/eliminar-dia" method="post" onsubmit="return confirm('¿Eliminar este día y todos sus ejercicios?')">
+                        <input type="hidden" name="rutina_id" value="{{ rutina.id }}">
+                        <input type="hidden" name="dia_id"    value="{{ dia.id }}">
+                        <button type="submit" class="btn btn-danger btn-xs">Eliminar día</button>
+                    </form>
+                </div>
+
+                {# Ejercicios del día #}
+                {% if dia.ejercicios is not empty %}
+                    <ul class="lista-ejercicios">
+                        {% for ej in dia.ejercicios %}
+                            <li>
+                                <div class="ej-info">
+                                    <strong>{{ ej.nombre }}</strong>
+                                    <span class="ej-series">{{ ej.series_repeticiones }}</span>
+                                    {% if ej.musculos %}<span class="text-muted">· {{ ej.musculos }}</span>{% endif %}
+                                </div>
+                                <form action="/entrenador/rutinas/eliminar-ejercicio" method="post">
+                                    <input type="hidden" name="rutina_id" value="{{ rutina.id }}">
+                                    <input type="hidden" name="dia_id"    value="{{ dia.id }}">
+                                    <input type="hidden" name="pivot_id"  value="{{ ej.pivot_id }}">
+                                    <button type="submit" class="btn btn-danger btn-xs">×</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="sin-ejercicios">Sin ejercicios aún.</p>
+                {% endif %}
+
+                {# Agregar ejercicio con buscador #}
+                <div class="agregar-ejercicio" data-dia="{{ dia.id }}" data-rutina="{{ rutina.id }}">
+                    <h4>Agregar ejercicio</h4>
+
+                    <div class="buscador-ejercicio">
+                        <input type="text"
+                               class="buscador-input"
+                               placeholder="Buscar ejercicio (ej: bench press, squat...)"
+                               autocomplete="off">
+                        <div class="buscador-resultados" style="display:none"></div>
+                    </div>
+
+                    <form action="/entrenador/rutinas/agregar-ejercicio" method="post" class="form-agregar-ej">
+                        <input type="hidden" name="rutina_id"       value="{{ rutina.id }}">
+                        <input type="hidden" name="dia_id"          value="{{ dia.id }}">
+                        <input type="hidden" name="api_ejercicio_id" class="campo-api-id" value="">
+
+                        <div class="ejercicio-seleccionado" style="display:none">
+                            <span class="nombre-seleccionado"></span>
+                            <button type="button" class="btn-limpiar-ej">✕</button>
+                        </div>
+
+                        <div class="form-ejercicio-fila">
+                            <div>
+                                <label>Series</label>
+                                <input type="number" name="series" value="3" min="1" required>
+                            </div>
+                            <div>
+                                <label>Repeticiones</label>
+                                <input type="number" name="repeticiones" value="10" min="1" required>
+                            </div>
+                            <div>
+                                <label>Orden</label>
+                                <input type="number" name="orden" value="{{ dia.ejercicios|length + 1 }}" min="1">
+                            </div>
+                            <div style="align-self:flex-end">
+                                <button type="submit" class="btn btn-primary btn-sm btn-submit-ej" disabled>
+                                    Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </section>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelectorAll('.agregar-ejercicio').forEach(function(bloque) {
+    var input      = bloque.querySelector('.buscador-input');
+    var resultados = bloque.querySelector('.buscador-resultados');
+    var campoId    = bloque.querySelector('.campo-api-id');
+    var seleccion  = bloque.querySelector('.ejercicio-seleccionado');
+    var nombreSel  = bloque.querySelector('.nombre-seleccionado');
+    var btnLimpiar = bloque.querySelector('.btn-limpiar-ej');
+    var btnSubmit  = bloque.querySelector('.btn-submit-ej');
+    var timer;
+
+    input.addEventListener('input', function() {
+        clearTimeout(timer);
+        var q = input.value.trim();
+        if (q.length < 2) { resultados.style.display = 'none'; return; }
+
+        timer = setTimeout(function() {
+            fetch('/entrenador/ejercicios/buscar?q=' + encodeURIComponent(q))
+                .then(function(r) { return r.json(); })
+                .then(function(lista) {
+                    resultados.innerHTML = '';
+                    if (!lista.length) {
+                        resultados.innerHTML = '<p class="sin-resultados">Sin resultados.</p>';
+                    } else {
+                        lista.forEach(function(ej) {
+                            var item = document.createElement('div');
+                            item.className = 'resultado-item';
+                            item.innerHTML =
+                                '<strong>' + ej.nombre + '</strong>' +
+                                (ej.musculos ? '<span>' + ej.musculos + '</span>' : '');
+                            item.addEventListener('click', function() {
+                                campoId.value       = ej.api_id;
+                                nombreSel.textContent = ej.nombre;
+                                seleccion.style.display = 'flex';
+                                btnSubmit.disabled  = false;
+                                resultados.style.display = 'none';
+                                input.value = '';
+                            });
+                            resultados.appendChild(item);
+                        });
+                    }
+                    resultados.style.display = 'block';
+                });
+        }, 400);
+    });
+
+    btnLimpiar.addEventListener('click', function() {
+        campoId.value           = '';
+        seleccion.style.display = 'none';
+        btnSubmit.disabled      = true;
+        input.value             = '';
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!bloque.contains(e.target)) resultados.style.display = 'none';
+    });
+});
+</script>
+{% endblock %}

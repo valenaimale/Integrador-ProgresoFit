@@ -1,0 +1,114 @@
+/* ===================================
+   ProgresoFit — escanearQr.css
+   =================================== */
+
+.scanner-container {
+  max-width: 480px;
+  margin: 32px auto;
+  padding: 0 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.scanner-container h2 {
+  margin: 0;
+}
+
+.scanner-subtitulo {
+  color: var(--texto-secundario, #666);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ── Área del lector QR (html5-qrcode inyecta aquí) ── */
+
+#qr-reader {
+  width: 100%;
+  max-width: 360px;
+  border-radius: var(--radio, 12px);
+  overflow: hidden;
+  box-shadow: var(--sombra, 0 4px 20px rgba(0,0,0,.15));
+}
+
+/* Ocultar los controles extra que inyecta html5-qrcode */
+#qr-reader__dashboard_section_csr span,
+#qr-reader__dashboard_section_fsr,
+#qr-reader__status_span {
+  display: none !important;
+}
+
+.scanner-error {
+  color: #f87171;
+  padding: 16px;
+}
+
+/* ── Panel de resultado ── */
+
+.resultado {
+  width: 100%;
+  max-width: 360px;
+  border-radius: var(--radio, 12px);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--sombra, 0 4px 20px rgba(0,0,0,.15));
+}
+
+.resultado[hidden] { display: none; }
+
+.resultado-ok    { background: #f0fdf4; border: 2px solid #4ade80; }
+.resultado-error { background: #fef2f2; border: 2px solid #f87171; }
+
+.resultado-icono {
+  font-size: 3rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.resultado-ok    .resultado-icono { color: #16a34a; }
+.resultado-error .resultado-icono { color: #dc2626; }
+
+.resultado-tipo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.resultado-ok    .resultado-tipo { color: #16a34a; }
+.resultado-error .resultado-tipo { color: #dc2626; }
+
+.resultado-mensaje {
+  font-size: 1rem;
+  margin: 0;
+  color: #374151;
+}
+
+.resultado-aforo {
+  font-size: 0.9rem;
+  color: #6b7280;
+  background: rgba(0,0,0,.05);
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.btn-nuevo-scan {
+  margin-top: 8px;
+  padding: 10px 28px;
+  background: var(--rojo, #dc2626);
+  color: #fff;
+  border: none;
+  border-radius: var(--radio, 8px);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-nuevo-scan:hover {
+  background: var(--rojo-dark, #b91c1c);
+}

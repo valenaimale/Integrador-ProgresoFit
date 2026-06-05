@@ -6,28 +6,36 @@ function stripHtml(html = '') {
 }
 
 function transformExercise(raw) {
-  // exerciseinfo returns translations as an array; pick English (language id = 2)
+  // Prefer Spanish (language id = 4), fallback to English (id = 2), fallback to first
   const translation =
+    raw.translations?.find(t => (t.language?.id ?? t.language) === 4) ||
     raw.translations?.find(t => (t.language?.id ?? t.language) === 2) ||
     raw.translations?.[0];
 
   const name = translation?.name?.trim();
   if (!name) return null;
 
+  // Prefer Spanish muscle names, fallback to English
+  const musculos = raw.muscles?.map(m => m.name || m.name_en).join(', ') ||
+                   raw.category?.name || '';
+
+  const equipamiento = raw.equipment?.map(e => e.name).join(', ') || 'Sin equipamiento';
+
   return {
     api_id: raw.id,
     nombre: name,
     descripcion: stripHtml(translation?.description || ''),
-    musculos: raw.muscles?.map(m => m.name_en || m.name).join(', ') || raw.category?.name || '',
-    equipamiento: raw.equipment?.map(e => e.name).join(', ') || 'Sin equipamiento',
-    dificultad: 'media', // wger does not expose difficulty
+    musculos,
+    equipamiento,
+    dificultad: 'media',
     video_url: null,
     categoria: raw.category?.name || ''
   };
 }
 
-export async function listarEjercicios({ limit = 20, offset = 0 } = {}) {
-  const url = `${WGER_BASE}/exerciseinfo/?format=json&language=2&limit=${limit}&offset=${offset}`;
+export async function listarEjercicios({ limit = 20, offset = 0, q = '' } = {}) {
+  let url = `${WGER_BASE}/exerciseinfo/?format=json&language=2&limit=${limit}&offset=${offset}`;
+  if (q) url += `&name=${encodeURIComponent(q)}`;
   const response = await fetch(url);
   if (!response.ok) throw new Error('Error al contactar la API de ejercicios');
 
