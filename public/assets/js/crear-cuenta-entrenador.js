@@ -3,13 +3,17 @@ document.addEventListener("DOMContentLoaded", () => {//cargar script crea el scr
         new DragDrop("#fotodeperfil");
     });
     ConstructorElementos.cargarScript("FormValidation", "/assets/js/components/formValidation.js", () => {
-        new FormValidation("#form-editar-perfil-entrenador", {
+        new FormValidation("#form-crear-cuenta-entrenador", {
             contra_nueva_repetida:{
                 validar: (input) => {
-                    if (input.value.trim() === "") return false;
-                    return input.value === document.querySelector("#contra_nueva").value;
+                    if (input.value.trim().length === 0) return false;  // vacío → error
+                        return input.value === document.querySelector("#contra_nueva").value;  // coincide → verde
                 },
-                mensaje: "Las contraseñas no coinciden."
+                mensaje: "Las contraseñas es obligatoria y debe coincidir con la ingresada."
+            },
+            contra_nueva:{
+                validar: (input) => input.value.trim().length > 0,
+                mensaje: "La contraseña es obligatoria."
             },
             nombre:{
                 validar: (input) => input.value.trim().length > 0,
@@ -22,6 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {//cargar script crea el scr
                     return tiposValidos.includes(input.files[0].type); 
                 },
                 mensaje: "La foto de perfil debe ser una imagen JPG, PNG o WEBP."
+            },
+            email:{
+                validar: (input) => input.value.trim().length > 0,
+                mensaje: "El email es obligatorio."
             }
         })});
     });

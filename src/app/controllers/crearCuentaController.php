@@ -54,6 +54,14 @@ class CrearCuentaController
         ]);
 
         if ($response['ok']) {
+            $login = $this->api->post('/auth/login', [
+            'email'    => $email,
+            'password' => $contraseña,
+            ]);
+            if ($login['ok']) {
+            $_SESSION['jwt']  = $login['data']['token'];
+            $_SESSION['user'] = $login['data']['user'];
+            }
             require $this->viewsDir . 'crearCuentaCreada.view.php';
             exit;
         }
@@ -95,10 +103,19 @@ class CrearCuentaController
         ]);
 
         if ($response['ok']) {
+            $login = $this->api->post('/auth/login', [
+            'email'    => $email,
+            'password' => $contraseña,
+            ]);
+            if ($login['ok']) {
+            $_SESSION['jwt']  = $login['data']['token'];
+            $_SESSION['user'] = $login['data']['user'];
+            }
             require $this->viewsDir . 'crearCuentaCreada.view.php';
             exit;
         }
 
+          
         $error = $response['data']['message'] ?? 'Error al crear la cuenta. El email puede ya estar registrado.';
         require $this->viewsDir . 'crearCuentaEntrenador.view.php';
     }
@@ -142,6 +159,14 @@ class CrearCuentaController
         ]);
 
         if ($response['ok']) {
+            $login = $this->api->post('/auth/login', [
+            'email'    => $email,
+            'password' => $contraseña,
+            ]);
+            if ($login['ok']) {
+            $_SESSION['jwt']  = $login['data']['token'];
+            $_SESSION['user'] = $login['data']['user'];
+            }
             require $this->viewsDir . 'crearCuentaCreada.view.php';
             exit;
         }
