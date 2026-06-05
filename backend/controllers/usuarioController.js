@@ -1,4 +1,6 @@
 import * as usuarioService from '../services/usuarioService.js';
+import * as usuarioRepository from '../repositories/usuarioRepository.js';
+import * as entrenadorRepository from '../repositories/entrenadorRepository.js';
 
 export async function createEntrenador(req, res) {
   try {
@@ -22,11 +24,30 @@ export async function createAlumno(req, res) {
 
 export async function updateProfile(req, res) {
   try {
-    const { nombre, email, password } = req.body;
-    const user = await usuarioService.updateProfile(req.user, req.params.id, { nombre, email, password });
+    // contra_actual se usa para verificar la contraseña antes de cambiarla
+    const { nombre, email, password, contra_actual } = req.body;
+    const user = await usuarioService.updateProfile(req.user, req.params.id, { nombre, email, password, contra_actual });
     res.json({ message: 'Perfil actualizado', user });
   } catch (error) {
     res.status(403).json({ error: error.message });
+  }
+}
+
+export async function getMisEntrenadores(req, res) {
+  try {
+    const entrenadores = await entrenadorRepository.findMisEntrenadores(req.user.id);
+    res.json(entrenadores);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function getMisAlumnos(req, res) {
+  try {
+    const alumnos = await usuarioRepository.findMisAlumnos(req.user.id);
+    res.json(alumnos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 }
 

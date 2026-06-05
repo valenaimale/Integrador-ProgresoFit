@@ -2,22 +2,22 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 use PAW\app\services\ApiClient;
 
-class InicioSesionController
+class InicioSesionController extends Controller
 {
-    public string $viewsDir;
     private ApiClient $api;
 
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
         $this->api = new ApiClient();
     }
 
     public function index()
     {
-        require $this->viewsDir . 'inicioSesion.view.php';
+        $this->render('inicioSesion.html.twig');
     }
 
     public function process()
@@ -38,7 +38,7 @@ class InicioSesionController
         }
 
         $error = $response['data']['message'] ?? 'Email o contraseña incorrectos';
-        require $this->viewsDir . 'inicioSesion.view.php';
+        $this->render('inicioSesion.html.twig', ['error' => $error]);
     }
 
     public function logout()

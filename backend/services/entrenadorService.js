@@ -1,4 +1,6 @@
 import * as entrenadorRepository from '../repositories/entrenadorRepository.js';
+import * as usuarioRepository from '../repositories/usuarioRepository.js';
+import bcrypt from 'bcrypt';
 
 export async function listarEntrenadores() {
   return await entrenadorRepository.findAll();
@@ -21,4 +23,16 @@ export async function actualizarPerfil(user, usuarioId, data) {
 
   await entrenadorRepository.upsertPerfil(usuarioId, data);
   return await entrenadorRepository.findByUsuarioId(usuarioId);
+}
+export async function registrarEntrenador({nombre, email, password, horario, descripcion, especialidad}){
+
+  if (!email || !password) throw new Error('Email y password son obligatorios');
+      
+      const existing = await usuarioRepository.findByEmail(email);
+      if (existing) throw new Error('El correo ya está registrado');
+      
+      const hashed = await bcrypt.hash(password, 10);
+      const usuario = await usuarioRepository.create({ nombre, email, password: hashed, rol: 'ENTRENADOR' });
+      const entrenador = await entrenadorRepository.create({usuario_id: usuario.id, nombre, horario, email, descripcion, especialidad }); 
+      return entrenador;
 }

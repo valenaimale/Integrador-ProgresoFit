@@ -53,6 +53,24 @@ label {
   color: var(--gris);
 }
 
+textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--rojo);
+}
+
 input[type="text"],
 input[type="email"],
 input[type="tel"],
@@ -72,6 +90,7 @@ input:focus {
   outline: none;
   border-color: var(--rojo);
 }
+
 
 fieldset fieldset {
   margin-top: 1rem;
@@ -121,4 +140,40 @@ button[type="submit"]:hover {
 
 .form-link a:hover {
   text-decoration: underline;
+}
+input.input-error{
+  border: 2px solid #C0392B !important;
+  background-color: #fdecea !important;
+}
+
+input.input-ok{
+  border: 2px solid #27ae60 !important;
+}
+
+.drag-drop-area {
+    width: 100%;
+    padding: 1.2rem;
+    border: 2px dashed #ccc;
+    border-radius: var(--radio-sm);
+    text-align: center;
+    cursor: pointer;
+    color: var(--gris);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s;
+}
+
+.drag-drop-area:hover {
+    border-color: var(--rojo);
+}
+
+.drag-drop-area input[type="file"] {
+    display: none;
+}
+
+.mensaje-error {
+    color: #C0392B;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 0.8rem;
 }

@@ -4,15 +4,18 @@
 -- Hash generado con bcrypt (cost=10)
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 -- Usuarios de ejemplo
 INSERT IGNORE INTO usuarios (id, nombre, email, password, rol) VALUES
-(1, 'Admin ProgresoFit', 'admin@progresofit.com', '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ADMIN'),
-(2, 'Carlos Entrenador', 'carlos@test.com',       '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ENTRENADOR'),
-(3, 'María Alumna',      'maria@test.com',        '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ALUMNO');
+(1, 'Admin ProgresoFit', 'admin@progresofit.com',          '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ADMIN'),
+(2, 'Carlos Entrenador', 'carlos@test.com',                '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ENTRENADOR'),
+(3, 'María Alumna',      'maria@test.com',                 '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ALUMNO'),
+(4, 'Gimnasio Central',  'gimnasio@gimnasiocentral.com',   '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'GIMNASIO');
 
--- Gimnasio de ejemplo
-INSERT IGNORE INTO gimnasios (id, nombre, direccion, horarios, telefono, email, descripcion, servicios, activo) VALUES
-(1, 'Gimnasio Central',
+-- Gimnasio de ejemplo (usuario_id=4 es la cuenta del gimnasio)
+INSERT IGNORE INTO gimnasios (id, usuario_id, nombre, direccion, horarios, telefono, email, descripcion, servicios, activo) VALUES
+(1, 4, 'Gimnasio Central',
     'Av. Siempre Viva 123',
     'Lun a Vie 7:00-22:00, Sáb 9:00-18:00',
     '11-5555-0123',
@@ -51,35 +54,35 @@ INSERT IGNORE INTO ejercicios (id, nombre, descripcion, dificultad, musculos, eq
  'media',
  'Pectoral mayor, Hombro anterior, Tríceps',
  'Barra, Banco plano, Discos',
- '011'),
+ '11'),
 (2,
  'Dominadas',
  'Colgate de la barra con agarre prono y elevá tu cuerpo hasta que la barbilla pase la barra.',
  'media',
  'Dorsal ancho, Bíceps, Hombro posterior',
  'Barra de dominadas',
- '015'),
+ '15'),
 (3,
  'Sentadilla',
  'Con la barra en los hombros, flexioná rodillas y cadera como si te sentaras en una silla, y volvé a subir.',
  'media',
  'Cuádriceps, Glúteos, Femorales, Core',
  'Barra, Soporte de sentadilla',
- '012'),
+ '12'),
 (4,
  'Press militar',
  'De pie, presioná la barra desde los hombros hacia arriba hasta extender completamente los brazos.',
  'media',
  'Hombros, Tríceps, Core',
  'Barra, Discos',
- '024'),
+ '24'),
 (5,
  'Remo con barra',
  'Inclinado con el torso a 45°, traccioná la barra hacia el abdomen manteniendo la espalda recta.',
  'media',
  'Espalda media, Dorsal, Bíceps',
  'Barra, Discos',
- '017');
+ '17');
 
 -- Asignación de ejercicios a cada día
 INSERT IGNORE INTO entrenamiento_ejercicios (id, entrenamiento_id, ejercicio_id, series_repeticiones, orden) VALUES
@@ -96,6 +99,14 @@ INSERT IGNORE INTO entrenamiento_ejercicios (id, entrenamiento_id, ejercicio_id,
 INSERT IGNORE INTO suscripciones (id, usuario_id, plan, precio, estado, fecha_inicio, fecha_fin) VALUES
 (1, 3, 'premium', 4999.00, 'activa', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 30 DAY));
 
+-- Relación entrenador-alumno (Carlos entrena a María)
+INSERT IGNORE INTO entrenador_alumnos (id, entrenador_id, alumno_id) VALUES
+(1, 2, 3);
+
 -- Asignación: Carlos le asigna la rutina de fuerza a María
 INSERT IGNORE INTO alumno_rutinas (id, alumno_id, rutina_id, asignado_por) VALUES
 (1, 3, 1, 2);
+
+-- Aforo inicial del gimnasio
+INSERT IGNORE INTO gimnasio_aforo (gimnasio_id, capacidad_maxima, ocupacion_actual) VALUES
+(1, 50, 0);

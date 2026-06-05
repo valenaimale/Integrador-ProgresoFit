@@ -1,0 +1,34 @@
+<header>
+    <img src="Logo.JPG" alt="Logo ProgresoFit">
+    <h1><a href="/">progresoFit</a></h1>
+    <nav>
+        <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/rutinas">Rutinas</a></li>
+            <li><a href="/gimnasios">Gimnasios</a></li>
+            <li><a href="/entrenadores">Entrenadores</a></li>
+        </ul>
+
+        <div class="nav-acciones">
+            {% if session.user is defined and session.user %}
+                {% if session.user.rol == 'ENTRENADOR' %}
+                    <a href="/entrenador/rutinas">Mis rutinas</a>
+                {% endif %}
+                {% if session.user.rol == 'ALUMNO' %}
+                    <a href="/mi-qr">Mi QR de acceso</a>
+                {% endif %}
+                {% if session.user.rol in ['ADMIN', 'ENTRENADOR'] %}
+                    <a href="/aforo">Aforo del gimnasio</a>
+                {% endif %}
+                {% if session.user.rol == 'ADMIN' %}
+                    <a href="/escanear">Escanear QR</a>
+                {% endif %}
+                <a href="/perfil">{{ session.user.nombre|default('Mi perfil') }}</a>
+                <a href="/cerrar-sesion">Cerrar sesión</a>
+            {% else %}
+                <a href="/crearCuenta">Registro</a>
+                <a href="/inicio-sesion">Iniciar sesión</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>

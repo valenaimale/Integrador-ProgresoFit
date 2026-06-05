@@ -92,6 +92,14 @@
 .ejercicio-nombre {
   font-size: .9rem;
   font-weight: 600;
+  color: var(--negro);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+a.ejercicio-nombre:hover {
+  color: var(--rojo);
+  text-decoration: underline;
 }
 
 .ejercicio-series {
@@ -172,6 +180,13 @@
   padding: 6px 10px;
   border-radius: 20px;
   font-size: .8rem;
+}
+
+.rutina-descripcion {
+  font-size: .9rem;
+  color: var(--gris);
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* ── RESPONSIVE ───────────────────── */

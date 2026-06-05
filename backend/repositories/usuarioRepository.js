@@ -13,6 +13,12 @@ export async function findByEmail(email) {
   return rows[0];
 }
 
+// obtiene solo el hash de la contraseña — se usa exclusivamente para verificar la contraseña actual antes de cambiarla
+export async function findPasswordById(id) {
+  const [rows] = await pool.query('SELECT password FROM usuarios WHERE id = ?', [id]);
+  return rows[0]?.password;
+}
+
 export async function updateProfile(id, fields) {
   const setClauses = [];
   const params = [];
@@ -25,6 +31,18 @@ export async function updateProfile(id, fields) {
 
   params.push(id);
   await pool.query(`UPDATE usuarios SET ${setClauses.join(', ')} WHERE id = ?`, params);
+}
+
+export async function findMisAlumnos(entrenadorId) {
+  const [rows] = await pool.query(
+    `SELECT u.id, u.nombre, u.email
+     FROM entrenador_alumnos ea
+     INNER JOIN usuarios u ON u.id = ea.alumno_id
+     WHERE ea.entrenador_id = ?
+     ORDER BY u.nombre`,
+    [entrenadorId]
+  );
+  return rows;
 }
 
 export async function create({ nombre, email, password, rol }) {

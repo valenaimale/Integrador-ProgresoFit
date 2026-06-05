@@ -20,12 +20,27 @@ class ApiClient
     {
         return $this->request('POST', $path, $data, $token);
     }
+    
+    public function put(string $path, array $data, ?string $token = null): array
+    {
+        return $this->request('PUT', $path, $data, $token);
+    }
+
+    public function delete(string $path, ?string $token = null): array
+    {
+        return $this->request('DELETE', $path, null, $token);
+    }
+
+    public function put(string $path, array $data, ?string $token = null): array
+    {
+        return $this->request('PUT', $path, $data, $token);
+    }
 
     private function request(string $method, string $path, ?array $data, ?string $token): array
     {
         $ch = curl_init($this->baseUrl . $path);
 
-        $headers = ['Content-Type: application/json', 'Accept: application/json'];
+        $headers = ['Content-Type: application/json; charset=utf-8', 'Accept: application/json; charset=utf-8'];
         if ($token) {
             $headers[] = 'Authorization: Bearer ' . $token;
         }
@@ -34,7 +49,7 @@ class ApiClient
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_CUSTOMREQUEST  => $method,
-            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_TIMEOUT        => 15,
         ]);
 
         if ($data !== null) {
@@ -43,8 +58,9 @@ class ApiClient
 
         $response   = curl_exec($ch);
         $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-        $decoded = json_decode($response, true) ?? [];
+        $decoded = json_decode(mb_convert_encoding($response, 'UTF-8', 'UTF-8'), true) ?? [];
 
         return [
             'status' => $statusCode,

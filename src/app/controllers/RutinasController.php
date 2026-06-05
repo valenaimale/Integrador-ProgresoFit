@@ -2,18 +2,24 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
+use PAW\app\services\ApiClient;
 
-class RutinasController
+class RutinasController extends Controller
 {
-    public string $viewsDir;
+    private ApiClient $api;
 
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
+        $this->api = new ApiClient();
     }
 
     public function listar()
     {
-        require $this->viewsDir . 'rutinas.view.php';
+        $response = $this->api->get('/rutinas', $_SESSION['jwt'] ?? null);
+        $rutinas  = $response['ok'] ? $response['data'] : [];
+
+        $this->render('rutinas.html.twig', ['rutinas' => $rutinas]);
     }
 }

@@ -41,9 +41,9 @@ export async function findById(id) {
   const [rows] = await pool.query(
     `SELECT
        e.id AS dia_id, e.nombre_dia, e.grupo_muscular, e.duracion_minutos, e.orden AS dia_orden,
-       ej.id AS ejercicio_id, ej.nombre AS ejercicio_nombre, ej.musculos,
+       ej.id AS ejercicio_id, ej.api_id, ej.nombre AS ejercicio_nombre, ej.musculos,
        ej.equipamiento, ej.dificultad,
-       ee.series_repeticiones, ee.orden AS ej_orden
+       ee.id AS pivot_id, ee.series_repeticiones, ee.orden AS ej_orden
      FROM entrenamientos e
      LEFT JOIN entrenamiento_ejercicios ee ON ee.entrenamiento_id = e.id
      LEFT JOIN ejercicios ej ON ej.id = ee.ejercicio_id
@@ -67,7 +67,9 @@ export async function findById(id) {
     }
     if (row.ejercicio_id) {
       diasMap.get(row.dia_id).ejercicios.push({
+        pivot_id: row.pivot_id,
         id: row.ejercicio_id,
+        api_id: row.api_id,
         nombre: row.ejercicio_nombre,
         musculos: row.musculos,
         equipamiento: row.equipamiento,
@@ -79,6 +81,16 @@ export async function findById(id) {
   }
 
   rutina.dias = Array.from(diasMap.values());
+
+  const [asignados] = await pool.query(
+    `SELECT u.id, u.nombre, u.email
+     FROM alumno_rutinas ar
+     INNER JOIN usuarios u ON u.id = ar.alumno_id
+     WHERE ar.rutina_id = ?`,
+    [id]
+  );
+  rutina.alumnos_asignados = asignados;
+
   return rutina;
 }
 

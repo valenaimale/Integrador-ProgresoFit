@@ -2,18 +2,25 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
+use PAW\app\services\ApiClient;
 
-class RutinaIndController
+class RutinaIndController extends Controller
 {
-    public string $viewsDir;
+    private ApiClient $api;
 
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
+        $this->api = new ApiClient();
     }
 
     public function mostrar()
     {
-        require $this->viewsDir . 'rutina_ind.view.php';
+        $id       = $_GET['id'] ?? null;
+        $response = $this->api->get("/rutinas/{$id}", $_SESSION['jwt'] ?? null);
+        $rutina   = $response['ok'] ? $response['data'] : null;
+
+        $this->render('rutina_ind.html.twig', ['rutina' => $rutina]);
     }
 }

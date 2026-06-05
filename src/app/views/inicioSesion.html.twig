@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inicio de Sesión — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/formularios.css">
+{% endblock %}
+
+{% block content %}
+<h2>Iniciar sesión</h2>
+{% if error %}
+    <p style="color:var(--rojo); margin-bottom:1rem; font-weight:600;">{{ error }}</p>
+{% endif %}
+<form action="/inicio-sesion" method="post">
+    <fieldset>
+        <legend>Datos personales:</legend>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="ej.:tuemail@email.com" required>
+        <label for="contra">Contraseña</label>
+        <input type="password" name="password" id="contra" placeholder="ej.:tucontraseña" required>
+    </fieldset>
+    <button type="submit">Iniciar sesión</button>
+</form>
+{% endblock %}

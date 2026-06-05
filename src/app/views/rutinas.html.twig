@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rutinas — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/rutinas.css">
+{% endblock %}
+
+{% block content %}
+<section class="seccion-rutinas">
+    <h2>Elige tu programa según tu objetivo</h2>
+    {% if not rutinas %}
+        <p class="sin-resultados">No hay rutinas disponibles.</p>
+    {% else %}
+        <ul class="grid-rutinas">
+            {% for rutina in rutinas %}
+                <li>
+                    <a href="/rutina?id={{ rutina.id }}" class="card-rutina">
+                        <article>
+                            <h3>{{ rutina.titulo }}</h3>
+                            <div class="card-info">
+                                <span class="card-autor">{{ rutina.entrenador_nombre|default('Entrenador') }}</span>
+                                {% if rutina.descripcion %}
+                                    <p class="card-descripcion">{{ rutina.descripcion }}</p>
+                                {% endif %}
+                                {% if rutina.objetivo %}
+                                    <span class="card-objetivo">Objetivo: {{ rutina.objetivo }}</span>
+                                {% endif %}
+                            </div>
+                        </article>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</section>
+
+<section class="seccion-especial">
+    <h2>Programas especiales de 28 días</h2>
+    <ul class="grid-programas">
+        <li>
+            <a href="/autocuidado" class="card-programa">
+                <article>
+                    <h3>Autocuidado</h3>
+                    <p>Las mejores rutinas para el cuidado personal</p>
+                </article>
+            </a>
+        </li>
+        <li>
+            <a href="/principiante" class="card-programa">
+                <article>
+                    <h3>Principiante</h3>
+                    <p>Tenés que ver esto si estás comenzando a entrenarte</p>
+                </article>
+            </a>
+        </li>
+    </ul>
+</section>
+{% endblock %}

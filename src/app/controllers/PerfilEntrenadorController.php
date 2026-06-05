@@ -2,18 +2,17 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 
-class PerfilEntrenadorController
+class PerfilEntrenadorController extends Controller
 {
-    public string $viewsDir;
-
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
     }
 
     public function mostrar()
     {
-        require $this->viewsDir . 'perfilEntrenador.view.php';
+        $this->render('perfilEntrenador.html.twig');
     }
 }

@@ -1,0 +1,58 @@
+{% extends "base.twig" %}
+
+{% block title %}Entrenadores - ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/rutinas.css">
+{% endblock %}
+
+{% block content %}
+    <div class="panel-header">
+        <h2>Entrenadores</h2>
+    </div>
+
+    {% if entrenadores is empty %}
+        <p class="text-muted">No hay entrenadores registrados todavía.</p>
+    {% else %}
+        <ul class="grid-entrenadores-lista">
+            {% for e in entrenadores %}
+                <li class="card-entrenador-lista">
+                    <div class="entrenador-info">
+                        <h3>{{ e.nombre ?? 'Sin nombre' }}</h3>
+                        {% if e.especialidad %}
+                            <span class="tag-objetivo">{{ e.especialidad }}</span>
+                        {% endif %}
+                        {% if e.descripcion %}
+                            <p class="text-muted">{{ e.descripcion }}</p>
+                        {% endif %}
+                        {% if e.horario %}
+                            <p class="text-muted">Horario: {{ e.horario }}</p>
+                        {% endif %}
+                        {% if e.gimnasio_nombre %}
+                            <p class="text-muted">Gimnasio: {{ e.gimnasio_nombre }}</p>
+                        {% endif %}
+                    </div>
+
+                    {% if es_alumno %}
+                        <div class="entrenador-accion">
+                            {% if e.id in mis_entrenadores_ids %}
+                                <form action="/entrenadores/desuscribirse" method="post">
+                                    <input type="hidden" name="entrenador_id" value="{{ e.id }}">
+                                    <button type="submit" class="btn btn-suscripto btn-sm">
+                                        <span class="label-default">✓ Suscripto</span>
+                                        <span class="label-hover">Cancelar</span>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="/entrenadores/suscribirse" method="post">
+                                    <input type="hidden" name="entrenador_id" value="{{ e.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Suscribirme</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

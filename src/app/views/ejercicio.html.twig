@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ejercicio — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/rutina-ind.css">
+<link rel="stylesheet" href="/assets/css/perfil.css">
+{% endblock %}
+
+{% block content %}
+{% if not ejercicio %}
+    <p class="sin-resultados">Ejercicio no encontrado.</p>
+{% else %}
+    <div class="rutina-header">
+        <h2>{{ ejercicio.nombre }}</h2>
+        <div class="rutina-meta">
+            {% if ejercicio.musculos %}
+                <span>{{ ejercicio.musculos }}</span>
+            {% endif %}
+            {% if ejercicio.dificultad %}
+                <span>Dificultad: {{ ejercicio.dificultad }}</span>
+            {% endif %}
+            {% if ejercicio.equipamiento %}
+                <span>{{ ejercicio.equipamiento }}</span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if ejercicio.video_url %}
+        <section>
+            <h2>Video tutorial</h2>
+            <article class="card-entrenamiento">
+                <iframe
+                    src="{{ ejercicio.video_url }}"
+                    title="Video tutorial — {{ ejercicio.nombre }}"
+                    width="100%"
+                    height="360"
+                    frameborder="0"
+                    allowfullscreen
+                    style="border-radius: var(--radio-sm); display: block;">
+                </iframe>
+            </article>
+        </section>
+    {% endif %}
+
+    <section>
+        <h2>Descripción</h2>
+        <div class="info-lista">
+            <dl>
+                {% if ejercicio.musculos %}
+                    <dt>Músculos involucrados</dt>
+                    <dd>{{ ejercicio.musculos }}</dd>
+                {% endif %}
+
+                {% if ejercicio.equipamiento %}
+                    <dt>Equipamiento necesario</dt>
+                    <dd>{{ ejercicio.equipamiento }}</dd>
+                {% endif %}
+
+                {% if ejercicio.descripcion %}
+                    <dt>Instrucciones</dt>
+                    <dd>{{ ejercicio.descripcion|striptags }}</dd>
+                {% endif %}
+            </dl>
+        </div>
+    </section>
+{% endif %}
+{% endblock %}

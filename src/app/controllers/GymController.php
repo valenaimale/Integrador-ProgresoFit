@@ -2,16 +2,16 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 use PAW\app\services\ApiClient;
 
-class GymController
+class GymController extends Controller
 {
-    public string $viewsDir;
     private ApiClient $api;
 
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
         $this->api = new ApiClient();
     }
 
@@ -21,6 +21,6 @@ class GymController
         $response  = $this->api->get('/gimnasios', $token);
         $gimnasios = $response['ok'] ? $response['data'] : [];
 
-        require $this->viewsDir . 'gimnasios.view.php';
+        $this->render('gimnasios.html.twig', ['gimnasios' => $gimnasios]);
     }
 }

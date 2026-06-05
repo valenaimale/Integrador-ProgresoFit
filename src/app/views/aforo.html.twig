@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Aforo del gimnasio — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/aforo.css">
+{% endblock %}
+
+{% block head_scripts %}
+<meta http-equiv="refresh" content="30">
+{% endblock %}
+
+{% block content %}
+<div class="aforo-container">
+    <h2>Aforo en tiempo real</h2>
+
+    {% if error %}
+        <p class="aforo-error">{{ error }}</p>
+
+    {% elseif aforo %}
+        <div class="aforo-card aforo-{{ estado }}">
+            <div class="aforo-numero">
+                <span class="aforo-actual">{{ aforo.ocupacion_actual }}</span>
+                <span class="aforo-sep">/</span>
+                <span class="aforo-max">{{ aforo.capacidad_maxima }}</span>
+            </div>
+            <p class="aforo-etiqueta">personas en el gimnasio</p>
+
+            <div class="aforo-barra-wrap">
+                <div class="aforo-barra" style="width: {{ porcentaje }}%"></div>
+            </div>
+            <p class="aforo-porcentaje">{{ porcentaje }}% de ocupación</p>
+
+            <p class="aforo-estado-texto">
+                {% if estado == 'lleno' %}
+                    Gimnasio al límite de capacidad
+                {% elseif estado == 'moderado' %}
+                    Gimnasio con alta concurrencia
+                {% else %}
+                    Gimnasio con buena disponibilidad
+                {% endif %}
+            </p>
+        </div>
+
+        <p class="aforo-actualiza">Se actualiza automáticamente cada 30 segundos.</p>
+    {% endif %}
+</div>
+{% endblock %}

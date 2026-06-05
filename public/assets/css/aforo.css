@@ -1,0 +1,106 @@
+/* ===================================
+   ProgresoFit — aforo.css
+   =================================== */
+
+.aforo-container {
+  max-width: 480px;
+  margin: 48px auto;
+  padding: 0 16px;
+  text-align: center;
+}
+
+.aforo-container h2 {
+  margin-bottom: 24px;
+}
+
+.aforo-card {
+  background: var(--fondo-card, #1e1e2e);
+  border-radius: var(--radio, 12px);
+  box-shadow: var(--sombra, 0 4px 20px rgba(0,0,0,.4));
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  border-top: 5px solid #6c63ff;
+}
+
+.aforo-libre  { border-top-color: #4ade80; }
+.aforo-moderado { border-top-color: #facc15; }
+.aforo-lleno  { border-top-color: #f87171; }
+
+.aforo-numero {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  line-height: 1;
+}
+
+.aforo-actual {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--color-primario, #6c63ff);
+}
+
+.aforo-lleno  .aforo-actual { color: #f87171; }
+.aforo-moderado .aforo-actual { color: #facc15; }
+.aforo-libre  .aforo-actual { color: #4ade80; }
+
+.aforo-sep {
+  font-size: 2.5rem;
+  color: var(--texto-secundario, #aaa);
+}
+
+.aforo-max {
+  font-size: 2.5rem;
+  color: var(--texto-secundario, #aaa);
+}
+
+.aforo-etiqueta {
+  font-size: 1rem;
+  color: var(--texto-secundario, #aaa);
+  margin: 0;
+}
+
+.aforo-barra-wrap {
+  width: 100%;
+  height: 12px;
+  background: rgba(255,255,255,.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.aforo-barra {
+  height: 100%;
+  background: var(--color-primario, #6c63ff);
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.aforo-libre  .aforo-barra { background: #4ade80; }
+.aforo-moderado .aforo-barra { background: #facc15; }
+.aforo-lleno  .aforo-barra { background: #f87171; }
+
+.aforo-porcentaje {
+  font-size: 0.9rem;
+  color: var(--texto-secundario, #aaa);
+  margin: 0;
+}
+
+.aforo-estado-texto {
+  font-weight: 600;
+  margin: 0;
+}
+
+.aforo-error {
+  color: #f87171;
+  background: var(--fondo-card, #1e1e2e);
+  border-radius: var(--radio, 12px);
+  padding: 24px;
+}
+
+.aforo-actualiza {
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: var(--texto-secundario, #aaa);
+}

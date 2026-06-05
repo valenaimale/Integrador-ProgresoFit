@@ -10,13 +10,14 @@
 
 -- Usuarios de ejemplo
 INSERT IGNORE INTO usuarios (id, nombre, email, password, rol) VALUES
-(1, 'Admin ProgresoFit', 'admin@progresofit.com', '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ADMIN'),
-(2, 'Carlos Entrenador', 'carlos@test.com',       '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ENTRENADOR'),
-(3, 'María Alumna',      'maria@test.com',        '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ALUMNO');
+(1, 'Admin ProgresoFit', 'admin@progresofit.com',          '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ADMIN'),
+(2, 'Carlos Entrenador', 'carlos@test.com',                '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ENTRENADOR'),
+(3, 'María Alumna',      'maria@test.com',                 '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'ALUMNO'),
+(4, 'Gimnasio Central',  'gimnasio@gimnasiocentral.com',   '$2b$10$j2ZAvVb0yFNgBZBTJ.7HB.g0ive9J3omfjB14D56NNh5C7hg7dCe2', 'GIMNASIO');
 
--- Gimnasio de ejemplo
-INSERT IGNORE INTO gimnasios (id, nombre, direccion, horarios, telefono, email, descripcion, servicios, activo) VALUES
-(1, 'Gimnasio Central',
+-- Gimnasio de ejemplo (usuario_id=4 es la cuenta del gimnasio)
+INSERT IGNORE INTO gimnasios (id, usuario_id, nombre, direccion, horarios, telefono, email, descripcion, servicios, activo) VALUES
+(1, 4, 'Gimnasio Central',
     'Av. Siempre Viva 123',
     'Lun a Vie 7:00-22:00, Sáb 9:00-18:00',
     '11-5555-0123',

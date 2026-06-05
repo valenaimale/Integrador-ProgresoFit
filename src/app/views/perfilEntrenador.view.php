@@ -25,27 +25,28 @@
             <!-- Info principal del entrenador -->
             <section class="info-lista">
                 <dl>
-                    <dt>nombre</dt>
-                    <dd>"Nombre del entrenador"</dd>
-     
-                    <dt>descripcion</dt>
-                    <dd>"descripcion del entrenador"</dd>
-     
-                    <dt>especialidad</dt>
-                    <dd>Futbol - Basquet - Funcional - Alto Rendimiento deportivo </dd>
-     
-                    <dt>estudios</dt>
-                    <dd>Licenciatura en Educacion FIsica - Maestria en ciencias del deporte - Maestria en Alto Rendimiento Deportivo</dd>
-     
-                    <dt>horarios</dt>
-                    <dd>Lunes a sabado, 9 a 13h y 15 a 21hs</dd>
-     
-                    <dt>Teléfono</dt>
-                    <dd>+54 9 11 1111-1111</dd>
-     
+                    <dt>Nombre</dt>
+                    <dd><?= htmlspecialchars($userData['nombre'] ?? 'Sin nombre') ?></dd>
+
                     <dt>Email</dt>
-                    <dd><a href="mailto:nombre@yahoo.com.ar">nombre@yahoo.com.ar</a></dd>
+                    <dd><a href="mailto:<?= htmlspecialchars($userData['email'] ?? '') ?>"><?= htmlspecialchars($userData['email'] ?? '-') ?></a></dd>
+
+                    <dt>Especialidad</dt>
+                    <dd><?= htmlspecialchars($userData['especialidad'] ?? 'No especificada') ?></dd>
+
+                    <dt>Descripción</dt>
+                    <dd><?= htmlspecialchars($userData['descripcion'] ?? '-') ?></dd>
+
+                    <dt>Horario</dt>
+                    <dd><?= htmlspecialchars($userData['horario'] ?? '-') ?></dd>
+
+                    <dt>Gimnasio</dt>
+                    <dd><?= htmlspecialchars($userData['gimnasio_nombre'] ?? '-') ?></dd>
+
+                    <dt>Miembro desde</dt>
+                    <dd><?= !empty($userData['created_at']) ? date('d/m/Y', strtotime($userData['created_at'])) : '-' ?></dd>
                 </dl>
+                <a href="/editar-perfil" class="btn btn-primary">Editar perfil</a>
             </section>
         </div>
     </main>

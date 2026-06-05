@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/formularios.css">
+    <script src="/assets/js/constructorElementos.js"></script>
+    <script src="/assets/js/inicio-sesion.js"></script>
 </head>
 
 <body>
@@ -16,7 +18,7 @@
         <?php if (!empty($error)): ?>
             <p style="color:var(--rojo); margin-bottom:1rem; font-weight:600;"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
-        <form action="/inicio-sesion" method="post">
+        <form action="/inicio-sesion" id="form-inicio-sesion" method="post">
             <fieldset>
                 <legend>Datos personales:</legend>
                 <label for="email">Email</label>

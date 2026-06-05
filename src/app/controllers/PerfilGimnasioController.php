@@ -2,16 +2,16 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 use PAW\app\services\ApiClient;
 
-class PerfilGimnasioController
+class PerfilGimnasioController extends Controller
 {
-    public string $viewsDir;
     private ApiClient $api;
 
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
         $this->api = new ApiClient();
     }
 
@@ -22,6 +22,30 @@ class PerfilGimnasioController
         $response = $this->api->get("/gimnasios/{$id}", $token);
         $gimnasio = $response['ok'] ? $response['data'] : null;
 
-        require $this->viewsDir . 'perfilGimnasio.view.php';
+        $aforo      = null;
+        $porcentaje = 0;
+        $estado     = 'libre';
+
+        if ($token) {
+            $aforoResp = $this->api->get("/accesos/aforo/{$id}", $token);
+            if ($aforoResp['ok']) {
+                $aforo      = $aforoResp['data'];
+                $ocupacion  = (int) $aforo['ocupacion_actual'];
+                $capacidad  = (int) $aforo['capacidad_maxima'];
+                $porcentaje = $capacidad > 0 ? round($ocupacion / $capacidad * 100) : 0;
+                $estado     = match(true) {
+                    $porcentaje >= 90 => 'lleno',
+                    $porcentaje >= 60 => 'moderado',
+                    default           => 'libre',
+                };
+            }
+        }
+
+        $this->render('perfilGimnasio.html.twig', [
+            'gimnasio'   => $gimnasio,
+            'aforo'      => $aforo,
+            'porcentaje' => $porcentaje,
+            'estado'     => $estado,
+        ]);
     }
 }

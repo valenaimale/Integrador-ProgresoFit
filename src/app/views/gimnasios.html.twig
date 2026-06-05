@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gimnasios — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/rutinas.css">
+{% endblock %}
+
+{% block content %}
+<section class="seccion-rutinas">
+    <h2>Gimnasios disponibles</h2>
+
+    {% if not gimnasios %}
+        <p class="text-muted">No hay gimnasios disponibles en este momento.</p>
+    {% else %}
+        <ul class="grid-rutinas">
+            {% for gym in gimnasios %}
+                <li>
+                    <a href="/perfil-gimnasio?id={{ gym.id }}" class="card-rutina">
+                        <article>
+                            <h3>{{ gym.nombre }}</h3>
+                            <div class="card-info">
+                                {% if gym.direccion %}
+                                    <span class="card-autor">{{ gym.direccion }}</span>
+                                {% endif %}
+                                {% if gym.horarios %}
+                                    <span class="card-objetivo">{{ gym.horarios }}</span>
+                                {% endif %}
+                            </div>
+                        </article>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</section>
+{% endblock %}
