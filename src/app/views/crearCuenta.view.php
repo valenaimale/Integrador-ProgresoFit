@@ -2,7 +2,7 @@
 <html lang="es">
 
 <head>
-    <title>crear-cuenta</title>
+    <title>Crear cuenta regular</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/assets/css/style.css">
@@ -31,7 +31,7 @@
             <button type="submit">Crear cuenta</button>
         </form>
         <div class="form-link">
-            <p>¿Ya tienes una cuenta? <a href="inicio-sesion.html">Iniciar sesión</a></p>
+            <p>¿Ya tienes una cuenta? <a href="inicio-sesion">Iniciar sesión</a></p>
         </div>
     </main>
     <?php require 'parts/footer.view.php'; ?>

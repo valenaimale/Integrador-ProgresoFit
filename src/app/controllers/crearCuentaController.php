@@ -69,10 +69,10 @@ class CrearCuentaController
     }
 
     public function crearCuentaProcessEntrenador(){
-        $nombre     = $_POST['nombre_apellido'];
+        $nombre     = $_POST['nombre'];
         $email      = $_POST['email'];
-        $contraseña = $_POST['contraseña'];
-        $ccontraseña = $_POST['ccontraseña'];
+        $contraseña = $_POST['contra_nueva'];
+        $ccontraseña = $_POST['contra_nueva_repetida'];
         
         if(!$nombre || !$email ||!$ccontraseña || !$contraseña){
             $error = 'Hay campos obligatorios sin completar';
@@ -86,7 +86,7 @@ class CrearCuentaController
         }
         $especialidad = $_POST['especialidad'] ?? '';
         $horario = $_POST['horario'] ?? '';
-        $response = $this->api->post('/usuarios/alumno', [
+        $response = $this->api->post('/entrenadores/registrar', [
             'nombre'   => $nombre,
             'email'    => $email,
             'password' => $contraseña,

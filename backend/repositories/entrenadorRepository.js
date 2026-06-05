@@ -67,3 +67,10 @@ export async function upsertPerfil(usuarioId, { especialidad, descripcion, horar
     [usuarioId, especialidad || null, descripcion || null, horario || null, gimnasio_id || null]
   );
 }
+export async function create({usuario_id , nombre, horario, email, descripcion, especialidad }) {
+    const [result] = await pool.query(
+        'INSERT INTO entrenadores (usuario_id, horario, descripcion, especialidad) VALUES (?, ?, ?, ?)',
+        [usuario_id || null, horario || null, descripcion || null, especialidad || null]
+    );
+    return { id: result.insertId, usuario_id, horario, descripcion, especialidad};
+}

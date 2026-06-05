@@ -36,7 +36,7 @@ export async function registrarGimnasio({nombre, email, password, direccion, hor
     const hashed = await bcrypt.hash(password, 10);
     const usuario = await usuarioRepository.create({ nombre, email, password: hashed, rol: 'GIMNASIO' });
     const gimnasio = await gimnasioRepository.create({usuario_id: usuario.id, nombre, direccion, horarios, telefono, email, descripcion, servicios }); 
-    return gimnasio
+    return gimnasio;
 }
 
 export async function updateGimnasio(user, id, data) {
