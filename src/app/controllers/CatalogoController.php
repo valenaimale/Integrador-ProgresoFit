@@ -2,18 +2,17 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 
-class CatalogoController
+class CatalogoController extends Controller
 {
-    public string $viewsDir;
-
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
     }
 
     public function listar()
     {
-        require $this->viewsDir . 'rutinas.view.php';
+        $this->render('rutinas.html.twig', ['rutinas' => []]);
     }
 }

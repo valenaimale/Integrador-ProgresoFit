@@ -24,15 +24,26 @@ try {
 }
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 $log = new Logger('libreria-PAW');
 $log->pushHandler(new StreamHandler(__DIR__ . '/logs/lib.log', Logger::DEBUG));
 //seteo el handler al logger con nivel de logger a DEBUG
 //de esa manera puedo utilizar todos los tipos de logs
-// 5. Importar el Router
+// 5. Inicializar Twig
+$twigLoader = new FilesystemLoader(__DIR__ . '/src/app/views/');
+$twig = new Environment($twigLoader, [
+    'cache'       => false,
+    'auto_escape' => 'html',
+    'debug'       => true,
+]);
+$twig->addGlobal('session', $_SESSION ?? []);
+
+// 6. Importar el Router
 use PAW\Core\Router;
 
-// 6. Crear instancia del Router
+// 7. Crear instancia del Router
 $router = new Router();
 $router->setLogger($log);
 use PAW\Core\Request;

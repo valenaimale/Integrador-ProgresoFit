@@ -10,25 +10,25 @@
         </ul>
 
         <div class="nav-acciones">
-            <?php if (!empty($_SESSION['user'])): ?>
-                <?php if (($_SESSION['user']['rol'] ?? '') === 'ENTRENADOR'): ?>
+            {% if session.user is defined and session.user %}
+                {% if session.user.rol == 'ENTRENADOR' %}
                     <a href="/entrenador/rutinas">Mis rutinas</a>
-                <?php endif; ?>
-                <?php if (($_SESSION['user']['rol'] ?? '') === 'ALUMNO'): ?>
+                {% endif %}
+                {% if session.user.rol == 'ALUMNO' %}
                     <a href="/mi-qr">Mi QR de acceso</a>
-                <?php endif; ?>
-                <?php if (in_array($_SESSION['user']['rol'] ?? '', ['ADMIN', 'ENTRENADOR'])): ?>
+                {% endif %}
+                {% if session.user.rol in ['ADMIN', 'ENTRENADOR'] %}
                     <a href="/aforo">Aforo del gimnasio</a>
-                <?php endif; ?>
-                <?php if (($_SESSION['user']['rol'] ?? '') === 'ADMIN'): ?>
+                {% endif %}
+                {% if session.user.rol == 'ADMIN' %}
                     <a href="/escanear">Escanear QR</a>
-                <?php endif; ?>
-                <a href="/perfil"><?= htmlspecialchars($_SESSION['user']['nombre'] ?? 'Mi perfil') ?></a>
+                {% endif %}
+                <a href="/perfil">{{ session.user.nombre|default('Mi perfil') }}</a>
                 <a href="/cerrar-sesion">Cerrar sesión</a>
-            <?php else: ?>
-                <a href="/preCrearCuenta">Registro</a>
+            {% else %}
+                <a href="/crearCuenta">Registro</a>
                 <a href="/inicio-sesion">Iniciar sesión</a>
-            <?php endif; ?>
+            {% endif %}
         </div>
     </nav>
 </header>

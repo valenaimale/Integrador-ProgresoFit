@@ -2,13 +2,13 @@
 
 namespace PAW\app\controllers;
 
-class EscanearQrController
-{
-    public string $viewsDir;
+use PAW\Core\Controller;
 
+class EscanearQrController extends Controller
+{
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
     }
 
     public function mostrar()
@@ -26,6 +26,9 @@ class EscanearQrController
         $jwt        = $_SESSION['jwt'] ?? '';
         $gimnasioId = 1;
 
-        require $this->viewsDir . 'escanearQr.view.php';
+        $this->render('escanearQr.html.twig', [
+            'jwt'        => $jwt,
+            'gimnasioId' => $gimnasioId,
+        ]);
     }
 }

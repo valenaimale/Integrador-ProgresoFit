@@ -2,16 +2,16 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 use PAW\app\services\ApiClient;
 
-class AforoController
+class AforoController extends Controller
 {
-    public string $viewsDir;
     private ApiClient $api;
 
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
         $this->api = new ApiClient();
     }
 
@@ -28,20 +28,33 @@ class AforoController
             exit;
         }
 
-        // Por ahora se consulta el gimnasio con id=1 (Gimnasio Central)
-        // En una futura iteración se puede obtener el gimnasio del entrenador logueado
         $gimnasioId = 1;
         $aforo      = null;
         $error      = null;
+        $porcentaje = 0;
+        $estado     = 'libre';
 
         $response = $this->api->get("/accesos/aforo/{$gimnasioId}", $_SESSION['jwt']);
 
         if ($response['ok']) {
-            $aforo = $response['data'];
+            $aforo      = $response['data'];
+            $ocupacion  = (int) $aforo['ocupacion_actual'];
+            $capacidad  = (int) $aforo['capacidad_maxima'];
+            $porcentaje = $capacidad > 0 ? round($ocupacion / $capacidad * 100) : 0;
+            $estado     = match(true) {
+                $porcentaje >= 90 => 'lleno',
+                $porcentaje >= 60 => 'moderado',
+                default           => 'libre',
+            };
         } else {
             $error = $response['data']['error'] ?? 'Error al obtener el aforo';
         }
 
-        require $this->viewsDir . 'aforo.view.php';
+        $this->render('aforo.html.twig', [
+            'aforo'      => $aforo,
+            'error'      => $error,
+            'porcentaje' => $porcentaje,
+            'estado'     => $estado,
+        ]);
     }
 }

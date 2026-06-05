@@ -2,16 +2,16 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 use PAW\app\services\ApiClient;
 
-class MiQrController
+class MiQrController extends Controller
 {
-    public string $viewsDir;
     private ApiClient $api;
 
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
         $this->api = new ApiClient();
     }
 
@@ -38,7 +38,7 @@ class MiQrController
             $error = $response['data']['error'] ?? 'Error al generar el QR';
         }
 
-        require $this->viewsDir . 'miQr.view.php';
+        $this->render('miQr.html.twig', ['qrData' => $qrData, 'error' => $error]);
     }
 
     public function regenerar()
@@ -53,7 +53,6 @@ class MiQrController
             exit;
         }
 
-        // Mismo flujo: generar un nuevo QR y mostrarlo
         $this->mostrar();
     }
 }

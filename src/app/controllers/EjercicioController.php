@@ -2,16 +2,16 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 use PAW\app\services\ApiClient;
 
-class EjercicioController
+class EjercicioController extends Controller
 {
-    public string $viewsDir;
     private ApiClient $api;
 
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
         $this->api = new ApiClient();
     }
 
@@ -23,7 +23,11 @@ class EjercicioController
         $ejercicios = $resultado['ejercicios'] ?? [];
         $total      = $resultado['total'] ?? 0;
 
-        require $this->viewsDir . 'ejercicios.view.php';
+        $this->render('ejercicios.html.twig', [
+            'ejercicios' => $ejercicios,
+            'total'      => $total,
+            'offset'     => $offset,
+        ]);
     }
 
     public function mostrar()
@@ -32,7 +36,7 @@ class EjercicioController
         $response  = $this->api->get("/ejercicios/{$apiId}", $_SESSION['jwt'] ?? null);
         $ejercicio = $response['ok'] ? $response['data'] : null;
 
-        require $this->viewsDir . 'ejercicio.view.php';
+        $this->render('ejercicio.html.twig', ['ejercicio' => $ejercicio]);
     }
 
     public function mostrarLocal()
@@ -41,6 +45,6 @@ class EjercicioController
         $response  = $this->api->get("/ejercicios/local/{$id}", $_SESSION['jwt'] ?? null);
         $ejercicio = $response['ok'] ? $response['data'] : null;
 
-        require $this->viewsDir . 'ejercicio.view.php';
+        $this->render('ejercicio.html.twig', ['ejercicio' => $ejercicio]);
     }
 }

@@ -2,23 +2,22 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 use PAW\app\services\ApiClient;
-use PAW\app\services\TwigRenderer;
 
-class CrearcuentaGymController
+class CrearcuentaGymController extends Controller
 {
     private ApiClient $api;
-    private TwigRenderer $twig;
 
     public function __construct()
     {
-        $this->api  = new ApiClient();
-        $this->twig = new TwigRenderer();
+        parent::__construct();
+        $this->api = new ApiClient();
     }
 
     public function crear(): void
     {
-        $this->twig->render('crearcuenta-gym.twig');
+        $this->render('crearcuenta-gym.html.twig');
     }
 
     public function crearGym(): void
@@ -28,7 +27,7 @@ class CrearcuentaGymController
         $cconf      = $_POST['ccontraseña'] ?? '';
 
         if ($contraseña !== $cconf) {
-            $this->twig->render('crearcuenta-gym.twig', [
+            $this->render('crearcuenta-gym.html.twig', [
                 'error' => 'Las contraseñas no coinciden',
                 'form'  => $_POST,
             ]);
@@ -52,7 +51,7 @@ class CrearcuentaGymController
             exit;
         }
 
-        $this->twig->render('crearcuenta-gym.twig', [
+        $this->render('crearcuenta-gym.html.twig', [
             'error' => $response['data']['error'] ?? 'Error al crear la cuenta. El email puede estar registrado.',
             'form'  => $_POST,
         ]);

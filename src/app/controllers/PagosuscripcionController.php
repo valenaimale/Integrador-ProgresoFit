@@ -2,18 +2,17 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 
-class PagosuscripcionController
+class PagosuscripcionController extends Controller
 {
-    public string $viewsDir;
-
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
     }
 
     public function mostrar()
     {
-        require $this->viewsDir . 'pagosuscripcion.view.php';
+        $this->render('pagosuscripcion.html.twig');
     }
 }

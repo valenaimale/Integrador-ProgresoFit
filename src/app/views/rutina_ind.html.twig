@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rutina Individual — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/rutina-ind.css">
+{% endblock %}
+
+{% block content %}
+{% if not rutina %}
+    <p class="sin-resultados">Rutina no encontrada.</p>
+{% else %}
+    <div class="rutina-header">
+        <h2>{{ rutina.titulo }}</h2>
+        <div class="rutina-meta">
+            <span class="rutina-autor">{{ rutina.entrenador_nombre|default('Entrenador') }}</span>
+            {% if rutina.objetivo %}
+                <span class="rutina-objetivo">Objetivo: {{ rutina.objetivo }}</span>
+            {% endif %}
+        </div>
+        {% if rutina.descripcion %}
+            <p class="rutina-descripcion">{{ rutina.descripcion }}</p>
+        {% endif %}
+    </div>
+
+    <section class="grid-entrenamientos">
+        {% if not rutina.dias %}
+            <p class="sin-resultados">Esta rutina no tiene días cargados.</p>
+        {% else %}
+            {% for dia in rutina.dias %}
+                <article class="card-entrenamiento">
+                    <div class="card-header">
+                        <h3>{{ dia.nombre_dia }}</h3>
+                        <div class="card-meta-badges">
+                            {% if dia.duracion_minutos %}
+                                <span class="badge-duracion">{{ dia.duracion_minutos }} min</span>
+                            {% endif %}
+                            {% if dia.ejercicios %}
+                                <span class="badge-ejercicios">{{ dia.ejercicios|length }} ejercicios</span>
+                            {% endif %}
+                            {% if dia.grupo_muscular %}
+                                <span class="badge-grupo">{{ dia.grupo_muscular }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="lista-ejercicios">
+                        {% if not dia.ejercicios %}
+                            <p class="sin-resultados">Sin ejercicios cargados.</p>
+                        {% else %}
+                            {% for ejercicio in dia.ejercicios %}
+                                <div class="ejercicio-item">
+                                    <div>
+                                        <a href="/ejercicio-local?id={{ ejercicio.id }}" class="ejercicio-nombre">
+                                            {{ ejercicio.nombre }}
+                                        </a>
+                                        {% if ejercicio.series_repeticiones %}
+                                            <div class="ejercicio-series">{{ ejercicio.series_repeticiones }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ejercicio-acciones">
+                                        {% if ejercicio.video_url %}
+                                            <a href="{{ ejercicio.video_url }}" class="btn-video" target="_blank" aria-label="Ver video">
+                                                <img src="/assets/img/logoyoutube.JPG" alt="Video">
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        {% endif %}
+    </section>
+{% endif %}
+{% endblock %}

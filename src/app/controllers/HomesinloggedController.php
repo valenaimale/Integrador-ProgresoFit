@@ -2,18 +2,17 @@
 
 namespace PAW\app\controllers;
 
+use PAW\Core\Controller;
 
-class HomesinloggedController
+class HomesinloggedController extends Controller
 {
-    public string $viewsDir;
-
     public function __construct()
     {
-        $this->viewsDir = __DIR__ . '/../views/';
+        parent::__construct();
     }
 
     public function index()
     {
-        require $this->viewsDir . 'homesinlogged.view.php';
+        $this->render('homesinlogged.html.twig');
     }
 }

@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ejercicios — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/ejercicios.css">
+{% endblock %}
+
+{% block content %}
+<section class="seccion-ejercicios">
+    <h2>Catálogo de ejercicios</h2>
+
+    {% if not ejercicios %}
+        <p class="sin-resultados">No se pudieron cargar los ejercicios.</p>
+    {% else %}
+        <ul class="grid-ejercicios">
+            {% for ejercicio in ejercicios %}
+                <li>
+                    <a href="/ejercicio?id={{ ejercicio.api_id }}" class="card-ejercicio">
+                        <article>
+                            <h3>{{ ejercicio.nombre }}</h3>
+                            <div class="card-ejercicio-info">
+                                {% if ejercicio.musculos %}
+                                    <span class="badge-musculo">{{ ejercicio.musculos }}</span>
+                                {% endif %}
+                                {% if ejercicio.dificultad %}
+                                    <span class="badge-dificultad badge-dificultad--{{ ejercicio.dificultad }}">
+                                        {{ ejercicio.dificultad }}
+                                    </span>
+                                {% endif %}
+                                {% if ejercicio.equipamiento %}
+                                    <span class="card-equipamiento">{{ ejercicio.equipamiento }}</span>
+                                {% endif %}
+                            </div>
+                        </article>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% set limit = 20 %}
+        <nav class="paginacion">
+            {% if offset > 0 %}
+                <a href="/ejercicios?offset={{ offset - limit }}" class="btn-pagina">← Anterior</a>
+            {% endif %}
+            <span class="paginacion-info">
+                {{ offset + 1 }}–{{ [offset + limit, total]|min }} de {{ total }}
+            </span>
+            {% if offset + limit < total %}
+                <a href="/ejercicios?offset={{ offset + limit }}" class="btn-pagina">Siguiente →</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}
