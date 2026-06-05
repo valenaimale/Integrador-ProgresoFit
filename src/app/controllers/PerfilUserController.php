@@ -40,21 +40,21 @@ class PerfilUserController extends Controller
 
         switch ($rol) {
             case 'ALUMNO':
-                require __DIR__ . '/../views/perfilUser.view.php';
+                $this->render('perfilUser.html.twig', ['userData' => $userData]);
                 break;
             case 'ENTRENADOR':
                 $entResponse = $this->api->get("/entrenadores/{$userId}", $_SESSION['jwt']);
                 if ($entResponse['ok']) {
                     $userData = array_merge($userData, $entResponse['data']);
                 }
-                require __DIR__ . '/../views/perfilEntrenador.view.php';
+                $this->render('perfilEntrenador.html.twig', ['userData' => $userData]);
                 break;
             case 'GIMNASIO':
                 $gimResponse = $this->api->get("/gimnasios/me", $_SESSION['jwt']);
                 if ($gimResponse['ok']) {
                     $userData = array_merge($userData, $gimResponse['data']);
                 }
-                require __DIR__ . '/../views/perfilGimnasio.view.php';
+                $this->render('perfilGimnasio.html.twig', ['userData' => $userData]);
                 break;
             default:
                 header('Location: /');
