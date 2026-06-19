@@ -22,9 +22,34 @@ class PerfilUserController extends Controller
             exit;
         }
         $userId   = $_SESSION['user']['id'];
-        $response = $this->api->get("/usuarios/{$userId}", $_SESSION['jwt']);
+        $jwt      = $_SESSION['jwt'];
+
+        // Obtener datos básicos del perfil
+        $response = $this->api->get("/usuarios/{$userId}", $jwt);
         $userData = $response['ok'] ? $response['data'] : $_SESSION['user'];
-        $this->render('perfilUser.html.twig', ['userData' => $userData]);
+
+        $suscripcionActiva = null;
+        $planes = [];
+
+        if ($userData['rol'] === 'ALUMNO') {
+            // Obtener suscripción activa
+            $resSub = $this->api->get('/suscripciones/mi-suscripcion', $jwt);
+            if ($resSub['ok']) {
+                $suscripcionActiva = $resSub['data'];
+            }
+
+            // Obtener planes disponibles
+            $resPlanes = $this->api->get('/suscripciones/planes', $jwt);
+            if ($resPlanes['ok']) {
+                $planes = $resPlanes['data'];
+            }
+        }
+
+        $this->render('perfilUser.html.twig', [
+            'userData' => $userData,
+            'suscripcionActiva' => $suscripcionActiva,
+            'planes' => $planes
+        ]);
     }
 
     public function mostrarPerfil()
@@ -34,23 +59,39 @@ class PerfilUserController extends Controller
             exit;
         }
         $userId   = $_SESSION['user']['id'];
-        $response = $this->api->get("/usuarios/{$userId}", $_SESSION['jwt']);
+        $jwt      = $_SESSION['jwt'];
+        $response = $this->api->get("/usuarios/{$userId}", $jwt);
         $userData = $response['ok'] ? $response['data'] : $_SESSION['user'];
-        $rol      = $_SESSION['user']['rol'];
+        $rol      = $userData['rol'] ?? $_SESSION['user']['rol'];
 
         switch ($rol) {
             case 'ALUMNO':
-                $this->render('perfilUser.html.twig', ['userData' => $userData]);
+                $suscripcionActiva = null;
+                $planes = [];
+                // Tu lógica de suscripciones:
+                $resSub = $this->api->get('/suscripciones/mi-suscripcion', $jwt);
+                if ($resSub['ok']) {
+                    $suscripcionActiva = $resSub['data'];
+                }
+                $resPlanes = $this->api->get('/suscripciones/planes', $jwt);
+                if ($resPlanes['ok']) {
+                    $planes = $resPlanes['data'];
+                }
+                $this->render('perfilUser.html.twig', [
+                    'userData' => $userData,
+                    'suscripcionActiva' => $suscripcionActiva,
+                    'planes' => $planes
+                ]);
                 break;
             case 'ENTRENADOR':
-                $entResponse = $this->api->get("/entrenadores/{$userId}", $_SESSION['jwt']);
+                $entResponse = $this->api->get("/entrenadores/{$userId}", $jwt);
                 if ($entResponse['ok']) {
                     $userData = array_merge($userData, $entResponse['data']);
                 }
                 $this->render('perfilEntrenador.html.twig', ['userData' => $userData]);
                 break;
             case 'GIMNASIO':
-                $gimResponse = $this->api->get("/gimnasios/me", $_SESSION['jwt']);
+                $gimResponse = $this->api->get("/gimnasios/me", $jwt);
                 if ($gimResponse['ok']) {
                     $userData = array_merge($userData, $gimResponse['data']);
                 }
@@ -69,23 +110,25 @@ class PerfilUserController extends Controller
             exit;
         }
         $userId   = $_SESSION['user']['id'];
-        $response = $this->api->get("/usuarios/{$userId}", $_SESSION['jwt']);
+        $jwt      = $_SESSION['jwt'];
+        $response = $this->api->get("/usuarios/{$userId}", $jwt);
         $userData = $response['ok'] ? $response['data'] : $_SESSION['user'];
-        $rol      = $_SESSION['user']['rol'];
+        $rol      = $userData['rol'] ?? $_SESSION['user']['rol'];
 
         switch ($rol) {
             case 'ALUMNO':
+                // Nota: Ellos siguen usando require para edición, podrías migrarlo luego
                 require __DIR__ . '/../views/perfilUserEdicion.view.php';
                 break;
             case 'ENTRENADOR':
-                $entResponse = $this->api->get("/entrenadores/{$userId}", $_SESSION['jwt']);
+                $entResponse = $this->api->get("/entrenadores/{$userId}", $jwt);
                 if ($entResponse['ok']) {
                     $userData = array_merge($userData, $entResponse['data']);
                 }
                 require __DIR__ . '/../views/perfilEntrenadorEdicion.view.php';
                 break;
             case 'GIMNASIO':
-                $gimResponse = $this->api->get("/gimnasios/me", $_SESSION['jwt']);
+                $gimResponse = $this->api->get("/gimnasios/me", $jwt);
                 if ($gimResponse['ok']) {
                     $userData = array_merge($userData, $gimResponse['data']);
                 }
@@ -104,9 +147,10 @@ class PerfilUserController extends Controller
             exit;
         }
         $userId   = $_SESSION['user']['id'];
-        $response = $this->api->get("/usuarios/{$userId}", $_SESSION['jwt']);
+        $jwt      = $_SESSION['jwt'];
+        $response = $this->api->get("/usuarios/{$userId}", $jwt);
         $userData = $response['ok'] ? $response['data'] : $_SESSION['user'];
-        $rol      = $_SESSION['user']['rol'];
+        $rol      = $userData['rol'] ?? $_SESSION['user']['rol'];
 
         switch ($rol) {
             case 'ALUMNO':
@@ -119,7 +163,7 @@ class PerfilUserController extends Controller
                     $almResponse = $this->api->put("/usuarios/{$userId}", [
                         'password'      => $_POST['contra_nueva'],
                         'contra_actual' => $_POST['contra_actual'] ?? '',
-                    ], $_SESSION['jwt']);
+                    ], $jwt);
                     if ($almResponse['ok']) {
                         header('Location: /perfil');
                         exit;
@@ -135,7 +179,7 @@ class PerfilUserController extends Controller
                 if (!empty($_POST['contra_nueva'])) {
                     if ($_POST['contra_nueva'] !== $_POST['contra_nueva_repetida']) {
                         $error = 'Las contraseñas nuevas no coinciden';
-                        $entResponse = $this->api->get("/entrenadores/{$userId}", $_SESSION['jwt']);
+                        $entResponse = $this->api->get("/entrenadores/{$userId}", $jwt);
                         if ($entResponse['ok']) {
                             $userData = array_merge($userData, $entResponse['data']);
                         }
@@ -146,10 +190,10 @@ class PerfilUserController extends Controller
                         'nombre'        => $_POST['nombre']       ?? '',
                         'password'      => $_POST['contra_nueva'],
                         'contra_actual' => $_POST['contra_actual'] ?? '',
-                    ], $_SESSION['jwt']);
+                    ], $jwt);
                     if (!$passResponse['ok']) {
                         $error = $passResponse['data']['error'] ?? 'La contraseña actual es incorrecta';
-                        $entResponse = $this->api->get("/entrenadores/{$userId}", $_SESSION['jwt']);
+                        $entResponse = $this->api->get("/entrenadores/{$userId}", $jwt);
                         if ($entResponse['ok']) {
                             $userData = array_merge($userData, $entResponse['data']);
                         }
@@ -157,19 +201,19 @@ class PerfilUserController extends Controller
                         return;
                     }
                 } else {
-                    $this->api->put("/usuarios/{$userId}", ['nombre' => $_POST['nombre'] ?? ''], $_SESSION['jwt']);
+                    $this->api->put("/usuarios/{$userId}", ['nombre' => $_POST['nombre'] ?? ''], $jwt);
                 }
                 $entResponse = $this->api->put("/entrenadores/{$userId}", [
                     'especialidad' => $_POST['especialidad'] ?? '',
                     'descripcion'  => $_POST['descripcion']  ?? '',
                     'horario'      => $_POST['horario']       ?? '',
-                ], $_SESSION['jwt']);
+                ], $jwt);
                 if ($entResponse['ok']) {
                     header('Location: /perfil');
                     exit;
                 }
                 $error = $entResponse['data']['error'] ?? 'Error al actualizar el perfil';
-                $entResponse = $this->api->get("/entrenadores/{$userId}", $_SESSION['jwt']);
+                $entResponse = $this->api->get("/entrenadores/{$userId}", $jwt);
                 if ($entResponse['ok']) {
                     $userData = array_merge($userData, $entResponse['data']);
                 }
@@ -180,7 +224,7 @@ class PerfilUserController extends Controller
                 if (!empty($_POST['contra_nueva'])) {
                     if ($_POST['contra_nueva'] !== $_POST['contra_nueva_repetida']) {
                         $error = 'Las contraseñas nuevas no coinciden';
-                        $gimResponse = $this->api->get("/gimnasios/me", $_SESSION['jwt']);
+                        $gimResponse = $this->api->get("/gimnasios/me", $jwt);
                         if ($gimResponse['ok']) {
                             $userData = array_merge($userData, $gimResponse['data']);
                         }
@@ -190,10 +234,10 @@ class PerfilUserController extends Controller
                     $passResponse = $this->api->put("/usuarios/{$userId}", [
                         'password'      => $_POST['contra_nueva'],
                         'contra_actual' => $_POST['contra_actual'] ?? '',
-                    ], $_SESSION['jwt']);
+                    ], $jwt);
                     if (!$passResponse['ok']) {
                         $error = $passResponse['data']['error'] ?? 'La contraseña actual es incorrecta';
-                        $gimResponse = $this->api->get("/gimnasios/me", $_SESSION['jwt']);
+                        $gimResponse = $this->api->get("/gimnasios/me", $jwt);
                         if ($gimResponse['ok']) {
                             $userData = array_merge($userData, $gimResponse['data']);
                         }
@@ -208,13 +252,13 @@ class PerfilUserController extends Controller
                     'telefono'    => $_POST['telefono']    ?? '',
                     'descripcion' => $_POST['descripcion'] ?? '',
                     'servicios'   => $_POST['servicios']   ?? '',
-                ], $_SESSION['jwt']);
+                ], $jwt);
                 if ($gimResponse['ok']) {
                     header('Location: /perfil');
                     exit;
                 }
                 $error = $gimResponse['data']['error'] ?? 'Error al actualizar el perfil';
-                $gimResponse = $this->api->get("/gimnasios/me", $_SESSION['jwt']);
+                $gimResponse = $this->api->get("/gimnasios/me", $jwt);
                 if ($gimResponse['ok']) {
                     $userData = array_merge($userData, $gimResponse['data']);
                 }
@@ -234,12 +278,13 @@ class PerfilUserController extends Controller
             exit;
         }
         $userId = $_SESSION['user']['id'];
+        $jwt    = $_SESSION['jwt'];
         $data   = array_filter([
             'nombre'   => $_POST['nombre']   ?? '',
             'email'    => $_POST['email']    ?? '',
             'password' => $_POST['password'] ?? '',
         ]);
-        $response = $this->api->put("/usuarios/{$userId}", $data, $_SESSION['jwt']);
+        $response = $this->api->put("/usuarios/{$userId}", $data, $jwt);
         if ($response['ok']) {
             $_SESSION['user'] = array_merge($_SESSION['user'], $data);
             header('Location: /perfil-user');

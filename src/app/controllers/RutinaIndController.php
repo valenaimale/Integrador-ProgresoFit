@@ -17,9 +17,25 @@ class RutinaIndController extends Controller
 
     public function mostrar()
     {
-        $id       = $_GET['id'] ?? null;
-        $response = $this->api->get("/rutinas/{$id}", $_SESSION['jwt'] ?? null);
-        $rutina   = $response['ok'] ? $response['data'] : null;
+        if (empty($_SESSION['user'])) {
+            header('Location: /inicio-sesion');
+            exit;
+        }
+
+        $rutinaId = $_GET['id'] ?? null;
+        if (!$rutinaId) {
+            header('Location: /rutinas');
+            exit;
+        }
+
+        $response = $this->api->get("/rutinas/{$rutinaId}", $_SESSION['jwt']);
+        
+        if (!$response['ok']) {
+            header('Location: /rutinas?error=No se pudo cargar la rutina');
+            exit;
+        }
+
+        $rutina = $response['data'];
 
         $this->render('rutina_ind.html.twig', ['rutina' => $rutina]);
     }

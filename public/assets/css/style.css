@@ -47,7 +47,7 @@ button { cursor: pointer; font-family: inherit; }
 ul, ol { list-style: none; }
 
 /* ── Header / Navbar ───────────────── */
-header {
+.site-header {
   position: sticky;
   top: 0;
   z-index: 100;
@@ -61,14 +61,14 @@ header {
   box-shadow: var(--sombra);
 }
 
-header img {
+.site-header img {
   height: 36px;
   width: 36px;
   object-fit: contain;
   border-radius: 4px;
 }
 
-header h1 {
+.site-header h1 {
   font-family: var(--font-titulo);
   font-size: 1.7rem;
   color: var(--crema);
@@ -76,21 +76,21 @@ header h1 {
   white-space: nowrap;
 }
 
-header nav {
+.site-header nav {
   display: flex;
   align-items: center;
   gap: 32px;
   margin-left: auto;
 }
 
-header nav ul {
+.site-header nav ul {
   display: flex;
   align-items: center;
   gap: 24px;
 }
 
-header nav ul li a,
-header nav .nav-acciones a {
+.site-header nav ul li a,
+.site-header nav .nav-acciones a {
   color: var(--crema);
   font-size: .9rem;
   font-weight: 500;
@@ -100,8 +100,8 @@ header nav .nav-acciones a {
   text-transform: capitalize;
 }
 
-header nav ul li a::after,
-header nav .nav-acciones a::after {
+.site-header nav ul li a::after,
+.site-header nav .nav-acciones a::after {
   content: '';
   position: absolute;
   bottom: 0; left: 0;
@@ -110,19 +110,19 @@ header nav .nav-acciones a::after {
   transition: width .25s;
 }
 
-header nav ul li a:hover,
-header nav .nav-acciones a:hover { color: var(--crema-dark); }
+.site-header nav ul li a:hover,
+.site-header nav .nav-acciones a:hover { color: var(--crema-dark); }
 
-header nav ul li a:hover::after,
-header nav .nav-acciones a:hover::after { width: 100%; }
+.site-header nav ul li a:hover::after,
+.site-header nav .nav-acciones a:hover::after { width: 100%; }
 
-header .nav-acciones {
+.site-header .nav-acciones {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-header .nav-acciones a:first-child {
+.site-header .nav-acciones a:first-child {
   background: var(--rojo);
   color: var(--blanco);
   padding: 7px 16px;
@@ -131,8 +131,8 @@ header .nav-acciones a:first-child {
   transition: background .2s;
 }
 
-header .nav-acciones a:first-child:hover { background: var(--rojo-dark); }
-header .nav-acciones a:first-child::after { display: none; }
+.site-header .nav-acciones a:first-child:hover { background: var(--rojo-dark); }
+.site-header .nav-acciones a:first-child::after { display: none; }
 
 .btn-perfil {
   width: 36px; height: 36px;
@@ -171,7 +171,7 @@ header .nav-acciones a:first-child::after { display: none; }
 /* ── Main ──────────────────────────── */
 main {
   flex: 1;
-  padding: 28px 20px 80px;   /* bottom padding for mobile nav */
+  padding: calc(var(--nav-h) + 28px) 20px 80px;   /* top padding compensa nav sticky */
   max-width: 960px;
   margin: 0 auto;
   width: 100%;

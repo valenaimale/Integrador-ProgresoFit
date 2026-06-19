@@ -52,3 +52,11 @@ export async function create({ nombre, email, password, rol }) {
   );
   return { id: result.insertId, nombre: nombre || null, email, rol };
 }
+
+export async function findAllByRol(rol) {
+  const [rows] = await pool.query(
+    'SELECT id, nombre, email, created_at FROM usuarios WHERE rol = ? ORDER BY nombre',
+    [rol]
+  );
+  return rows;
+}

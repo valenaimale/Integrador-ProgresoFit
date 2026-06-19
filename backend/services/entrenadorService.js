@@ -24,6 +24,15 @@ export async function actualizarPerfil(user, usuarioId, data) {
   await entrenadorRepository.upsertPerfil(usuarioId, data);
   return await entrenadorRepository.findByUsuarioId(usuarioId);
 }
+export async function listarAlumnos() {
+  const { findAllByRol } = await import('../repositories/usuarioRepository.js');
+  return await findAllByRol('ALUMNO');
+}
+
+export async function listarMisAlumnos(entrenadorId) {
+  return await entrenadorRepository.findAlumnosByEntrenador(entrenadorId);
+}
+
 export async function registrarEntrenador({nombre, email, password, horario, descripcion, especialidad}){
 
   if (!email || !password) throw new Error('Email y password son obligatorios');

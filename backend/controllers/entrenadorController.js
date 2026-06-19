@@ -54,6 +54,27 @@ export async function upsertPerfil(req, res) {
   }
 }
 
+export async function getAlumnos(req, res) {
+  try {
+    const alumnos = await entrenadorService.listarAlumnos();
+    res.json(alumnos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function getMisAlumnos(req, res) {
+  try {
+    // Si el usuario es ENTRENADOR, listamos sus alumnos asignados
+    // Si es ADMIN, tal vez queremos pasarle un ID por params, pero por ahora simplificamos
+    const entrenadorId = req.user.rol === 'ENTRENADOR' ? req.user.id : req.params.id;
+    const alumnos = await entrenadorService.listarMisAlumnos(entrenadorId);
+    res.json(alumnos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 export async function registrar(req, res) {
   try {
     const {nombre, email, password, horario, descripcion, especialidad} = req.body;

@@ -17,9 +17,58 @@ class RutinasController extends Controller
 
     public function listar()
     {
-        $response = $this->api->get('/rutinas', $_SESSION['jwt'] ?? null);
-        $rutinas  = $response['ok'] ? $response['data'] : [];
+        if (empty($_SESSION['user'])) {
+            header('Location: /inicio-sesion');
+            exit;
+        }
 
-        $this->render('rutinas.html.twig', ['rutinas' => $rutinas]);
+        $jwt = $_SESSION['jwt'];
+        $user = $_SESSION['user'];
+
+        // Obtener rutinas (el backend ya filtra por rol)
+        $resRutinas = $this->api->get('/rutinas', $jwt);
+        $rutinas = $resRutinas['ok'] ? $resRutinas['data'] : [];
+
+        $alumnos = [];
+        if (in_array($user['rol'], ['ENTRENADOR', 'ADMIN'])) {
+            // Obtener todos los alumnos para el selector de asignación
+            $resAlumnos = $this->api->get('/entrenadores/alumnos', $jwt);
+            $alumnos = $resAlumnos['ok'] ? $resAlumnos['data'] : [];
+        }
+
+        $this->render('rutinas.html.twig', [
+            'rutinas' => $rutinas,
+            'alumnos' => $alumnos,
+            'mensaje' => $_GET['mensaje'] ?? null,
+            'error'   => $_GET['error'] ?? null
+        ]);
+    }
+
+    public function asignar()
+    {
+        if (empty($_SESSION['user'])) {
+            header('Location: /inicio-sesion');
+            exit;
+        }
+
+        $rutinaId = $_POST['rutina_id'] ?? null;
+        $alumnoId = $_POST['alumno_id'] ?? null;
+
+        if (!$rutinaId || !$alumnoId) {
+            header('Location: /rutinas?error=Datos incompletos');
+            exit;
+        }
+
+        $response = $this->api->post("/rutinas/{$rutinaId}/asignar", [
+            'alumno_id' => $alumnoId
+        ], $_SESSION['jwt']);
+
+        if ($response['ok']) {
+            header('Location: /rutinas?mensaje=Rutina asignada correctamente');
+        } else {
+            $error = $response['data']['error'] ?? 'Error al asignar rutina';
+            header("Location: /rutinas?error=" . urlencode($error));
+        }
+        exit;
     }
 }

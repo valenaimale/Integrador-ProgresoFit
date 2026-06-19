@@ -69,7 +69,8 @@ class Router {
         // Catálogo y Rutinas
         $this->register('GET@/catalogo', 'CatalogoController@listar');
         $this->register('GET@/rutinas', 'RutinasController@listar');
-        $this->register('GET@/rutina',  'RutinaIndController@mostrar');
+        $this->register('POST@/rutinas/asignar', 'RutinasController@asignar');
+        $this->register('GET@/rutina', 'RutinaIndController@mostrar');
 
         // Ejercicios
         $this->register('GET@/ejercicios',       'EjercicioController@listar');
@@ -110,7 +111,8 @@ class Router {
         $this->register('GET@/mis-compras', 'FormularioController@historial');
 
         // Suscripción
-        $this->register('GET@/pagos-suscripcion', 'PagosuscripcionController@mostrar');
+        $this->register('GET@/pago-suscripcion', 'PagosuscripcionController@mostrar');
+        $this->register('POST@/pago-suscripcion', 'PagosuscripcionController@suscribir');
 
 
         // Panel del entrenador — rutinas

@@ -116,6 +116,51 @@
   line-height: 1.4;
 }
 
+/* ── Acciones de Administrador / Entrenador ────────────────────── */
+
+.card-rutina-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-actions {
+  background: var(--blanco);
+  border: 1px dashed var(--rojo);
+  border-radius: var(--radio);
+  padding: 16px;
+}
+
+.form-asignar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-asignar select {
+  padding: 8px;
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--crema-dark);
+}
+
+.btn-asignar {
+  background: var(--negro);
+  color: var(--blanco);
+  padding: 8px;
+  border-radius: var(--radio-sm);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity .2s;
+}
+
+.btn-asignar:hover {
+  opacity: 0.8;
+}
+
+.exito { color: #2ecc71; font-weight: 600; margin-bottom: 20px; }
+.error { color: var(--rojo); font-weight: 600; margin-bottom: 20px; }
+
 /* ── Responsive ────────────────────── */
 
 @media (max-width: 640px) {

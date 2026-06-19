@@ -6,6 +6,13 @@ const router = Router();
 
 // Any logged-in user can view trainer profiles
 router.get('/',    authenticateToken, entrenadorController.getAll);
+
+// List of all students (for trainers and admins to pick for assignments)
+router.get('/alumnos', authenticateToken, checkRole(['ENTRENADOR', 'ADMIN']), entrenadorController.getAlumnos);
+
+// List of students assigned to the logged-in trainer
+router.get('/mis-alumnos', authenticateToken, checkRole(['ENTRENADOR', 'ADMIN']), entrenadorController.getMisAlumnos);
+
 router.get('/:id', authenticateToken, entrenadorController.getById);
 
 // Alumnos can subscribe/unsubscribe to a trainer

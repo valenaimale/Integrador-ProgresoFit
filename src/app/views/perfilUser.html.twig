@@ -68,6 +68,30 @@
             </div>
         </form>
     </section>
+
+    {% if userData.rol == 'ALUMNO' %}
+    <section class="info-lista suscripcion-card">
+        <div class="info-header">
+            <h2>Mi Suscripción</h2>
+        </div>
+        {% if suscripcionActiva %}
+            <div class="sub-status activa">
+                <p class="plan-nombre">{{ suscripcionActiva.plan|upper }}</p>
+                <div class="sub-fechas">
+                    <span><strong>Inicio:</strong> {{ suscripcionActiva.fecha_inicio|date('d/m/Y') }}</span>
+                    <span><strong>Vence:</strong> {{ suscripcionActiva.fecha_fin|date('d/m/Y') }}</span>
+                </div>
+                <p class="precio-tag">${{ suscripcionActiva.precio|number_format(2, ',', '.') }}</p>
+                <span class="badge-status">Activa</span>
+            </div>
+        {% else %}
+            <div class="sub-status vacia">
+                <p>No tenés una suscripción activa.</p>
+                <a href="/pago-suscripcion" class="btn-suscribirse">Suscribirse ahora</a>
+            </div>
+        {% endif %}
+    </section>
+    {% endif %}
 </div>
 {% endblock %}
 

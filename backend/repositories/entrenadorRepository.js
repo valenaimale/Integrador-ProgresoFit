@@ -67,6 +67,18 @@ export async function upsertPerfil(usuarioId, { especialidad, descripcion, horar
     [usuarioId, especialidad || null, descripcion || null, horario || null, gimnasio_id || null]
   );
 }
+export async function findAlumnosByEntrenador(entrenadorId) {
+  const [rows] = await pool.query(
+    `SELECT DISTINCT u.id, u.nombre, u.email
+     FROM usuarios u
+     INNER JOIN alumno_rutinas ar ON ar.alumno_id = u.id
+     WHERE ar.asignado_por = ?
+     ORDER BY u.nombre`,
+    [entrenadorId]
+  );
+  return rows;
+}
+
 export async function create({usuario_id , nombre, horario, email, descripcion, especialidad }) {
     const [result] = await pool.query(
         'INSERT INTO entrenadores (usuario_id, horario, descripcion, especialidad) VALUES (?, ?, ?, ?)',

@@ -28,6 +28,9 @@ services:
     build: ./backend
     ports:
       - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     environment:
       PORT: 3000
       JWT_SECRET: tu_clave_secreta_super_segura_aqui_123456
@@ -46,6 +49,8 @@ services:
     build: .
     ports:
       - "8000:8000"
+    volumes:
+      - .:/var/www/html
     environment:
       API_BASE_URL: http://backend:3000
     depends_on:

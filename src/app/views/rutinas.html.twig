@@ -8,13 +8,25 @@
 
 {% block content %}
 <section class="seccion-rutinas">
-    <h2>Elige tu programa según tu objetivo</h2>
+    {% if session.user.rol in ['ENTRENADOR', 'ADMIN'] %}
+        <h2>Gestión de Rutinas</h2>
+    {% else %}
+        <h2>Elige tu programa según tu objetivo</h2>
+    {% endif %}
+
+    {% if mensaje %}
+        <p class="exito">{{ mensaje }}</p>
+    {% endif %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
     {% if not rutinas %}
         <p class="sin-resultados">No hay rutinas disponibles.</p>
     {% else %}
         <ul class="grid-rutinas">
             {% for rutina in rutinas %}
-                <li>
+                <li class="card-rutina-container">
                     <a href="/rutina?id={{ rutina.id }}" class="card-rutina">
                         <article>
                             <h3>{{ rutina.titulo }}</h3>
@@ -29,6 +41,21 @@
                             </div>
                         </article>
                     </a>
+
+                    {% if session.user.rol in ['ENTRENADOR', 'ADMIN'] %}
+                        <div class="admin-actions">
+                            <form action="/rutinas/asignar" method="post" class="form-asignar">
+                                <input type="hidden" name="rutina_id" value="{{ rutina.id }}">
+                                <select name="alumno_id" required>
+                                    <option value="">Asignar a alumno...</option>
+                                    {% for alumno in alumnos %}
+                                        <option value="{{ alumno.id }}">{{ alumno.nombre }} ({{ alumno.email }})</option>       
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn-asignar">Asignar</button>
+                            </form>
+                        </div>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
