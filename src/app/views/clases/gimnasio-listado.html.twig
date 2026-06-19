@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mis clases — ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/clases.css">
+{% endblock %}
+
+{% block content %}
+    <div class="panel-header">
+        <h2>Clases del gimnasio</h2>
+        <a href="/gimnasio/clases/nueva" class="btn btn-primary">+ Nueva clase</a>
+    </div>
+
+    {% if flash %}<p class="flash-ok">{{ flash }}</p>{% endif %}
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+    {% if clases is empty %}
+        <p class="text-muted">Todavía no creaste ninguna clase.</p>
+    {% else %}
+        <ul class="grid-clases">
+            {% for clase in clases %}
+                {% set lleno = clase.inscriptos >= clase.cupo_maximo %}
+                <li>
+                    <article class="card-clase">
+                        <h3>{{ clase.nombre }}</h3>
+                        {% if clase.descripcion %}
+                            <p class="text-muted">{{ clase.descripcion }}</p>
+                        {% endif %}
+                        <p class="card-clase-horario">
+                            📅 {{ clase.fecha|date('d/m/Y') }} · 🕒 {{ clase.hora_inicio|slice(0, 5) }}{% if clase.hora_fin %} - {{ clase.hora_fin|slice(0, 5) }}{% endif %}
+                        </p>
+                        <p class="card-clase-cupo">
+                            Inscriptos: {{ clase.inscriptos }} / {{ clase.cupo_maximo }}
+                            {% if lleno %}<span class="badge badge-lleno">Llena</span>{% endif %}
+                        </p>
+
+                        <div class="card-acciones">
+                            <a href="/gimnasio/clases/inscriptos?id={{ clase.id }}" class="btn btn-secondary btn-sm">Ver inscriptos</a>
+                            <form action="/gimnasio/clases/cancelar" method="post" onsubmit="return confirm('¿Cancelar esta clase? Se notificará a los inscriptos.')">
+                                <input type="hidden" name="id" value="{{ clase.id }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Cancelar clase</button>
+                            </form>
+                        </div>
+                    </article>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

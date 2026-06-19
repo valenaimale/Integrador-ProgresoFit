@@ -9,6 +9,7 @@ import ejercicioRoutes from '../routes/ejercicioRoutes.js';
 import entrenadorRoutes from '../routes/entrenadorRoutes.js';
 import suscripcionRoutes from '../routes/suscripcionRoutes.js';
 import accesosRoutes from '../routes/accesosRoutes.js';
+import claseRoutes from '../routes/claseRoutes.js';
 
 dotenv.config();
 //todas las peticiones al back end se reciben aca
@@ -27,6 +28,7 @@ app.use('/ejercicios', ejercicioRoutes);
 app.use('/entrenadores', entrenadorRoutes);
 app.use('/suscripciones', suscripcionRoutes);
 app.use('/accesos', accesosRoutes);
+app.use('/clases', claseRoutes);
 
 //Ruta de prueba
 app.get('/', (req, res) => {

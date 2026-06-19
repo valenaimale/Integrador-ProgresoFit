@@ -16,6 +16,10 @@
                 {% endif %}
                 {% if session.user.rol == 'ALUMNO' %}
                     <a href="/mi-qr">Mi QR de acceso</a>
+                    <a href="/clases">Clases</a>
+                {% endif %}
+                {% if session.user.rol == 'GIMNASIO' %}
+                    <a href="/gimnasio/clases">Mis clases</a>
                 {% endif %}
                 {% if session.user.rol in ['ADMIN', 'ENTRENADOR'] %}
                     <a href="/aforo">Aforo del gimnasio</a>

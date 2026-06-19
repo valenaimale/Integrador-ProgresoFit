@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscriptos — ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/clases.css">
+{% endblock %}
+
+{% block content %}
+    <div class="panel-header">
+        <h2>
+            Inscriptos{% if clase %}: {{ clase.nombre }}{% endif %}
+        </h2>
+        <a href="/gimnasio/clases" class="btn btn-secondary">Volver</a>
+    </div>
+
+    {% if clase %}
+        <p class="card-clase-horario">
+            📅 {{ clase.fecha|date('d/m/Y') }} · 🕒 {{ clase.hora_inicio|slice(0, 5) }}{% if clase.hora_fin %} - {{ clase.hora_fin|slice(0, 5) }}{% endif %}
+            · {{ clase.inscriptos }} / {{ clase.cupo_maximo }}
+        </p>
+    {% endif %}
+
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+    {% if inscriptos is empty %}
+        <p class="text-muted">Todavía no hay nadie anotado en esta clase.</p>
+    {% else %}
+        <table class="tabla-inscriptos">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Se anotó</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inscripto in inscriptos %}
+                    <tr>
+                        <td>{{ inscripto.nombre ?? '—' }}</td>
+                        <td>{{ inscripto.email }}</td>
+                        <td>{{ inscripto.inscripto_at|date('d/m/Y H:i') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

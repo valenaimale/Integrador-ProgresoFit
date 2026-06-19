@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clases disponibles — ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/clases.css">
+{% endblock %}
+
+{% block content %}
+    <div class="panel-header">
+        <h2>Clases disponibles</h2>
+        <a href="/mis-clases" class="btn btn-secondary">Mis clases</a>
+    </div>
+
+    {% if flash %}<p class="flash-ok">{{ flash }}</p>{% endif %}
+    {% if flashError %}<p class="error">{{ flashError }}</p>{% endif %}
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+    {% if clases is empty %}
+        <p class="text-muted">No hay clases disponibles por el momento.</p>
+    {% else %}
+        <ul class="grid-clases">
+            {% for clase in clases %}
+                {% set yaAnotado = clase.id in inscriptoIds %}
+                {% set lleno = clase.inscriptos >= clase.cupo_maximo %}
+                <li>
+                    <article class="card-clase">
+                        <h3>{{ clase.nombre }}</h3>
+                        <p class="card-clase-gym">{{ clase.gimnasio_nombre }}</p>
+                        {% if clase.descripcion %}
+                            <p class="text-muted">{{ clase.descripcion }}</p>
+                        {% endif %}
+                        <p class="card-clase-horario">
+                            📅 {{ clase.fecha|date('d/m/Y') }} · 🕒 {{ clase.hora_inicio|slice(0, 5) }}{% if clase.hora_fin %} - {{ clase.hora_fin|slice(0, 5) }}{% endif %}
+                        </p>
+                        <p class="card-clase-cupo">
+                            Cupos: {{ clase.inscriptos }} / {{ clase.cupo_maximo }}
+                            {% if lleno %}<span class="badge badge-lleno">Llena</span>{% endif %}
+                        </p>
+
+                        <div class="card-acciones">
+                            {% if yaAnotado %}
+                                <span class="badge badge-anotado">Ya estás anotado</span>
+                                <form action="/clases/cancelar" method="post">
+                                    <input type="hidden" name="id" value="{{ clase.id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Cancelar inscripción</button>
+                                </form>
+                            {% elseif lleno %}
+                                <button type="button" class="btn btn-primary btn-sm" disabled>Sin cupo</button>
+                            {% else %}
+                                <form action="/clases/inscribir" method="post">
+                                    <input type="hidden" name="id" value="{{ clase.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Anotarme</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </article>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

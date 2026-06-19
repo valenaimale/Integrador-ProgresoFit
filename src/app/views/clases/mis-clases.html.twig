@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mis clases — ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/clases.css">
+{% endblock %}
+
+{% block content %}
+    <div class="panel-header">
+        <h2>Mis clases</h2>
+        <a href="/clases" class="btn btn-secondary">Ver clases disponibles</a>
+    </div>
+
+    {% if flash %}<p class="flash-ok">{{ flash }}</p>{% endif %}
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+    {% if clases is empty %}
+        <p class="text-muted">Todavía no te anotaste en ninguna clase.</p>
+    {% else %}
+        <ul class="grid-clases">
+            {% for clase in clases %}
+                <li>
+                    <article class="card-clase">
+                        <h3>{{ clase.nombre }}</h3>
+                        <p class="card-clase-gym">{{ clase.gimnasio_nombre }}</p>
+                        <p class="card-clase-horario">
+                            📅 {{ clase.fecha|date('d/m/Y') }} · 🕒 {{ clase.hora_inicio|slice(0, 5) }}{% if clase.hora_fin %} - {{ clase.hora_fin|slice(0, 5) }}{% endif %}
+                        </p>
+                        {% if clase.estado == 'CANCELADA' %}
+                            <p class="badge badge-lleno">Esta clase fue cancelada por el gimnasio</p>
+                        {% endif %}
+
+                        <div class="card-acciones">
+                            <form action="/clases/cancelar" method="post">
+                                <input type="hidden" name="id" value="{{ clase.id }}">
+                                <input type="hidden" name="origen" value="mis-clases">
+                                <button type="submit" class="btn btn-danger btn-sm">Cancelar inscripción</button>
+                            </form>
+                        </div>
+                    </article>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

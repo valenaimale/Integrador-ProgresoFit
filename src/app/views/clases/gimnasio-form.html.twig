@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nueva clase — ProgresoFit{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/formularios.css">
+    <link rel="stylesheet" href="/assets/css/clases.css">
+{% endblock %}
+
+{% block content %}
+    <h2>Nueva clase</h2>
+
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+    <form action="/gimnasio/clases/nueva" method="post">
+        <label for="nombre">Actividad *</label>
+        <input type="text" id="nombre" name="nombre" value="{{ clase.nombre ?? '' }}" placeholder="Ej: Spinning / Bicicleta" required>
+
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion">{{ clase.descripcion ?? '' }}</textarea>
+
+        <label for="fecha">Fecha *</label>
+        <input type="date" id="fecha" name="fecha" value="{{ clase.fecha ?? '' }}" required>
+
+        <label for="hora_inicio">Hora de inicio *</label>
+        <input type="time" id="hora_inicio" name="hora_inicio" value="{{ clase.hora_inicio ?? '' }}" required>
+
+        <label for="hora_fin">Hora de fin</label>
+        <input type="time" id="hora_fin" name="hora_fin" value="{{ clase.hora_fin ?? '' }}">
+
+        <label for="cupo_maximo">Cupo máximo *</label>
+        <input type="number" id="cupo_maximo" name="cupo_maximo" min="1" value="{{ clase.cupo_maximo ?? '' }}" required>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Crear clase</button>
+            <a href="/gimnasio/clases" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+{% endblock %}

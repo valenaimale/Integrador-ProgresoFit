@@ -1,0 +1,268 @@
+/* ===================================
+   ProgresoFit — clases.css
+   Estilos para Clases / Actividades con cupo.
+   Reutiliza la paleta y utilidades de style.css y rutinas.css
+   (panel-header, card-acciones, btn-*, error, form-actions).
+   =================================== */
+
+/* ── Cabecera de panel (título + acción) ──
+   También definido en rutinas.css; lo replicamos para que las
+   vistas de clases sean autosuficientes cargando solo clases.css. */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+/* ── Acciones dentro de una card ───── */
+.card-acciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--crema-dark);
+}
+
+.card-acciones form { margin: 0; }
+
+/* ── Botones (variantes usadas por las vistas de clases) ── */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--radio-sm);
+  font-weight: 600;
+  font-size: .85rem;
+  border: 2px solid var(--negro);
+  background: transparent;
+  color: var(--negro);
+  transition: background .2s, color .2s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-secondary:hover {
+  background: var(--negro);
+  color: var(--crema);
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--radio-sm);
+  font-weight: 600;
+  font-size: .85rem;
+  background: transparent;
+  color: var(--rojo);
+  border: 2px solid var(--rojo);
+  transition: background .2s, color .2s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-danger:hover {
+  background: var(--rojo);
+  color: var(--blanco);
+}
+
+.btn-sm { padding: 6px 12px; font-size: .8rem; }
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* ── Mensaje de error (también en rutinas.css) ── */
+.error {
+  background: #fdecea;
+  color: var(--rojo-dark);
+  border: 1px solid var(--rojo);
+  padding: 10px 14px;
+  border-radius: var(--radio-sm);
+  font-size: .9rem;
+}
+
+/* ── Grid de tarjetas ──────────────── */
+.grid-clases {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-clase {
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 22px 24px;
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--crema-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+
+.card-clase:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sombra);
+  border-color: var(--rojo);
+}
+
+.card-clase h3 {
+  font-family: var(--font-titulo);
+  font-size: 1.5rem;
+  color: var(--negro);
+  letter-spacing: .5px;
+  line-height: 1.1;
+}
+
+.card-clase-gym {
+  font-weight: 600;
+  color: var(--rojo);
+  font-size: .9rem;
+}
+
+.card-clase-horario {
+  font-size: .9rem;
+  color: var(--gris);
+  background: var(--crema);
+  padding: 6px 12px;
+  border-radius: var(--radio-sm);
+  width: fit-content;
+}
+
+.card-clase-cupo {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--negro);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Badges de estado ──────────────── */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.badge-lleno {
+  background: var(--rojo);
+  color: var(--blanco);
+}
+
+.badge-anotado {
+  background: var(--verde);
+  color: var(--blanco);
+}
+
+/* ── Mensaje flash de éxito ────────── */
+.flash-ok {
+  background: #e9f9ef;
+  color: #1e7a45;
+  border: 1px solid var(--verde);
+  padding: 10px 14px;
+  border-radius: var(--radio-sm);
+  font-size: .9rem;
+  font-weight: 500;
+}
+
+/* ── Tabla de inscriptos ───────────── */
+.tabla-inscriptos {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--blanco);
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--crema-dark);
+}
+
+.tabla-inscriptos thead {
+  background: var(--negro);
+}
+
+.tabla-inscriptos th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: .8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--crema);
+}
+
+.tabla-inscriptos td {
+  padding: 11px 16px;
+  font-size: .9rem;
+  color: var(--gris);
+  border-top: 1px solid var(--crema-dark);
+}
+
+.tabla-inscriptos tbody tr:hover {
+  background: var(--crema);
+}
+
+/* ── Inputs de fecha/hora/número en el form de clase ──
+   formularios.css estiliza text/email/tel/password pero no estos tipos. */
+input[type="date"],
+input[type="time"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: var(--rojo);
+}
+
+/* ── Acciones del formulario de crear clase ──
+   formularios.css pone button[type=submit] a width:100%; acá los
+   alineamos lado a lado y dejamos que .btn defina su ancho natural. */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.form-actions .btn,
+.form-actions button[type="submit"] {
+  width: auto;
+}
+
+@media (max-width: 640px) {
+  .grid-clases { grid-template-columns: 1fr; }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tabla-inscriptos th,
+  .tabla-inscriptos td { padding: 9px 10px; font-size: .82rem; }
+}

@@ -140,6 +140,19 @@ class Router {
         // Nosotros
         $this->register('GET@/nosotros', 'NosotrosController@mostrar_nosotros');
 
+        // Clases / Actividades — Alumno
+        $this->register('GET@/clases',            'ClasesController@listar');
+        $this->register('POST@/clases/inscribir', 'ClasesController@inscribir');
+        $this->register('POST@/clases/cancelar',  'ClasesController@cancelar');
+        $this->register('GET@/mis-clases',        'ClasesController@misClases');
+
+        // Clases / Actividades — Gimnasio
+        $this->register('GET@/gimnasio/clases',            'GimnasioClasesController@listar');
+        $this->register('GET@/gimnasio/clases/nueva',      'GimnasioClasesController@nueva');
+        $this->register('POST@/gimnasio/clases/nueva',     'GimnasioClasesController@crear');
+        $this->register('POST@/gimnasio/clases/cancelar',  'GimnasioClasesController@cancelar');
+        $this->register('GET@/gimnasio/clases/inscriptos', 'GimnasioClasesController@inscriptos');
+
         // Acceso por QR
         $this->register('GET@/mi-qr',            'MiQrController@mostrar');
         $this->register('POST@/mi-qr/regenerar', 'MiQrController@regenerar');
