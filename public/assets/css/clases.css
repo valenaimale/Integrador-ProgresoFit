@@ -167,6 +167,11 @@
   color: var(--blanco);
 }
 
+.badge-pocos-cupos {
+  background: var(--dorado);
+  color: var(--blanco);
+}
+
 .badge-anotado {
   background: var(--verde);
   color: var(--blanco);

@@ -20,7 +20,9 @@ export async function listarPorGimnasio(gimnasioId) {
 export async function listarDisponibles() {
   const [rows] = await pool.query(
     `SELECT c.id, c.gimnasio_id, c.nombre, c.descripcion, c.fecha, c.hora_inicio, c.hora_fin,
-            c.cupo_maximo, c.inscriptos, c.estado, g.nombre AS gimnasio_nombre
+            c.cupo_maximo, c.inscriptos, c.estado, g.nombre AS gimnasio_nombre,
+            (c.cupo_maximo - c.inscriptos) AS cupos_restantes,
+            (c.cupo_maximo - c.inscriptos > 0 AND c.cupo_maximo - c.inscriptos <= 3) AS pocos_cupos
      FROM clases c
      JOIN gimnasios g ON g.id = c.gimnasio_id
      WHERE c.estado = 'ACTIVA' AND c.fecha >= CURDATE()

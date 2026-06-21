@@ -35,7 +35,11 @@
                         </p>
                         <p class="card-clase-cupo">
                             Cupos: {{ clase.inscriptos }} / {{ clase.cupo_maximo }}
-                            {% if lleno %}<span class="badge badge-lleno">Llena</span>{% endif %}
+                            {% if lleno %}
+                                <span class="badge badge-lleno">Llena</span>
+                            {% elseif clase.pocos_cupos %}
+                                <span class="badge badge-pocos-cupos">¡Últimos cupos!</span>
+                            {% endif %}
                         </p>
 
                         <div class="card-acciones">
