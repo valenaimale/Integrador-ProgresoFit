@@ -21,9 +21,6 @@ export async function suscribirse(usuarioId, plan) {
   }
 
   const hoy = new Date();
-  const fechaFin = new Date(hoy);
-  fechaFin.setDate(fechaFin.getDate() + planData.duracion_dias);
-
   const formatDate = (d) => d.toISOString().slice(0, 10);
 
   return await suscripcionRepository.create({
@@ -31,6 +28,18 @@ export async function suscribirse(usuarioId, plan) {
     plan,
     precio: planData.precio,
     fecha_inicio: formatDate(hoy),
-    fecha_fin: formatDate(fechaFin)
+    fecha_fin: null,
+    estado: 'pendiente'
   });
+}
+
+export async function activarPorPago(suscripcionId) {
+  const hoy = new Date();
+  const fechaFin = new Date(hoy);
+  fechaFin.setDate(fechaFin.getDate() + 30);
+  return await suscripcionRepository.updateEstado(
+    suscripcionId,
+    'activa',
+    fechaFin.toISOString().slice(0, 10)
+  );
 }

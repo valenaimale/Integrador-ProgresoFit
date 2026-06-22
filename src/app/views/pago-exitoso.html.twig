@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pago exitoso — ProgresoFit{% endblock %}
+
+{% block styles %}
+<style>
+    .pago-resultado {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 80px 20px;
+        min-height: 50vh;
+    }
+    .icono-exito {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #2ecc71;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    .icono-exito svg {
+        width: 40px;
+        height: 40px;
+        fill: #fff;
+    }
+    .pago-resultado h1 {
+        font-family: var(--font-titulo);
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: var(--negro);
+    }
+    .pago-resultado p {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 40px;
+    }
+    .acciones-pago {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pago-resultado">
+    <div class="icono-exito">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+    </div>
+    <h1>¡Pago exitoso!</h1>
+    <p>Tu suscripción se activará en unos segundos.</p>
+    <div class="acciones-pago">
+        <a href="/perfil" class="btn-primario">Ir a mi perfil</a>
+    </div>
+</div>
+{% endblock %}

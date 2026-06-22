@@ -40,20 +40,55 @@ class PagosuscripcionController extends Controller
         }
 
         $plan = $_POST['plan'] ?? null;
-
         if (!$plan) {
             header('Location: /pago-suscripcion?error=Debe seleccionar un plan');
             exit;
         }
 
-        $response = $this->api->post('/suscripciones', ['plan' => $plan], $_SESSION['jwt']);
-
-        if ($response['ok']) {
-            header('Location: /perfil?mensaje=Suscripción exitosa');
-        } else {
-            $error = $response['data']['error'] ?? 'Error al procesar la suscripción';
+        // 1. Crear suscripción pendiente
+        $susc = $this->api->post('/suscripciones', ['plan' => $plan], $_SESSION['jwt']);
+        if (!$susc['ok']) {
+            $error = $susc['data']['error'] ?? 'Error al crear la suscripción';
             header("Location: /pago-suscripcion?error=" . urlencode($error));
+            exit;
         }
+
+        $suscripcionId = $susc['data']['id'];
+        $monto = $susc['data']['precio'];
+        $nombrePlan = $susc['data']['plan'];
+        $user = $_SESSION['user'];
+
+        // 2. Crear preferencia de pago en MP
+        $pref = $this->api->post('/mercadopago/preference', [
+            'suscripcion_id' => $suscripcionId,
+            'monto'          => (float)$monto,
+            'titular'        => $user['nombre'] ?? 'Alumno',
+            'email'          => $user['email'],
+            'descripcion'    => "ProgresoFit - {$nombrePlan} 30d"
+        ], $_SESSION['jwt']);
+
+        if (!$pref['ok']) {
+            $msg = $pref['data']['message'] ?? $pref['data']['error'] ?? 'Error al conectar con Mercado Pago';
+            header("Location: /pago-suscripcion?error=" . urlencode($msg));
+            exit;
+        }
+
+        // 3. Redirigir a MP
+        header("Location: " . $pref['data']['init_point']);
         exit;
+    }
+
+    public function pagoExitoso()
+    {
+        $this->render('pago-exitoso.html.twig', [
+            'mensaje' => $_GET['mensaje'] ?? null,
+        ]);
+    }
+
+    public function pagoFallido()
+    {
+        $this->render('pago-fallido.html.twig', [
+            'error' => $_GET['error'] ?? 'El pago no pudo procesarse',
+        ]);
     }
 }

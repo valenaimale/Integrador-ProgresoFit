@@ -32,6 +32,12 @@ services:
       DB_USER: progresofit_user
       DB_PASSWORD: progresofit_pass
       DB_NAME: progresofit
+      MP_ACCESS_TOKEN: ${MP_ACCESS_TOKEN}
+      MP_WEBHOOK_SECRET: ${MP_WEBHOOK_SECRET}
+      MP_SUCCESS_URL: ${MP_SUCCESS_URL:-http://localhost:8000/pago-exitoso}
+      MP_FAILURE_URL: ${MP_FAILURE_URL:-http://localhost:8000/pago-fallido}
+      MP_PENDING_URL: ${MP_PENDING_URL:-http://localhost:8000/pago-suscripcion}
+      MP_NOTIFICATION_URL: ${MP_NOTIFICATION_URL}
     depends_on:
       mysql:
         condition: service_healthy  # Espera a que MySQL esté realmente listo

@@ -10,6 +10,7 @@ import entrenadorRoutes from '../routes/entrenadorRoutes.js';
 import suscripcionRoutes from '../routes/suscripcionRoutes.js';
 import accesosRoutes from '../routes/accesosRoutes.js';
 import claseRoutes from '../routes/claseRoutes.js';
+import mercadopagoRoutes from '../routes/mercadopago.routes.js';
 
 dotenv.config();
 //todas las peticiones al back end se reciben aca
@@ -17,6 +18,15 @@ const app = express();
 
 //Middlewares
 app.use(cors()); //Permite la conexión desde el frontend
+
+// Raw body parser para webhook de MP — DEBE ir ANTES de express.json()
+// para preservar el body crudo que necesita la validación HMAC
+app.use('/mercadopago/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
+  req.rawBody = req.body.toString('utf-8');
+  try { req.body = JSON.parse(req.rawBody); } catch { /* fallback: raw body queda como string */ }
+  next();
+});
+
 app.use(express.json()); // Parsea el body de las request a JSON
 
 //Rutas por las que pasara mi App
@@ -29,6 +39,7 @@ app.use('/entrenadores', entrenadorRoutes);
 app.use('/suscripciones', suscripcionRoutes);
 app.use('/accesos', accesosRoutes);
 app.use('/clases', claseRoutes);
+app.use('/mercadopago', mercadopagoRoutes);
 
 //Ruta de prueba
 app.get('/', (req, res) => {

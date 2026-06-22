@@ -8,29 +8,7 @@
     {% block styles %}{% endblock %}
 </head>
 <body>
-    <header>
-        <h1><a href="/">progresoFit</a></h1>
-        <nav>
-            <ul>
-                <li><a href="/">Inicio</a></li>
-                <li><a href="/rutinas">Rutinas</a></li>
-                <li><a href="/gimnasios">Gimnasios</a></li>
-                <li><a href="/entrenadores">Entrenadores</a></li>
-            </ul>
-            <div class="nav-acciones">
-                {% if session.user is defined %}
-                    {% if session.user.rol == 'ENTRENADOR' %}
-                        <a href="/entrenador/rutinas">Mis rutinas</a>
-                    {% endif %}
-                    <a href="/perfil">{{ session.user.nombre ?? 'Mi perfil' }}</a>
-                    <a href="/cerrar-sesion">Cerrar sesión</a>
-                {% else %}
-                    <a href="/crearCuenta">Registro</a>
-                    <a href="/inicio-sesion">Iniciar sesión</a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
+    {% include 'parts/header.html.twig' %}
 
     <main>
         {% block content %}{% endblock %}

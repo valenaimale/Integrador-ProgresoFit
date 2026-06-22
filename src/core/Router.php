@@ -113,6 +113,8 @@ class Router {
         // Suscripción
         $this->register('GET@/pago-suscripcion', 'PagosuscripcionController@mostrar');
         $this->register('POST@/pago-suscripcion', 'PagosuscripcionController@suscribir');
+        $this->register('GET@/pago-exitoso', 'PagosuscripcionController@pagoExitoso');
+        $this->register('GET@/pago-fallido', 'PagosuscripcionController@pagoFallido');
 
 
         // Panel del entrenador — rutinas
