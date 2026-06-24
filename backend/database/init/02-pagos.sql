@@ -4,7 +4,7 @@
 -- ============================================================
 
 -- ENUM type for pagos.estado (separate from suscripcion_estado_type)
-CREATE TYPE pago_estado_type AS ENUM ('pendiente','aprobado','rechazado','cancelado','expirado');
+DO $$ BEGIN CREATE TYPE pago_estado_type AS ENUM ('pendiente','aprobado','rechazado','cancelado','expirado'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 CREATE TABLE IF NOT EXISTS pagos (
   id               SERIAL PRIMARY KEY,
@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS pagos (
 );
 
 -- Trigger to auto-update actualizado_en on row change
+DROP TRIGGER IF EXISTS trg_pagos_actualizado_en ON pagos;
 CREATE TRIGGER trg_pagos_actualizado_en
   BEFORE UPDATE ON pagos
   FOR EACH ROW
@@ -34,3 +35,4 @@ ALTER TYPE suscripcion_estado_type ADD VALUE IF NOT EXISTS 'pendiente';
 -- Hacer fecha_fin nullable (las suscripciones pendientes no tienen fecha de fin)
 ALTER TABLE suscripciones
   ALTER COLUMN fecha_fin DROP NOT NULL;
+

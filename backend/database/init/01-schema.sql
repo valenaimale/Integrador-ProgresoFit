@@ -7,11 +7,11 @@
 -- ENUM types (must exist before tables that reference them)
 -- ============================================================
 
-CREATE TYPE rol_type AS ENUM ('ADMIN','ENTRENADOR','ALUMNO','GIMNASIO');
-CREATE TYPE dificultad_type AS ENUM ('baja','media','alta');
-CREATE TYPE suscripcion_estado_type AS ENUM ('activa','cancelada','vencida');
-CREATE TYPE acceso_tipo_type AS ENUM ('ENTRADA','SALIDA');
-CREATE TYPE clase_estado_type AS ENUM ('ACTIVA','CANCELADA');
+DO $$ BEGIN CREATE TYPE rol_type AS ENUM ('ADMIN','ENTRENADOR','ALUMNO','GIMNASIO'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE dificultad_type AS ENUM ('baja','media','alta'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE suscripcion_estado_type AS ENUM ('activa','cancelada','vencida'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE acceso_tipo_type AS ENUM ('ENTRADA','SALIDA'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE clase_estado_type AS ENUM ('ACTIVA','CANCELADA'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- ============================================================
 -- Trigger function for updated_at columns
