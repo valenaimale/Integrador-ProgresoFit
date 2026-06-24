@@ -132,11 +132,12 @@ class Router {
         $this->register('GET@/entrenador/ejercicios/buscar',           'EntrenadorRutinaController@buscarEjercicios');
         $this->register('POST@/entrenador/rutinas/asignar',            'EntrenadorRutinaController@asignar');
         $this->register('POST@/entrenador/rutinas/desasignar',         'EntrenadorRutinaController@desasignar');
-
+       
         // Entrenadores (lista pública + suscripción para alumnos)
         $this->register('GET@/entrenadores',              'EntrenadoresController@listar');
         $this->register('POST@/entrenadores/suscribirse', 'EntrenadoresController@suscribirse');
         $this->register('POST@/entrenadores/desuscribirse','EntrenadoresController@desuscribirse');
+        $this->register('GET@/entrenador', 'EntrenadoresController@mostrarEntrenador');
 
         // Gimnasios
         $this->register('GET@/gimnasios', 'GymController@listar');

@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/perfil.css">
-
     <link rel="stylesheet" href="/assets/css/formularios.css">
     <script src="/assets/js/constructorElementos.js"></script>
     <script src="/assets/js/crear-cuenta-entrenador.js"></script>

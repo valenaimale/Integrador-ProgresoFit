@@ -25,7 +25,24 @@ class EntrenadoresController
     {
         return $_SESSION['jwt'] ?? '';
     }
+    public function mostrarEntrenador(): void
+    {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            header('Location: /entrenadores');
+            exit;
+        }
 
+        $response = $this->api->get("/entrenadores/{$id}", $this->token());
+        if (!$response['ok']) {
+            header('Location: /entrenadores');
+            exit;
+        }
+
+        $this->twig->render('entrenadores/perfil.twig', [
+            'entrenador' => $response['data'],
+        ]);
+    }
     public function listar(): void
     {
         $entrenadoresRes   = $this->api->get('/entrenadores', $this->token());

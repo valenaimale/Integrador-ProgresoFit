@@ -13,31 +13,20 @@
 
 <section>
     <h2>Entrenadores destacados</h2>
+    
     <div class="grid-entrenadores">
-        <article class="card-entrenador">
-            <div class="avatar">
-                <img src="assets/img/imagenUser.jpg" alt="Foto de Entrenador 1">
-            </div>
-            <p>Entrenador 1</p>
-        </article>
-        <article class="card-entrenador">
-            <div class="avatar">
-                <img src="assets/img/imagenUser.jpg" alt="Foto de Entrenador 2">
-            </div>
-            <p>Entrenador 2</p>
-        </article>
-        <article class="card-entrenador">
-            <div class="avatar">
-                <img src="assets/img/imagenUser.jpg" alt="Foto de Entrenador 3">
-            </div>
-            <p>Entrenador 3</p>
-        </article>
-        <article class="card-entrenador">
-            <div class="avatar">
-                <img src="assets/img/imagenUser.jpg" alt="Foto de Entrenador 4">
-            </div>
-            <p>Entrenador 4</p>
-        </article>
+        {% for entrenador in entrenadores %}
+            <a href="/entrenador?id={{ entrenador.id }}">
+                <article class="card-entrenador">
+                    <div class="avatar">
+                        <img src="assets/img/imagenUser.jpg" alt="Foto de {{ entrenador.nombre }}">
+                    </div>
+                    <p>{{ entrenador.nombre }}</p>
+                </article>
+            <a>
+        {% else %}
+            <p>No hay entrenadores disponibles.</p>
+        {% endfor %}
     </div>
 </section>
 

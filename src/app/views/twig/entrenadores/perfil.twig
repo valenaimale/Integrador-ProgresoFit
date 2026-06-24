@@ -1,0 +1,50 @@
+{% extends "base.twig" %}
+
+{% block title %}{{ entrenador.nombre ?? 'Perfil del entrenador' }} — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/perfil.css">
+{% endblock %}
+
+{% block content %}
+{% if entrenador is not defined or entrenador is null %}
+    <p class="text-muted">No se encontró el entrenador.</p>
+{% else %}
+<div class="perfil-grid">
+    <section class="perfil-hero">
+        <figure>
+            <img src="/assets/img/imagenUser.jpg" alt="Foto de {{ entrenador.nombre }}">
+        </figure>
+    </section>
+
+    <section class="info-lista">
+        <dl>
+            <dt>Nombre</dt>
+            <dd>{{ entrenador.nombre ?? 'Sin nombre' }}</dd>
+
+            {% if entrenador.especialidad %}
+                <dt>Especialidad</dt>
+                <dd>{{ entrenador.especialidad }}</dd>
+            {% endif %}
+
+            {% if entrenador.descripcion %}
+                <dt>Descripción</dt>
+                <dd>{{ entrenador.descripcion }}</dd>
+            {% endif %}
+
+            {% if entrenador.horario %}
+                <dt>Horarios</dt>
+                <dd>{{ entrenador.horario }}</dd>
+            {% endif %}
+
+            {% if entrenador.gimnasio_nombre %}
+                <dt>Gimnasio</dt>
+                <dd>{{ entrenador.gimnasio_nombre }}</dd>
+            {% endif %}
+        </dl>
+
+        <a href="/entrenadores" class="btn btn-outline">← Volver a entrenadores</a>
+    </section>
+</div>
+{% endif %}
+{% endblock %}

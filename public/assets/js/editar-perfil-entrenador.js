@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {//cargar script crea el scr
         new FormValidation("#form-editar-perfil-entrenador", {
             contra_nueva_repetida:{
                 validar: (input) => {
-                    if (input.value.trim() === "") return false;
+                    if (input.value.trim() === "") return null;
                     return input.value === document.querySelector("#contra_nueva").value;
                 },
                 mensaje: "Las contraseñas no coinciden."
