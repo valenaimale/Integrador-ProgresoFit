@@ -44,7 +44,8 @@ class ApiClient
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_CUSTOMREQUEST  => $method,
-            CURLOPT_TIMEOUT        => 15,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_FOLLOWLOCATION => true,
         ]);
 
         if ($data !== null) {
@@ -52,10 +53,15 @@ class ApiClient
         }
 
         $response   = curl_exec($ch);
+        $curlError  = curl_error($ch);
         $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        $decoded = json_decode(mb_convert_encoding($response, 'UTF-8', 'UTF-8'), true) ?? [];
+        if ($curlError) {
+            error_log("ApiClient cURL error [{$method} {$this->baseUrl}{$path}]: {$curlError}");
+        }
+
+        $decoded = json_decode(mb_convert_encoding($response ?: '', 'UTF-8', 'UTF-8'), true) ?? [];
 
         return [
             'status' => $statusCode,
