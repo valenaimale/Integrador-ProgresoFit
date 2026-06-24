@@ -56,6 +56,79 @@
   letter-spacing: 1.5px;
 }
 
+/* ── Grid de Perfil (gym / entrenador) ─── */
+
+.perfil-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.perfil-hero {
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+
+.perfil-hero figure {
+  margin: 0;
+}
+
+.perfil-hero img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: var(--radio);
+}
+
+.info-lista {
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 32px;
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--crema-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-lista dl {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-lista dt {
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--rojo);
+  letter-spacing: 0.5px;
+}
+
+.info-lista dd {
+  font-size: 1.1rem;
+  color: var(--negro);
+  margin-left: 0;
+  font-weight: 600;
+}
+
+@media (min-width: 851px) {
+  .perfil-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .perfil-hero img {
+    height: 100%;
+    min-height: 300px;
+  }
+}
+
 /* ── Grid de Cards ────────────────────── */
 
 .perfil-grid-cards {

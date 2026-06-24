@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block content %}
-{% if gimnasio is null %}
+{% set gym = gimnasio ?? userData ?? null %}
+{% if gym is null %}
     <p class="text-muted">No se encontró el gimnasio.</p>
 {% else %}
     <div class="perfil-grid">
@@ -20,16 +21,16 @@
         <section class="info-lista">
             <dl>
                 <dt>Nombre</dt>
-                <dd>{{ gimnasio.nombre }}</dd>
+                <dd>{{ gym.nombre }}</dd>
 
-                {% if gimnasio.direccion %}
+                {% if gym.direccion %}
                     <dt>Dirección</dt>
-                    <dd>{{ gimnasio.direccion }}</dd>
+                    <dd>{{ gym.direccion }}</dd>
                 {% endif %}
 
-                {% if gimnasio.horarios %}
+                {% if gym.horarios %}
                     <dt>Horarios</dt>
-                    <dd>{{ gimnasio.horarios }}</dd>
+                    <dd>{{ gym.horarios }}</dd>
                 {% endif %}
             </dl>
 
