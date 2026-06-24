@@ -77,7 +77,7 @@ ul, ol { list-style: none; }
 }
 
 .site-header nav {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 32px;
   margin-left: auto;
@@ -136,6 +136,7 @@ ul, ol { list-style: none; }
 
 .btn-perfil {
   width: 36px; height: 36px;
+  min-height: 44px;
   border-radius: 50%;
   border: 2px solid var(--rojo);
   overflow: hidden;
@@ -147,7 +148,7 @@ ul, ol { list-style: none; }
 
 /* ── Bottom Nav (mobile) ───────────── */
 .bottom-nav {
-  display: none;
+  display: flex;
   position: fixed;
   bottom: 0; left: 0; right: 0;
   z-index: 100;
@@ -171,13 +172,12 @@ ul, ol { list-style: none; }
 /* ── Main ──────────────────────────── */
 main {
   flex: 1;
-  padding: calc(var(--nav-h) + 28px) 20px 80px;   /* top padding compensa nav sticky */
-  max-width: 960px;
+  padding: 20px 14px 70px;   /* mobile first — bottom nav space */
   margin: 0 auto;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 28px;
 }
 
 /* ── Secciones ─────────────────────── */
@@ -229,8 +229,8 @@ section h2 {
 /* ── Grid de entrenadores ──────────── */
 .grid-entrenadores {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
 }
 
 .card-entrenador {
@@ -361,6 +361,7 @@ section h2 {
 /* ── Botones generales ─────────────── */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px;
   padding: 10px 22px;
   border-radius: var(--radio-sm);
   font-weight: 600;
@@ -434,13 +435,11 @@ section h2 {
 footer {
   background: var(--negro);
   color: var(--crema-dark);
-  padding: 40px 32px 24px;
+  padding: 28px 16px 80px;   /* space for bottom-nav on mobile */
   font-size: .88rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 24px;
 }
 
 footer section,
@@ -475,32 +474,36 @@ footer small { color: var(--gris); font-size: .75rem; }
 
 footer img { max-width: 80px; margin-bottom: 10px; }
 
-@media (max-width: 640px) {
-  footer {
-    flex-direction: column;
-    gap: 24px;
-    padding: 28px 16px 80px; /* espacio para bottom nav */
+/* ── Responsive (mobile-first) ─────── */
+/* Breakpoints: 480px (large phone), 641px (tablet/desktop chico), 769px (desktop) */
+
+@media (min-width: 481px) {
+  .grid-entrenadores {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 14px;
   }
 }
 
-/* ── Responsive ────────────────────── */
-@media (max-width: 640px) {
-  header nav { display: none; }
-  .bottom-nav { display: flex; }
+@media (min-width: 641px) {
+  .site-header nav { display: flex; }
+  .bottom-nav { display: none; }
 
-  main { padding: 20px 14px 70px; gap: 28px; }
+  main { padding: calc(var(--nav-h) + 28px) 20px 80px; gap: 36px; }
 
-  section h2 { font-size: 1.25rem; }
+  section h2 { font-size: 1.5rem; }
 
-  .grid-entrenadores {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
+  .grid-posts { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 
-  .card-entrenador { padding: 12px 8px; }
-  .card-entrenador .avatar { width: 52px; height: 52px; }
+  .card-entrenador { padding: 16px 12px; }
+  .card-entrenador .avatar { width: 64px; height: 64px; }
 
-  .grid-posts { grid-template-columns: 1fr; }
+  footer { flex-direction: row; padding: 40px 32px 24px; gap: 32px; justify-content: space-between; align-items: flex-start; }
+  footer section,
+  footer nav { flex: 1 1 160px; }
+}
+
+@media (min-width: 769px) {
+  main { max-width: 960px; }
 }
 
 /* ── Utilidades ────────────────────── */

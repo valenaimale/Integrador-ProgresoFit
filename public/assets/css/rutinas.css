@@ -78,8 +78,8 @@
 
 .grid-programas {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 16px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -146,6 +146,7 @@
 .btn-asignar {
   background: var(--negro);
   color: var(--blanco);
+  min-height: 44px;
   padding: 8px;
   border-radius: var(--radio-sm);
   border: none;
@@ -163,10 +164,10 @@
 
 /* ── Responsive ────────────────────── */
 
-@media (max-width: 640px) {
+@media (min-width: 641px) {
   .grid-programas {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
   }
 }
 
@@ -232,9 +233,8 @@
 
 .panel-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
   margin-bottom: 8px;
 }
@@ -255,6 +255,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
   padding: 8px 16px;
   border-radius: var(--radio-sm);
   font-weight: 600;
@@ -276,6 +277,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
   padding: 8px 16px;
   border-radius: var(--radio-sm);
   font-weight: 600;
@@ -535,9 +537,9 @@
 
 .form-ejercicio-fila {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  align-items: flex-end;
-  flex-wrap: wrap;
+  align-items: stretch;
 }
 
 .form-ejercicio-fila > div {
@@ -553,7 +555,7 @@
 }
 
 .form-ejercicio-fila input[type="number"] {
-  width: 80px;
+  width: 100%;
   padding: 6px 8px;
   border: 1px solid #ccc;
   border-radius: var(--radio-sm);
@@ -563,9 +565,9 @@
 
 .form-inline-dia {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  align-items: flex-end;
-  flex-wrap: wrap;
+  align-items: stretch;
 }
 
 .form-inline-dia > div {
@@ -631,6 +633,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
   padding: 8px 16px;
   border-radius: var(--radio-sm);
   font-weight: 600;
@@ -701,19 +704,22 @@
   border-radius: 20px;
 }
 
-@media (max-width: 640px) {
+@media (min-width: 641px) {
   .panel-header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 
   .form-inline-dia,
   .form-ejercicio-fila {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: wrap;
   }
 
   .form-ejercicio-fila input[type="number"] {
-    width: 100%;
+    width: 80px;
   }
 }

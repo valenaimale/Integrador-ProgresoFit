@@ -181,6 +181,7 @@
   display: block;
   background: var(--rojo);
   color: var(--blanco);
+  min-height: 44px;
   padding: 16px 32px;
   border-radius: var(--radio);
   text-decoration: none;
@@ -218,6 +219,7 @@
   color: #fff;
   border: none;
   border-radius: var(--radio);
+  min-height: 44px;
   padding: 6px 18px;
   font-size: .85rem;
   font-weight: 600;
@@ -384,26 +386,42 @@
   opacity: .7;
 }
 
-/* ── Responsive ────────────────────── */
+/* ── Responsive (mobile-first) ─── */
 
-@media (max-width: 850px) {
+/* Mobile base */
+.perfil-header-compacto {
+  flex-direction: column;
+  text-align: center;
+  padding: 30px;
+}
+
+.perfil-foto-circular {
+  width: 100px;
+  height: 100px;
+}
+
+.perfil-titulos h2 {
+  font-size: 1.8rem;
+}
+
+@media (min-width: 851px) {
   .perfil-header-compacto {
-    flex-direction: column;
-    text-align: center;
-    padding: 30px;
+    flex-direction: row;
+    text-align: left;
+    padding: 40px;
   }
 
   .perfil-foto-circular {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
+  }
+
+  .perfil-titulos h2 {
+    font-size: 2.4rem;
   }
 
   .perfil-hero {
     aspect-ratio: auto;
     height: 220px;
-  }
-
-  .perfil-titulos h2 {
-    font-size: 1.8rem;
   }
 }

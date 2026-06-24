@@ -10,9 +10,8 @@
    vistas de clases sean autosuficientes cargando solo clases.css. */
 .panel-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
   margin-bottom: 8px;
 }
@@ -35,6 +34,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
   padding: 8px 16px;
   border-radius: var(--radio-sm);
   font-weight: 600;
@@ -56,6 +56,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
   padding: 8px 16px;
   border-radius: var(--radio-sm);
   font-weight: 600;
@@ -94,7 +95,7 @@
 /* ── Grid de tarjetas ──────────────── */
 .grid-clases {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: 1fr;
   gap: 20px;
   list-style: none;
   padding: 0;
@@ -260,14 +261,84 @@ input[type="number"]:focus {
   width: auto;
 }
 
-@media (max-width: 640px) {
-  .grid-clases { grid-template-columns: 1fr; }
+/* ── Tabla→cards en mobile (base) ── */
+.tabla-inscriptos thead {
+  display: none;
+}
 
-  .panel-header {
-    flex-direction: column;
-    align-items: flex-start;
+.tabla-inscriptos tr {
+  display: block;
+  border-bottom: 1px solid var(--crema-dark);
+  margin-bottom: 12px;
+  background: var(--blanco);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-sm);
+  overflow: hidden;
+}
+
+.tabla-inscriptos td {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-top: none;
+  gap: 10px;
+  font-size: .88rem;
+}
+
+.tabla-inscriptos td::before {
+  content: attr(data-label);
+  font-weight: 700;
+  color: var(--negro);
+  width: 40%;
+  flex-shrink: 0;
+}
+
+.tabla-inscriptos td:not(:last-child) {
+  border-bottom: 1px solid var(--crema-dark);
+}
+
+/* ── Responsive (mobile-first) ─────── */
+@media (min-width: 769px) {
+  .grid-clases {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 
-  .tabla-inscriptos th,
-  .tabla-inscriptos td { padding: 9px 10px; font-size: .82rem; }
+  .panel-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  /* Restore table layout */
+  .tabla-inscriptos thead {
+    display: table-header-group;
+  }
+
+  .tabla-inscriptos tr {
+    display: table-row;
+    border-bottom: none;
+    margin-bottom: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .tabla-inscriptos td {
+    display: table-cell;
+    padding: 11px 16px;
+    border-top: 1px solid var(--crema-dark);
+    gap: 0;
+    font-size: .9rem;
+  }
+
+  .tabla-inscriptos td::before {
+    display: none;
+  }
+
+  .tabla-inscriptos td:not(:last-child) {
+    border-bottom: none;
+  }
 }

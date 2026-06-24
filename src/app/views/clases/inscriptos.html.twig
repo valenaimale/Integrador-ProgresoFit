@@ -37,9 +37,9 @@
             <tbody>
                 {% for inscripto in inscriptos %}
                     <tr>
-                        <td>{{ inscripto.nombre ?? '—' }}</td>
-                        <td>{{ inscripto.email }}</td>
-                        <td>{{ inscripto.inscripto_at|date('d/m/Y H:i') }}</td>
+                        <td data-label="Nombre">{{ inscripto.nombre ?? '—' }}</td>
+                        <td data-label="Email">{{ inscripto.email }}</td>
+                        <td data-label="Se anotó">{{ inscripto.inscripto_at|date('d/m/Y H:i') }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
