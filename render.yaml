@@ -46,11 +46,11 @@ services:
       - key: MP_NOTIFICATION_URL
         sync: false
       - key: MP_SUCCESS_URL
-        value: https://darwin-consulting.online/pago-exitoso
+        value: https://progresofit-frontend.onrender.com/pago-exitoso
       - key: MP_FAILURE_URL
-        value: https://darwin-consulting.online/pago-fallido
+        value: https://progresofit-frontend.onrender.com/pago-fallido
       - key: MP_PENDING_URL
-        value: https://darwin-consulting.online/pago-suscripcion
+        value: https://progresofit-frontend.onrender.com/pago-suscripcion
 
   - type: web
     name: progresofit-frontend
