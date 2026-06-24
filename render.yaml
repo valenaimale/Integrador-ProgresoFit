@@ -64,5 +64,3 @@ services:
     envVars:
       - key: API_BASE_URL
         value: https://progresofit-backend.onrender.com
-    customDomains:
-      - name: darwin-consulting.online
