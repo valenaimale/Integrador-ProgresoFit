@@ -158,7 +158,7 @@ CREATE TABLE IF NOT EXISTS gym_tokens (
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_expires ON gym_tokens(expires_at);
+CREATE INDEX IF NOT EXISTS idx_expires ON gym_tokens(expires_at);
 
 CREATE TABLE IF NOT EXISTS accesos_gimnasio (
   id            SERIAL PRIMARY KEY,
@@ -170,9 +170,9 @@ CREATE TABLE IF NOT EXISTS accesos_gimnasio (
   FOREIGN KEY (gimnasio_id) REFERENCES gimnasios(id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_usuario ON accesos_gimnasio(usuario_id);
-CREATE INDEX idx_gimnasio_tipo ON accesos_gimnasio(gimnasio_id, tipo);
-CREATE INDEX idx_fecha ON accesos_gimnasio(registrado_at);
+CREATE INDEX IF NOT EXISTS idx_usuario ON accesos_gimnasio(usuario_id);
+CREATE INDEX IF NOT EXISTS idx_gimnasio_tipo ON accesos_gimnasio(gimnasio_id, tipo);
+CREATE INDEX IF NOT EXISTS idx_fecha ON accesos_gimnasio(registrado_at);
 
 CREATE TABLE IF NOT EXISTS gimnasio_aforo (
   gimnasio_id      INT NOT NULL PRIMARY KEY,
@@ -200,7 +200,7 @@ CREATE TABLE IF NOT EXISTS clases (
   FOREIGN KEY (gimnasio_id) REFERENCES gimnasios(id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_gimnasio_fecha ON clases(gimnasio_id, fecha);
+CREATE INDEX IF NOT EXISTS idx_gimnasio_fecha ON clases(gimnasio_id, fecha);
 
 CREATE TABLE IF NOT EXISTS clase_inscripciones (
   id            SERIAL PRIMARY KEY,
@@ -212,4 +212,4 @@ CREATE TABLE IF NOT EXISTS clase_inscripciones (
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id)  ON DELETE CASCADE
 );
 
-CREATE INDEX idx_clase_inscripciones_usuario ON clase_inscripciones(usuario_id);
+CREATE INDEX IF NOT EXISTS idx_clase_inscripciones_usuario ON clase_inscripciones(usuario_id);
