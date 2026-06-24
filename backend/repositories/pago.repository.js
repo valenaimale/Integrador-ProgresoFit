@@ -9,12 +9,12 @@ import { pool } from '../database/connection.js';
  * @returns {Promise<Object>} Pago creado
  */
 export async function create({ suscripcion_id, monto, mp_preference_id }) {
-  const [result] = await pool.query(
+  const { rows: [{ id }] } = await pool.query(
     `INSERT INTO pagos (suscripcion_id, monto, mp_preference_id)
-     VALUES (?, ?, ?)`,
+     VALUES ($1, $2, $3) RETURNING id`,
     [suscripcion_id, monto, mp_preference_id]
   );
-  return findById(result.insertId);
+  return findById(id);
 }
 
 /**
@@ -23,11 +23,11 @@ export async function create({ suscripcion_id, monto, mp_preference_id }) {
  * @returns {Promise<Object|undefined>}
  */
 export async function findById(id) {
-  const [[row]] = await pool.query(
+  const { rows: [row] } = await pool.query(
     `SELECT id, suscripcion_id, monto, estado,
             mp_preference_id, mp_payment_id, mp_status, mp_status_detail,
             intentos, creado_en, actualizado_en
-     FROM pagos WHERE id = ?`,
+     FROM pagos WHERE id = $1`,
     [id]
   );
   return row;
@@ -39,11 +39,11 @@ export async function findById(id) {
  * @returns {Promise<Object|undefined>}
  */
 export async function findByPreferenceId(preferenceId) {
-  const [[row]] = await pool.query(
+  const { rows: [row] } = await pool.query(
     `SELECT id, suscripcion_id, monto, estado,
             mp_preference_id, mp_payment_id, mp_status, mp_status_detail,
             intentos, creado_en, actualizado_en
-     FROM pagos WHERE mp_preference_id = ?`,
+     FROM pagos WHERE mp_preference_id = $1`,
     [preferenceId]
   );
   return row;
@@ -55,11 +55,11 @@ export async function findByPreferenceId(preferenceId) {
  * @returns {Promise<Object|undefined>}
  */
 export async function findByPaymentId(paymentId) {
-  const [[row]] = await pool.query(
+  const { rows: [row] } = await pool.query(
     `SELECT id, suscripcion_id, monto, estado,
             mp_preference_id, mp_payment_id, mp_status, mp_status_detail,
             intentos, creado_en, actualizado_en
-     FROM pagos WHERE mp_payment_id = ?`,
+     FROM pagos WHERE mp_payment_id = $1`,
     [paymentId]
   );
   return row;
@@ -80,25 +80,26 @@ export async function findByPaymentId(paymentId) {
 export async function updateStatus(id, fields) {
   const setClauses = [];
   const params = [];
+  let paramIndex = 1;
 
   if (fields.estado !== undefined) {
-    setClauses.push('estado = ?');
+    setClauses.push(`estado = $${paramIndex++}`);
     params.push(fields.estado);
   }
   if (fields.mp_payment_id !== undefined) {
-    setClauses.push('mp_payment_id = ?');
+    setClauses.push(`mp_payment_id = $${paramIndex++}`);
     params.push(fields.mp_payment_id);
   }
   if (fields.mp_status !== undefined) {
-    setClauses.push('mp_status = ?');
+    setClauses.push(`mp_status = $${paramIndex++}`);
     params.push(fields.mp_status);
   }
   if (fields.mp_status_detail !== undefined) {
-    setClauses.push('mp_status_detail = ?');
+    setClauses.push(`mp_status_detail = $${paramIndex++}`);
     params.push(fields.mp_status_detail);
   }
   if (fields.intentos !== undefined) {
-    setClauses.push('intentos = ?');
+    setClauses.push(`intentos = $${paramIndex++}`);
     params.push(fields.intentos);
   }
 
@@ -106,7 +107,7 @@ export async function updateStatus(id, fields) {
 
   params.push(id);
   await pool.query(
-    `UPDATE pagos SET ${setClauses.join(', ')} WHERE id = ?`,
+    `UPDATE pagos SET ${setClauses.join(', ')} WHERE id = $${paramIndex}`,
     params
   );
   return findById(id);
@@ -118,12 +119,12 @@ export async function updateStatus(id, fields) {
  * @returns {Promise<Array<Object>>}
  */
 export async function findBySuscripcion(suscripcionId) {
-  const [rows] = await pool.query(
+  const { rows } = await pool.query(
     `SELECT id, suscripcion_id, monto, estado,
             mp_preference_id, mp_payment_id, mp_status, mp_status_detail,
             intentos, creado_en, actualizado_en
      FROM pagos
-     WHERE suscripcion_id = ?
+     WHERE suscripcion_id = $1
      ORDER BY creado_en DESC`,
     [suscripcionId]
   );

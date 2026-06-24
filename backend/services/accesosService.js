@@ -22,26 +22,26 @@ export async function generarQr(usuarioId) {
 }
 
 export async function registrarAcceso(token, gimnasioId) {
-  const conn = await pool.getConnection();
+  const conn = await pool.connect();
   try {
-    await conn.beginTransaction();
+    await conn.query('BEGIN');
 
     // 1. Validar token (FOR UPDATE para serializar escaneos concurrentes)
     const gymToken = await repo.findToken(token, conn);
     if (!gymToken) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       const err = new Error('QR inválido');
       err.status = 404;
       throw err;
     }
     if (new Date(gymToken.expires_at) < new Date()) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       const err = new Error('QR vencido');
       err.status = 410;
       throw err;
     }
     if (gymToken.usado) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       const err = new Error('QR ya fue utilizado');
       err.status = 409;
       throw err;
@@ -52,7 +52,7 @@ export async function registrarAcceso(token, gimnasioId) {
     // 2. Verificar suscripción activa
     const suscripcion = await repo.getSuscripcionActiva(usuarioId, conn);
     if (!suscripcion) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       const err = new Error('El alumno no tiene una suscripción activa');
       err.status = 403;
       throw err;
@@ -61,7 +61,7 @@ export async function registrarAcceso(token, gimnasioId) {
     // 3. Lockear fila de aforo para serializar concurrencia
     const aforo = await repo.getAforo(gimnasioId, conn);
     if (!aforo) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       const err = new Error('Gimnasio no encontrado');
       err.status = 404;
       throw err;
@@ -73,7 +73,7 @@ export async function registrarAcceso(token, gimnasioId) {
 
     // 5. Control de capacidad (solo para ENTRADA)
     if (tipo === 'ENTRADA' && aforo.ocupacion_actual >= aforo.capacidad_maxima) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       const err = new Error(`Gimnasio al límite de capacidad (${aforo.capacidad_maxima} personas)`);
       err.status = 409;
       throw err;
@@ -92,7 +92,7 @@ export async function registrarAcceso(token, gimnasioId) {
     // 8. Marcar token como usado (requiere nuevo QR para próximo acceso)
     await repo.marcarTokenUsado(token, conn);
 
-    await conn.commit();
+    await conn.query('COMMIT');
 
     const nuevaOcupacion = tipo === 'ENTRADA'
       ? aforo.ocupacion_actual + 1
@@ -107,7 +107,7 @@ export async function registrarAcceso(token, gimnasioId) {
     };
   } catch (err) {
     // Solo hacer rollback si la transacción sigue abierta (no la cerramos antes)
-    try { await conn.rollback(); } catch (_) {}
+    try { await conn.query('ROLLBACK'); } catch (_) {}
     throw err;
   } finally {
     conn.release();

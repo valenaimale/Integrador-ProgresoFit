@@ -1,12 +1,23 @@
 -- ============================================================
 -- ProgresoFit - Migration: create missing tables
--- Run this once against the running MySQL container:
---   docker exec -i progresofit-db mysql -u root -proot progresofit < backend/database/migrations/create_tables.sql
+-- Run this once against the running PostgreSQL container:
+--   docker exec -i progresofit-postgres psql -U progresofit_user -d progresofit < backend/database/migrations/create_tables.sql
 -- ============================================================
+
+-- ENUM types (safe to re-create with DO blocks)
+DO $$ BEGIN
+  CREATE TYPE dificultad_type AS ENUM ('baja','media','alta');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+
+DO $$ BEGIN
+  CREATE TYPE suscripcion_estado_type AS ENUM ('activa','cancelada','vencida');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Trainer profile (extends usuarios where rol='ENTRENADOR')
 CREATE TABLE IF NOT EXISTS entrenadores (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
+  id          SERIAL PRIMARY KEY,
   usuario_id  INT NOT NULL UNIQUE,
   especialidad VARCHAR(255),
   descripcion  TEXT,
@@ -19,7 +30,7 @@ CREATE TABLE IF NOT EXISTS entrenadores (
 
 -- Workout routines
 CREATE TABLE IF NOT EXISTS rutinas (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
+  id           SERIAL PRIMARY KEY,
   titulo       VARCHAR(255) NOT NULL,
   descripcion  TEXT,
   objetivo     VARCHAR(255),
@@ -30,7 +41,7 @@ CREATE TABLE IF NOT EXISTS rutinas (
 
 -- Training days within a routine
 CREATE TABLE IF NOT EXISTS entrenamientos (
-  id               INT AUTO_INCREMENT PRIMARY KEY,
+  id               SERIAL PRIMARY KEY,
   rutina_id        INT NOT NULL,
   nombre_dia       VARCHAR(100) NOT NULL,
   grupo_muscular   VARCHAR(255),
@@ -41,10 +52,10 @@ CREATE TABLE IF NOT EXISTS entrenamientos (
 
 -- Exercise catalog (lazy-cached from external API)
 CREATE TABLE IF NOT EXISTS ejercicios (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
+  id           SERIAL PRIMARY KEY,
   nombre       VARCHAR(255) NOT NULL,
   descripcion  TEXT,
-  dificultad   ENUM('baja','media','alta') DEFAULT 'media',
+  dificultad   dificultad_type DEFAULT 'media',
   musculos     VARCHAR(255),
   equipamiento VARCHAR(255),
   video_url    VARCHAR(500),
@@ -54,7 +65,7 @@ CREATE TABLE IF NOT EXISTS ejercicios (
 
 -- Exercises within a training day (pivot)
 CREATE TABLE IF NOT EXISTS entrenamiento_ejercicios (
-  id                  INT AUTO_INCREMENT PRIMARY KEY,
+  id                  SERIAL PRIMARY KEY,
   entrenamiento_id    INT NOT NULL,
   ejercicio_id        INT NOT NULL,
   series_repeticiones VARCHAR(100),
@@ -65,11 +76,11 @@ CREATE TABLE IF NOT EXISTS entrenamiento_ejercicios (
 
 -- Subscriptions
 CREATE TABLE IF NOT EXISTS suscripciones (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
+  id          SERIAL PRIMARY KEY,
   usuario_id  INT NOT NULL,
   plan        VARCHAR(100) NOT NULL,
   precio      DECIMAL(10,2),
-  estado      ENUM('activa','cancelada','vencida') DEFAULT 'activa',
+  estado      suscripcion_estado_type DEFAULT 'activa',
   fecha_inicio DATE NOT NULL,
   fecha_fin    DATE NOT NULL,
   created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -78,25 +89,23 @@ CREATE TABLE IF NOT EXISTS suscripciones (
 
 -- Routine assignment (trainer -> student)
 CREATE TABLE IF NOT EXISTS alumno_rutinas (
-  id                INT AUTO_INCREMENT PRIMARY KEY,
+  id                SERIAL PRIMARY KEY,
   alumno_id         INT NOT NULL,
   rutina_id         INT NOT NULL,
   asignado_por      INT NOT NULL,
   fecha_asignacion  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_asignacion (alumno_id, rutina_id),
+  CONSTRAINT unique_asignacion UNIQUE (alumno_id, rutina_id),
   FOREIGN KEY (alumno_id)    REFERENCES usuarios(id) ON DELETE CASCADE,
   FOREIGN KEY (rutina_id)    REFERENCES rutinas(id)  ON DELETE CASCADE,
   FOREIGN KEY (asignado_por) REFERENCES usuarios(id)
 );
 
 -- Add missing columns to gimnasios for full registration form
--- NOTE: MySQL 8.0 does not support IF NOT EXISTS on ALTER TABLE ADD COLUMN.
--- Run this only once on a fresh DB. Skip if columns already exist.
 ALTER TABLE gimnasios
-  ADD COLUMN telefono    VARCHAR(50),
-  ADD COLUMN email       VARCHAR(255),
-  ADD COLUMN descripcion TEXT,
-  ADD COLUMN servicios   TEXT;
+  ADD COLUMN IF NOT EXISTS telefono    VARCHAR(50),
+  ADD COLUMN IF NOT EXISTS email       VARCHAR(255),
+  ADD COLUMN IF NOT EXISTS descripcion TEXT,
+  ADD COLUMN IF NOT EXISTS servicios   TEXT;
 
 -- ============================================================
 -- Migration: gimnasios as accounts (GIMNASIO role)
@@ -104,10 +113,14 @@ ALTER TABLE gimnasios
 -- ============================================================
 
 -- Add GIMNASIO to usuarios role enum
-ALTER TABLE usuarios
-  MODIFY COLUMN rol ENUM('ADMIN','ENTRENADOR','ALUMNO','GIMNASIO') NOT NULL DEFAULT 'ALUMNO';
+ALTER TYPE rol_type ADD VALUE IF NOT EXISTS 'GIMNASIO';
 
 -- Link gimnasios to their owner user account
 ALTER TABLE gimnasios
-  ADD COLUMN usuario_id INT UNIQUE DEFAULT NULL,
-  ADD CONSTRAINT fk_gimnasio_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL;
+  ADD COLUMN IF NOT EXISTS usuario_id INT UNIQUE DEFAULT NULL;
+
+DO $$ BEGIN
+  ALTER TABLE gimnasios
+    ADD CONSTRAINT fk_gimnasio_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;

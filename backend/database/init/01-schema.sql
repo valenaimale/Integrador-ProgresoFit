@@ -3,20 +3,44 @@
 -- Runs automatically on first `docker compose up` via init dir.
 -- ============================================================
 
-SET NAMES utf8mb4;
+-- ============================================================
+-- ENUM types (must exist before tables that reference them)
+-- ============================================================
+
+CREATE TYPE rol_type AS ENUM ('ADMIN','ENTRENADOR','ALUMNO','GIMNASIO');
+CREATE TYPE dificultad_type AS ENUM ('baja','media','alta');
+CREATE TYPE suscripcion_estado_type AS ENUM ('activa','cancelada','vencida');
+CREATE TYPE acceso_tipo_type AS ENUM ('ENTRADA','SALIDA');
+CREATE TYPE clase_estado_type AS ENUM ('ACTIVA','CANCELADA');
+
+-- ============================================================
+-- Trigger function for updated_at columns
+-- ============================================================
+
+CREATE OR REPLACE FUNCTION update_actualizado_en()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.actualizado_en = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ============================================================
+-- Tables
+-- ============================================================
 
 CREATE TABLE IF NOT EXISTS usuarios (
-  id         INT AUTO_INCREMENT PRIMARY KEY,
+  id         SERIAL PRIMARY KEY,
   nombre     VARCHAR(255) DEFAULT NULL,
   email      VARCHAR(255) NOT NULL,
   password   VARCHAR(255) NOT NULL,
-  rol        ENUM('ADMIN','ENTRENADOR','ALUMNO','GIMNASIO') NOT NULL DEFAULT 'ALUMNO',
+  rol        rol_type NOT NULL DEFAULT 'ALUMNO',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY email (email)
+  CONSTRAINT email UNIQUE (email)
 );
 
 CREATE TABLE IF NOT EXISTS gimnasios (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
+  id          SERIAL PRIMARY KEY,
   usuario_id  INT UNIQUE DEFAULT NULL,
   nombre      VARCHAR(255) NOT NULL,
   direccion   TEXT,
@@ -25,13 +49,13 @@ CREATE TABLE IF NOT EXISTS gimnasios (
   email       VARCHAR(255),
   descripcion TEXT,
   servicios   TEXT,
-  activo      TINYINT(1) DEFAULT 1,
+  activo      BOOLEAN DEFAULT TRUE,
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS entrenadores (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
+  id           SERIAL PRIMARY KEY,
   usuario_id   INT NOT NULL UNIQUE,
   especialidad VARCHAR(255),
   descripcion  TEXT,
@@ -43,7 +67,7 @@ CREATE TABLE IF NOT EXISTS entrenadores (
 );
 
 CREATE TABLE IF NOT EXISTS rutinas (
-  id            INT AUTO_INCREMENT PRIMARY KEY,
+  id            SERIAL PRIMARY KEY,
   titulo        VARCHAR(255) NOT NULL,
   descripcion   TEXT,
   objetivo      VARCHAR(255),
@@ -53,7 +77,7 @@ CREATE TABLE IF NOT EXISTS rutinas (
 );
 
 CREATE TABLE IF NOT EXISTS entrenamientos (
-  id               INT AUTO_INCREMENT PRIMARY KEY,
+  id               SERIAL PRIMARY KEY,
   rutina_id        INT NOT NULL,
   nombre_dia       VARCHAR(100) NOT NULL,
   grupo_muscular   VARCHAR(255),
@@ -63,10 +87,10 @@ CREATE TABLE IF NOT EXISTS entrenamientos (
 );
 
 CREATE TABLE IF NOT EXISTS ejercicios (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
+  id           SERIAL PRIMARY KEY,
   nombre       VARCHAR(255) NOT NULL,
   descripcion  TEXT,
-  dificultad   ENUM('baja','media','alta') DEFAULT 'media',
+  dificultad   dificultad_type DEFAULT 'media',
   musculos     VARCHAR(255),
   equipamiento VARCHAR(255),
   video_url    VARCHAR(500),
@@ -75,7 +99,7 @@ CREATE TABLE IF NOT EXISTS ejercicios (
 );
 
 CREATE TABLE IF NOT EXISTS entrenamiento_ejercicios (
-  id                  INT AUTO_INCREMENT PRIMARY KEY,
+  id                  SERIAL PRIMARY KEY,
   entrenamiento_id    INT NOT NULL,
   ejercicio_id        INT NOT NULL,
   series_repeticiones VARCHAR(100),
@@ -85,11 +109,11 @@ CREATE TABLE IF NOT EXISTS entrenamiento_ejercicios (
 );
 
 CREATE TABLE IF NOT EXISTS suscripciones (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
+  id          SERIAL PRIMARY KEY,
   usuario_id  INT NOT NULL,
   plan        VARCHAR(100) NOT NULL,
   precio      DECIMAL(10,2),
-  estado      ENUM('activa','cancelada','vencida') DEFAULT 'activa',
+  estado      suscripcion_estado_type DEFAULT 'activa',
   fecha_inicio DATE NOT NULL,
   fecha_fin    DATE NOT NULL,
   created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -97,22 +121,22 @@ CREATE TABLE IF NOT EXISTS suscripciones (
 );
 
 CREATE TABLE IF NOT EXISTS entrenador_alumnos (
-  id              INT AUTO_INCREMENT PRIMARY KEY,
+  id              SERIAL PRIMARY KEY,
   entrenador_id   INT NOT NULL,
   alumno_id       INT NOT NULL,
   fecha_registro  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_relacion (entrenador_id, alumno_id),
+  CONSTRAINT unique_relacion UNIQUE (entrenador_id, alumno_id),
   FOREIGN KEY (entrenador_id) REFERENCES usuarios(id) ON DELETE CASCADE,
   FOREIGN KEY (alumno_id)     REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS alumno_rutinas (
-  id                INT AUTO_INCREMENT PRIMARY KEY,
+  id                SERIAL PRIMARY KEY,
   alumno_id         INT NOT NULL,
   rutina_id         INT NOT NULL,
   asignado_por      INT NOT NULL,
   fecha_asignacion  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_asignacion (alumno_id, rutina_id),
+  CONSTRAINT unique_asignacion UNIQUE (alumno_id, rutina_id),
   FOREIGN KEY (alumno_id)    REFERENCES usuarios(id) ON DELETE CASCADE,
   FOREIGN KEY (rutina_id)    REFERENCES rutinas(id)  ON DELETE CASCADE,
   FOREIGN KEY (asignado_por) REFERENCES usuarios(id)
@@ -123,44 +147,46 @@ CREATE TABLE IF NOT EXISTS alumno_rutinas (
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS gym_tokens (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
+  id          SERIAL PRIMARY KEY,
   usuario_id  INT NOT NULL,
   token       VARCHAR(64) NOT NULL,
-  expires_at  DATETIME NOT NULL,
-  usado       TINYINT(1) NOT NULL DEFAULT 0,
+  expires_at  TIMESTAMP NOT NULL,
+  usado       BOOLEAN NOT NULL DEFAULT FALSE,
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uq_token (token),
-  UNIQUE KEY uq_usuario_activo (usuario_id),
-  INDEX idx_expires (expires_at),
+  CONSTRAINT uq_token UNIQUE (token),
+  CONSTRAINT uq_usuario_activo UNIQUE (usuario_id),
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
+
+CREATE INDEX idx_expires ON gym_tokens(expires_at);
 
 CREATE TABLE IF NOT EXISTS accesos_gimnasio (
-  id            INT AUTO_INCREMENT PRIMARY KEY,
+  id            SERIAL PRIMARY KEY,
   usuario_id    INT NOT NULL,
   gimnasio_id   INT NOT NULL,
-  tipo          ENUM('ENTRADA','SALIDA') NOT NULL,
-  registrado_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_usuario (usuario_id),
-  INDEX idx_gimnasio_tipo (gimnasio_id, tipo),
-  INDEX idx_fecha (registrado_at),
+  tipo          acceso_tipo_type NOT NULL,
+  registrado_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (usuario_id)  REFERENCES usuarios(id)  ON DELETE CASCADE,
   FOREIGN KEY (gimnasio_id) REFERENCES gimnasios(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
+
+CREATE INDEX idx_usuario ON accesos_gimnasio(usuario_id);
+CREATE INDEX idx_gimnasio_tipo ON accesos_gimnasio(gimnasio_id, tipo);
+CREATE INDEX idx_fecha ON accesos_gimnasio(registrado_at);
 
 CREATE TABLE IF NOT EXISTS gimnasio_aforo (
   gimnasio_id      INT NOT NULL PRIMARY KEY,
   capacidad_maxima INT NOT NULL DEFAULT 50,
   ocupacion_actual INT NOT NULL DEFAULT 0,
   FOREIGN KEY (gimnasio_id) REFERENCES gimnasios(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 -- ============================================================
 -- Clases / Actividades con cupo
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS clases (
-  id               INT AUTO_INCREMENT PRIMARY KEY,
+  id               SERIAL PRIMARY KEY,
   gimnasio_id      INT NOT NULL,
   nombre           VARCHAR(255) NOT NULL,          -- ej: "Spinning / Bicicleta"
   descripcion      TEXT,
@@ -169,19 +195,21 @@ CREATE TABLE IF NOT EXISTS clases (
   hora_fin         TIME,
   cupo_maximo      INT NOT NULL,
   inscriptos       INT NOT NULL DEFAULT 0,         -- contador denormalizado para control de cupo
-  estado           ENUM('ACTIVA','CANCELADA') NOT NULL DEFAULT 'ACTIVA',
+  estado           clase_estado_type NOT NULL DEFAULT 'ACTIVA',
   created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_gimnasio_fecha (gimnasio_id, fecha),
   FOREIGN KEY (gimnasio_id) REFERENCES gimnasios(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
+
+CREATE INDEX idx_gimnasio_fecha ON clases(gimnasio_id, fecha);
 
 CREATE TABLE IF NOT EXISTS clase_inscripciones (
-  id            INT AUTO_INCREMENT PRIMARY KEY,
+  id            SERIAL PRIMARY KEY,
   clase_id      INT NOT NULL,
   usuario_id    INT NOT NULL,
   created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uq_clase_usuario (clase_id, usuario_id),  -- evita doble inscripción
-  INDEX idx_usuario (usuario_id),
+  CONSTRAINT uq_clase_usuario UNIQUE (clase_id, usuario_id),  -- evita doble inscripción
   FOREIGN KEY (clase_id)   REFERENCES clases(id)    ON DELETE CASCADE,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id)  ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
+
+CREATE INDEX idx_clase_inscripciones_usuario ON clase_inscripciones(usuario_id);

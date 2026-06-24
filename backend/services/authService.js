@@ -5,7 +5,7 @@ import { pool } from '../database/connection.js';
 const SALT_ROUNDS = 10;
 
 export async function register(email, password, rol = 'ALUMNO', gymData = {}) {
-    const [existing] = await pool.query('SELECT id FROM usuarios WHERE email = ?', [email]);
+    const { rows: existing } = await pool.query('SELECT id FROM usuarios WHERE email = $1', [email]);
 
     if (existing.length > 0) {
         throw new Error('El correo ya está registrado');
@@ -13,31 +13,31 @@ export async function register(email, password, rol = 'ALUMNO', gymData = {}) {
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-    const [result] = await pool.query(
-        'INSERT INTO usuarios (email, password, rol) VALUES (?, ?, ?)',
+    const { rows: [{ id }] } = await pool.query(
+        'INSERT INTO usuarios (email, password, rol) VALUES ($1, $2, $3) RETURNING id',
         [email, hashedPassword, rol]
     );
 
-    const userId = result.insertId;
+    const userId = id;
     let gimnasio_id = null;
 
     if (rol === 'GIMNASIO') {
         const { nombre, direccion, horarios, telefono, descripcion, servicios } = gymData;
         if (!nombre) throw new Error('El nombre del gimnasio es obligatorio');
 
-        const [gymResult] = await pool.query(
-            'INSERT INTO gimnasios (usuario_id, nombre, direccion, horarios, telefono, email, descripcion, servicios) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        const { rows: [{ id: gymId }] } = await pool.query(
+            'INSERT INTO gimnasios (usuario_id, nombre, direccion, horarios, telefono, email, descripcion, servicios) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id',
             [userId, nombre, direccion || null, horarios || null, telefono || null, email, descripcion || null, servicios || null]
         );
-        gimnasio_id = gymResult.insertId;
+        gimnasio_id = gymId;
     }
 
     return { id: userId, email, rol, gimnasio_id };
 }
 
 export async function login(email, password) {
-    const [users] = await pool.query(
-        'SELECT id, email, password, rol FROM usuarios WHERE email = ?',
+    const { rows: users } = await pool.query(
+        'SELECT id, email, password, rol FROM usuarios WHERE email = $1',
         [email]
     );
 
@@ -54,8 +54,8 @@ export async function login(email, password) {
 
     let gimnasio_id = null;
     if (user.rol === 'GIMNASIO') {
-        const [gyms] = await pool.query(
-            'SELECT id FROM gimnasios WHERE usuario_id = ? AND activo = TRUE',
+        const { rows: gyms } = await pool.query(
+            'SELECT id FROM gimnasios WHERE usuario_id = $1 AND activo = TRUE',
             [user.id]
         );
         if (gyms.length > 0) gimnasio_id = gyms[0].id;

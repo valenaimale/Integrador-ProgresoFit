@@ -1,24 +1,23 @@
 services:
 
   # ==================== BASE DE DATOS ====================
-  mysql:
-    image: mysql:8.0
-    container_name: progresofit-mysql
+  postgres:
+    image: postgres:16-alpine
+    container_name: progresofit-postgres
     restart: always
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --character-set-client-handshake=FALSE
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: progresofit
-      MYSQL_USER: progresofit_user
-      MYSQL_PASSWORD: progresofit_pass
+      POSTGRES_DB: progresofit
+      POSTGRES_USER: progresofit_user
+      POSTGRES_PASSWORD: progresofit_pass
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
       - ./backend/database/init:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
+      test: ["CMD-SHELL", "pg_isready -U progresofit_user -d progresofit"]
+      interval: 5s
+      timeout: 5s
       retries: 10
 
   # ==================== BACKEND NODE.JS ====================
@@ -34,7 +33,7 @@ services:
     environment:
       PORT: 3000
       JWT_SECRET: tu_clave_secreta_super_segura_aqui_123456
-      DB_HOST: mysql
+      DB_HOST: postgres
       DB_USER: progresofit_user
       DB_PASSWORD: progresofit_pass
       DB_NAME: progresofit
@@ -45,7 +44,7 @@ services:
       MP_PENDING_URL: ${MP_PENDING_URL:-http://localhost:8000/pago-suscripcion}
       MP_NOTIFICATION_URL: ${MP_NOTIFICATION_URL}
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
 
   # ==================== FRONTEND PHP ====================
@@ -64,4 +63,4 @@ services:
       - backend
 
 volumes:
-  mysql_data:
+  postgres_data:

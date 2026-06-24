@@ -1,7 +1,7 @@
 import { pool } from '../database/connection.js';
 
 export async function findAll() {
-  const [rows] = await pool.query(
+  const { rows } = await pool.query(
     `SELECT r.id, r.titulo, r.descripcion, r.objetivo, r.created_at,
             u.nombre AS entrenador_nombre
      FROM rutinas r
@@ -12,13 +12,13 @@ export async function findAll() {
 }
 
 export async function findByAlumno(alumnoId) {
-  const [rows] = await pool.query(
+  const { rows } = await pool.query(
     `SELECT r.id, r.titulo, r.descripcion, r.objetivo, r.created_at,
             u.nombre AS entrenador_nombre
      FROM rutinas r
      INNER JOIN alumno_rutinas ar ON ar.rutina_id = r.id
      LEFT JOIN  usuarios u ON u.id = r.entrenador_id
-     WHERE ar.alumno_id = ?
+     WHERE ar.alumno_id = $1
      ORDER BY ar.fecha_asignacion DESC`,
     [alumnoId]
   );
@@ -27,18 +27,18 @@ export async function findByAlumno(alumnoId) {
 
 export async function findById(id) {
   // Main routine
-  const [[rutina]] = await pool.query(
+  const { rows: [rutina] } = await pool.query(
     `SELECT r.id, r.titulo, r.descripcion, r.objetivo, r.entrenador_id, r.created_at,
             u.nombre AS entrenador_nombre
      FROM rutinas r
      LEFT JOIN usuarios u ON u.id = r.entrenador_id
-     WHERE r.id = ?`,
+     WHERE r.id = $1`,
     [id]
   );
   if (!rutina) return null;
 
   // Training days + exercises in one query
-  const [rows] = await pool.query(
+  const { rows } = await pool.query(
     `SELECT
        e.id AS dia_id, e.nombre_dia, e.grupo_muscular, e.duracion_minutos, e.orden AS dia_orden,
        ej.id AS ejercicio_id, ej.api_id, ej.nombre AS ejercicio_nombre, ej.musculos,
@@ -47,7 +47,7 @@ export async function findById(id) {
      FROM entrenamientos e
      LEFT JOIN entrenamiento_ejercicios ee ON ee.entrenamiento_id = e.id
      LEFT JOIN ejercicios ej ON ej.id = ee.ejercicio_id
-     WHERE e.rutina_id = ?
+     WHERE e.rutina_id = $1
      ORDER BY e.orden, ee.orden`,
     [id]
   );
@@ -82,11 +82,11 @@ export async function findById(id) {
 
   rutina.dias = Array.from(diasMap.values());
 
-  const [asignados] = await pool.query(
+  const { rows: asignados } = await pool.query(
     `SELECT u.id, u.nombre, u.email
      FROM alumno_rutinas ar
      INNER JOIN usuarios u ON u.id = ar.alumno_id
-     WHERE ar.rutina_id = ?`,
+     WHERE ar.rutina_id = $1`,
     [id]
   );
   rutina.alumnos_asignados = asignados;
@@ -95,27 +95,27 @@ export async function findById(id) {
 }
 
 export async function create({ titulo, descripcion, objetivo, entrenador_id }) {
-  const [result] = await pool.query(
-    'INSERT INTO rutinas (titulo, descripcion, objetivo, entrenador_id) VALUES (?, ?, ?, ?)',
+  const { rows: [{ id }] } = await pool.query(
+    'INSERT INTO rutinas (titulo, descripcion, objetivo, entrenador_id) VALUES ($1, $2, $3, $4) RETURNING id',
     [titulo, descripcion || null, objetivo || null, entrenador_id]
   );
-  return { id: result.insertId, titulo, descripcion, objetivo, entrenador_id };
+  return { id, titulo, descripcion, objetivo, entrenador_id };
 }
 
 export async function update(id, { titulo, descripcion, objetivo }) {
   await pool.query(
-    'UPDATE rutinas SET titulo = ?, descripcion = ?, objetivo = ? WHERE id = ?',
+    'UPDATE rutinas SET titulo = $1, descripcion = $2, objetivo = $3 WHERE id = $4',
     [titulo, descripcion || null, objetivo || null, id]
   );
 }
 
 export async function remove(id) {
-  await pool.query('DELETE FROM rutinas WHERE id = ?', [id]);
+  await pool.query('DELETE FROM rutinas WHERE id = $1', [id]);
 }
 
 export async function isOwner(rutinaId, userId) {
-  const [[row]] = await pool.query(
-    'SELECT id FROM rutinas WHERE id = ? AND entrenador_id = ?',
+  const { rows: [row] } = await pool.query(
+    'SELECT id FROM rutinas WHERE id = $1 AND entrenador_id = $2',
     [rutinaId, userId]
   );
   return !!row;
@@ -124,20 +124,20 @@ export async function isOwner(rutinaId, userId) {
 // --- Training days ---
 
 export async function addDia(rutinaId, { nombre_dia, grupo_muscular, duracion_minutos, orden }) {
-  const [result] = await pool.query(
-    'INSERT INTO entrenamientos (rutina_id, nombre_dia, grupo_muscular, duracion_minutos, orden) VALUES (?, ?, ?, ?, ?)',
+  const { rows: [{ id }] } = await pool.query(
+    'INSERT INTO entrenamientos (rutina_id, nombre_dia, grupo_muscular, duracion_minutos, orden) VALUES ($1, $2, $3, $4, $5) RETURNING id',
     [rutinaId, nombre_dia, grupo_muscular || null, duracion_minutos || null, orden || 1]
   );
-  return { id: result.insertId, rutina_id: rutinaId, nombre_dia, grupo_muscular, duracion_minutos, orden };
+  return { id, rutina_id: rutinaId, nombre_dia, grupo_muscular, duracion_minutos, orden };
 }
 
 export async function removeDia(diaId) {
-  await pool.query('DELETE FROM entrenamientos WHERE id = ?', [diaId]);
+  await pool.query('DELETE FROM entrenamientos WHERE id = $1', [diaId]);
 }
 
 export async function diaPertenece(diaId, rutinaId) {
-  const [[row]] = await pool.query(
-    'SELECT id FROM entrenamientos WHERE id = ? AND rutina_id = ?',
+  const { rows: [row] } = await pool.query(
+    'SELECT id FROM entrenamientos WHERE id = $1 AND rutina_id = $2',
     [diaId, rutinaId]
   );
   return !!row;
@@ -146,30 +146,30 @@ export async function diaPertenece(diaId, rutinaId) {
 // --- Exercises within a day ---
 
 export async function addEjercicioToDia(diaId, { ejercicio_id, series_repeticiones, orden }) {
-  const [result] = await pool.query(
-    'INSERT INTO entrenamiento_ejercicios (entrenamiento_id, ejercicio_id, series_repeticiones, orden) VALUES (?, ?, ?, ?)',
+  const { rows: [{ id }] } = await pool.query(
+    'INSERT INTO entrenamiento_ejercicios (entrenamiento_id, ejercicio_id, series_repeticiones, orden) VALUES ($1, $2, $3, $4) RETURNING id',
     [diaId, ejercicio_id, series_repeticiones || null, orden || 1]
   );
-  return { id: result.insertId, entrenamiento_id: diaId, ejercicio_id, series_repeticiones, orden };
+  return { id, entrenamiento_id: diaId, ejercicio_id, series_repeticiones, orden };
 }
 
 export async function removeEjercicioFromDia(pivotId) {
-  await pool.query('DELETE FROM entrenamiento_ejercicios WHERE id = ?', [pivotId]);
+  await pool.query('DELETE FROM entrenamiento_ejercicios WHERE id = $1', [pivotId]);
 }
 
 // --- Assignment ---
 
 export async function asignarAlumno(rutinaId, alumnoId, asignadoPor) {
-  const [result] = await pool.query(
-    'INSERT IGNORE INTO alumno_rutinas (rutina_id, alumno_id, asignado_por) VALUES (?, ?, ?)',
+  const result = await pool.query(
+    'INSERT INTO alumno_rutinas (rutina_id, alumno_id, asignado_por) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING',
     [rutinaId, alumnoId, asignadoPor]
   );
-  return result.affectedRows > 0;
+  return result.rowCount > 0;
 }
 
 export async function desasignarAlumno(rutinaId, alumnoId) {
   await pool.query(
-    'DELETE FROM alumno_rutinas WHERE rutina_id = ? AND alumno_id = ?',
+    'DELETE FROM alumno_rutinas WHERE rutina_id = $1 AND alumno_id = $2',
     [rutinaId, alumnoId]
   );
 }

@@ -1,0 +1,68 @@
+databases:
+  - name: progresofit-db
+    plan: free
+    databaseName: progresofit
+    user: progresofit_user
+
+services:
+  - type: web
+    name: progresofit-backend
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: ./backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    preDeployCommand: node database/init.js
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: progresofit-db
+          property: connectionString
+      - key: DB_HOST
+        fromDatabase:
+          name: progresofit-db
+          property: host
+      - key: DB_USER
+        fromDatabase:
+          name: progresofit-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: progresofit-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: progresofit-db
+          property: database
+      - key: PORT
+        value: "3000"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MP_ACCESS_TOKEN
+        sync: false
+      - key: MP_WEBHOOK_SECRET
+        sync: false
+      - key: MP_NOTIFICATION_URL
+        sync: false
+      - key: MP_SUCCESS_URL
+        value: https://darwin-consulting.online/pago-exitoso
+      - key: MP_FAILURE_URL
+        value: https://darwin-consulting.online/pago-fallido
+      - key: MP_PENDING_URL
+        value: https://darwin-consulting.online/pago-suscripcion
+
+  - type: web
+    name: progresofit-frontend
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: API_BASE_URL
+        value: https://progresofit-backend.onrender.com
+    customDomains:
+      - name: darwin-consulting.online

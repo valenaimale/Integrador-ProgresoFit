@@ -77,38 +77,38 @@ export async function listarInscriptos(user, claseId) {
 }
 
 export async function inscribir(user, claseId) {
-  const conn = await pool.getConnection();
+  const conn = await pool.connect();
   try {
-    await conn.beginTransaction();
+    await conn.query('BEGIN');
 
     const clase = await repo.findById(claseId, conn);
     if (!clase) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       throw notFound('Clase no encontrada');
     }
     if (clase.estado !== 'ACTIVA') {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       throw conflict('La clase no está disponible');
     }
     if (esFechaPasada(formatFecha(clase.fecha))) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       throw conflict('La clase ya pasó');
     }
 
     if (await repo.existeInscripcion(claseId, user.id, conn)) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       throw conflict('Ya estás anotado en esta clase');
     }
 
     // Incremento condicional atómico: si devuelve 0, no había cupo.
     const ocupado = await repo.ocuparCupo(claseId, conn);
     if (ocupado === 0) {
-      await conn.rollback();
+      await conn.query('ROLLBACK');
       throw conflict('La clase está llena');
     }
 
     await repo.insertarInscripcion(claseId, user.id, conn);
-    await conn.commit();
+    await conn.query('COMMIT');
 
     return {
       clase_id: claseId,
@@ -116,7 +116,7 @@ export async function inscribir(user, claseId) {
       cupo_maximo: clase.cupo_maximo,
     };
   } catch (err) {
-    try { await conn.rollback(); } catch (_) {}
+    try { await conn.query('ROLLBACK'); } catch (_) {}
     throw err;
   } finally {
     conn.release();
@@ -124,19 +124,19 @@ export async function inscribir(user, claseId) {
 }
 
 export async function cancelarInscripcion(user, claseId) {
-  const conn = await pool.getConnection();
+  const conn = await pool.connect();
   try {
-    await conn.beginTransaction();
+    await conn.query('BEGIN');
 
     const eliminadas = await repo.eliminarInscripcion(claseId, user.id, conn);
     if (eliminadas > 0) {
       await repo.liberarCupo(claseId, conn);
     }
 
-    await conn.commit();
+    await conn.query('COMMIT');
     return { clase_id: claseId, cancelada: eliminadas > 0 };
   } catch (err) {
-    try { await conn.rollback(); } catch (_) {}
+    try { await conn.query('ROLLBACK'); } catch (_) {}
     throw err;
   } finally {
     conn.release();
