@@ -1,0 +1,48 @@
+openspec: v1
+project: Integrador-ProgresoFit
+created: 2026-06-20
+
+context: |
+  Gym management platform (ProgresoFit). PHP 8.3 frontend with custom MVC
+  (PAW\ namespace, Twig templates) consumes a Node.js 18 / Express 5 REST API.
+  MySQL 8.0 database, Docker Compose orchestration (3 services: mysql, backend, frontend).
+  Communication: PHP ApiClient (curl) → JWT-protected Express API.
+  Backend follows 4-layer architecture: Routes → Controllers → Services → Repositories.
+
+stack:
+  frontend: PHP 8.3
+  frontend_framework: Custom MVC (PAW\ namespace), Twig 3.27
+  backend: Node.js 18 / Express 5.2
+  database: MySQL 8.0
+  orm_migrations: Phinx (PHP), raw SQL (Node.js)
+  infrastructure: Docker Compose
+  authentication: JWT (jsonwebtoken)
+  templating: Twig 3.27
+
+strict_tdd: false
+
+testing:
+  runner: none
+  reason: >
+    No test framework configured. composer.json has no require-dev section,
+    no phpunit.xml or phpunit installed. package.json test script is a stub
+    ("echo 'Error: no test specified' && exit 1"). No test directories found
+    in either frontend (src/) or backend (backend/).
+  layers:
+    unit:        { available: false, tool: null }
+    integration: { available: false, tool: null }
+    e2e:         { available: false, tool: null }
+  coverage:      { available: false, command: null }
+  quality:
+    linter:       { available: false, command: null }
+    type_checker: { available: false, command: null }
+    formatter:    { available: false, command: null }
+
+phases:
+  propose: { required: true }
+  spec:    { required: true }
+  design:  { required: true }
+  tasks:   { required: true }
+  apply:   { required: true }
+  verify:  { required: false }
+  archive: { required: true }
