@@ -11,7 +11,7 @@ class TwigRenderer
 
     public function __construct()
     {
-        $loader = new FilesystemLoader(__DIR__ . '/../views/twig');
+        $loader = new FilesystemLoader([__DIR__ . '/../views/twig', __DIR__ . '/../views']);
         $this->twig = new Environment($loader, [
             'cache' => false,
         ]);
