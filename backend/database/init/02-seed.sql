@@ -119,3 +119,15 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO gimnasio_aforo (gimnasio_id, capacidad_maxima, ocupacion_actual) VALUES
 (1, 50, 0)
 ON CONFLICT (gimnasio_id) DO NOTHING;
+
+-- Reset sequences to avoid PK conflicts with new inserts
+SELECT setval('usuarios_id_seq', (SELECT COALESCE(MAX(id), 0) FROM usuarios));
+SELECT setval('gimnasios_id_seq', (SELECT COALESCE(MAX(id), 0) FROM gimnasios));
+SELECT setval('entrenadores_id_seq', (SELECT COALESCE(MAX(id), 0) FROM entrenadores));
+SELECT setval('rutinas_id_seq', (SELECT COALESCE(MAX(id), 0) FROM rutinas));
+SELECT setval('entrenamientos_id_seq', (SELECT COALESCE(MAX(id), 0) FROM entrenamientos));
+SELECT setval('ejercicios_id_seq', (SELECT COALESCE(MAX(id), 0) FROM ejercicios));
+SELECT setval('entrenamiento_ejercicios_id_seq', (SELECT COALESCE(MAX(id), 0) FROM entrenamiento_ejercicios));
+SELECT setval('suscripciones_id_seq', (SELECT COALESCE(MAX(id), 0) FROM suscripciones));
+SELECT setval('entrenador_alumnos_id_seq', (SELECT COALESCE(MAX(id), 0) FROM entrenador_alumnos));
+SELECT setval('alumno_rutinas_id_seq', (SELECT COALESCE(MAX(id), 0) FROM alumno_rutinas));
