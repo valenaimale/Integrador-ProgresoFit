@@ -5,7 +5,7 @@ import { authenticateToken, checkRole } from '../middleware/authMiddleware.js';
 const router = Router();
 
 // Any logged-in user can view trainer profiles
-router.get('/',    authenticateToken, entrenadorController.getAll);
+router.get('/',    entrenadorController.getAll);
 
 // List of all students (for trainers and admins to pick for assignments)
 router.get('/alumnos', authenticateToken, checkRole(['ENTRENADOR', 'ADMIN']), entrenadorController.getAlumnos);
@@ -13,7 +13,7 @@ router.get('/alumnos', authenticateToken, checkRole(['ENTRENADOR', 'ADMIN']), en
 // List of students assigned to the logged-in trainer
 router.get('/mis-alumnos', authenticateToken, checkRole(['ENTRENADOR', 'ADMIN']), entrenadorController.getMisAlumnos);
 
-router.get('/:id', authenticateToken, entrenadorController.getById);
+router.get('/:id', entrenadorController.getById);
 
 // Alumnos can subscribe/unsubscribe to a trainer
 router.post('/:id/suscribirse',   authenticateToken, entrenadorController.suscribirse);

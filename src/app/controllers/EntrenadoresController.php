@@ -14,7 +14,10 @@ class EntrenadoresController
     {
         $this->api  = new ApiClient();
         $this->twig = new TwigRenderer();
+    }
 
+    private function requireLogin(): void
+    {
         if (empty($_SESSION['user'])) {
             header('Location: /inicio-sesion');
             exit;
@@ -45,6 +48,7 @@ class EntrenadoresController
     }
     public function listar(): void
     {
+        $this->requireLogin();
         $entrenadoresRes   = $this->api->get('/entrenadores', $this->token());
         $misEntrenadoresIds = [];
 
@@ -65,6 +69,7 @@ class EntrenadoresController
 
     public function suscribirse(): void
     {
+        $this->requireLogin();
         $entrenadorId = (int) ($_POST['entrenador_id'] ?? 0);
         $this->api->post("/entrenadores/{$entrenadorId}/suscribirse", [], $this->token());
         header('Location: /entrenadores');
@@ -73,6 +78,7 @@ class EntrenadoresController
 
     public function desuscribirse(): void
     {
+        $this->requireLogin();
         $entrenadorId = (int) ($_POST['entrenador_id'] ?? 0);
         $this->api->delete("/entrenadores/{$entrenadorId}/suscribirse", $this->token());
         header('Location: /entrenadores');
