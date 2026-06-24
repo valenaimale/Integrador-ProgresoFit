@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { initDatabase } from '../database/init.js';
 import authRoutes from '../routes/authRoutes.js';
 import gimnasioRoutes from '../routes/gimnasioRoutes.js';
 import usuarioRoutes from '../routes/usuarioRoutes.js';
@@ -13,6 +14,8 @@ import claseRoutes from '../routes/claseRoutes.js';
 import mercadopagoRoutes from '../routes/mercadopago.routes.js';
 
 dotenv.config();
+
+await initDatabase();
 //todas las peticiones al back end se reciben aca
 const app = express();
 
