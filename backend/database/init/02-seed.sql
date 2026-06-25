@@ -108,12 +108,12 @@ ON CONFLICT (id) DO NOTHING;
 -- Relación entrenador-alumno (Carlos entrena a María)
 INSERT INTO entrenador_alumnos (id, entrenador_id, alumno_id) VALUES
 (1, 2, 3)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT ON CONSTRAINT unique_relacion DO NOTHING;
 
 -- Asignación: Carlos le asigna la rutina de fuerza a María
 INSERT INTO alumno_rutinas (id, alumno_id, rutina_id, asignado_por) VALUES
 (1, 3, 1, 2)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT ON CONSTRAINT unique_asignacion DO NOTHING;
 
 -- Aforo inicial del gimnasio
 INSERT INTO gimnasio_aforo (gimnasio_id, capacidad_maxima, ocupacion_actual) VALUES
