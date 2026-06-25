@@ -66,7 +66,7 @@ class CrearCuentaController extends Controller
 
     public function mostrarPreCrearCuenta()
     {
-        $this->render('crearCuenta.html.twig');
+        $this->render('preCrearCuenta.html.twig');
     }
 
     public function mostrarCrearCuentaAlumno()
@@ -115,7 +115,7 @@ class CrearCuentaController extends Controller
 
     public function mostrarCrearCuentaEntrenador()
     {
-        $this->render('crearCuenta.html.twig');
+        $this->render('crearCuentaEntrenador.html.twig');
     }
 
     public function crearCuentaProcessEntrenador()
@@ -126,11 +126,11 @@ class CrearCuentaController extends Controller
         $ccontraseña = $_POST['contra_nueva_repetida'] ?? '';
 
         if (!$nombre || !$email || !$ccontraseña || !$contraseña) {
-            $this->render('crearCuenta.html.twig', ['error' => 'Hay campos obligatorios sin completar']);
+            $this->render('crearCuentaEntrenador.html.twig', ['error' => 'Hay campos obligatorios sin completar']);
             exit;
         }
         if ($contraseña !== $ccontraseña) {
-            $this->render('crearCuenta.html.twig', ['error' => 'Las contraseñas no coinciden']);
+            $this->render('crearCuentaEntrenador.html.twig', ['error' => 'Las contraseñas no coinciden']);
             exit;
         }
 
@@ -159,12 +159,12 @@ class CrearCuentaController extends Controller
         }
 
         $error = $response['data']['message'] ?? 'Error al crear la cuenta. El email puede ya estar registrado.';
-        $this->render('crearCuenta.html.twig', ['error' => $error]);
+        $this->render('crearCuentaEntrenador.html.twig', ['error' => $error]);
     }
 
     public function mostrarCrearCuentaGym()
     {
-        $this->render('crearcuenta-gym.html.twig');
+        $this->render('crearCuentaGym.html.twig');
     }
 
     public function crearCuentaProcessGym()
@@ -176,11 +176,11 @@ class CrearCuentaController extends Controller
         $ccontraseña = $_POST['contra_nueva_repetida'] ?? '';
 
         if (!$nombre || !$email || !$direccion || !$ccontraseña || !$contraseña) {
-            $this->render('crearcuenta-gym.html.twig', ['error' => 'Hay campos obligatorios sin completar']);
+            $this->render('crearCuentaGym.html.twig', ['error' => 'Hay campos obligatorios sin completar']);
             exit;
         }
         if ($contraseña !== $ccontraseña) {
-            $this->render('crearcuenta-gym.html.twig', ['error' => 'Las contraseñas no coinciden']);
+            $this->render('crearCuentaGym.html.twig', ['error' => 'Las contraseñas no coinciden']);
             exit;
         }
 
@@ -214,6 +214,6 @@ class CrearCuentaController extends Controller
         }
 
         $error = $response['data']['message'] ?? 'Error al crear la cuenta. El email puede ya estar registrado.';
-        $this->render('crearcuenta-gym.html.twig', ['error' => $error]);
+        $this->render('crearCuentaGym.html.twig', ['error' => $error]);
     }
 }

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ userData.nombre|default('Perfil del Gimnasio') }} — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/perfil.css">
+{% endblock %}
+
+{% block content %}
+<div class="perfil-grid">
+    <section class="perfil-hero">
+        <figure>
+            <img src="/assets/img/imagenUser.jpg" alt="Foto del gimnasio">
+        </figure>
+    </section>
+
+    <section class="info-lista">
+        <dl>
+            <dt>Nombre</dt>
+            <dd>{{ userData.nombre|default('Sin nombre') }}</dd>
+
+            <dt>Email</dt>
+            <dd><a href="mailto:{{ userData.email|default('') }}">{{ userData.email|default('-') }}</a></dd>
+
+            <dt>Dirección</dt>
+            <dd>{{ userData.direccion|default('-') }}</dd>
+
+            <dt>Horarios</dt>
+            <dd>{{ userData.horarios|default('-') }}</dd>
+
+            <dt>Teléfono</dt>
+            <dd>{{ userData.telefono|default('-') }}</dd>
+
+            <dt>Descripción</dt>
+            <dd>{{ userData.descripcion|default('-') }}</dd>
+
+            <dt>Servicios</dt>
+            <dd>{{ userData.servicios|default('-') }}</dd>
+        </dl>
+        <a href="/editar-perfil" class="btn btn-primary">Editar perfil</a>
+    </section>
+</div>
+{% endblock %}

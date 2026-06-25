@@ -95,7 +95,7 @@ class PerfilUserController extends Controller
                 if ($gimResponse['ok']) {
                     $userData = array_merge($userData, $gimResponse['data']);
                 }
-                $this->render('perfilGimnasio.html.twig', ['userData' => $userData]);
+                $this->render('perfilGimnasioPropio.html.twig', ['userData' => $userData]);
                 break;
             default:
                 header('Location: /');
@@ -117,22 +117,21 @@ class PerfilUserController extends Controller
 
         switch ($rol) {
             case 'ALUMNO':
-                // Nota: Ellos siguen usando require para edición, podrías migrarlo luego
-                require __DIR__ . '/../views/perfilUserEdicion.view.php';
+                $this->render('perfilUserEdicion.html.twig', ['userData' => $userData]);
                 break;
             case 'ENTRENADOR':
                 $entResponse = $this->api->get("/entrenadores/{$userId}", $jwt);
                 if ($entResponse['ok']) {
                     $userData = array_merge($userData, $entResponse['data']);
                 }
-                require __DIR__ . '/../views/perfilEntrenadorEdicion.view.php';
+                $this->render('perfilEntrenadorEdicion.html.twig', ['userData' => $userData]);
                 break;
             case 'GIMNASIO':
                 $gimResponse = $this->api->get("/gimnasios/me", $jwt);
                 if ($gimResponse['ok']) {
                     $userData = array_merge($userData, $gimResponse['data']);
                 }
-                require __DIR__ . '/../views/perfilGimnasioEdicion.view.php';
+                $this->render('perfilGimnasioEdicion.html.twig', ['userData' => $userData]);
                 break;
             default:
                 header('Location: /');
@@ -157,7 +156,7 @@ class PerfilUserController extends Controller
                 if (!empty($_POST['contra_nueva'])) {
                     if ($_POST['contra_nueva'] !== $_POST['contra_nueva_repetida']) {
                         $error = 'Las contraseñas nuevas no coinciden';
-                        require __DIR__ . '/../views/perfilUserEdicion.view.php';
+                        $this->render('perfilUserEdicion.html.twig', ['userData' => $userData, 'error' => $error ?? null]);
                         return;
                     }
                     $almResponse = $this->api->put("/usuarios/{$userId}", [
@@ -169,7 +168,7 @@ class PerfilUserController extends Controller
                         exit;
                     }
                     $error = $almResponse['data']['error'] ?? 'Error al actualizar el perfil';
-                    require __DIR__ . '/../views/perfilUserEdicion.view.php';
+                    $this->render('perfilUserEdicion.html.twig', ['userData' => $userData, 'error' => $error ?? null]);
                     return;
                 }
                 header('Location: /perfil');
@@ -183,7 +182,7 @@ class PerfilUserController extends Controller
                         if ($entResponse['ok']) {
                             $userData = array_merge($userData, $entResponse['data']);
                         }
-                        require __DIR__ . '/../views/perfilEntrenadorEdicion.view.php';
+                        $this->render('perfilEntrenadorEdicion.html.twig', ['userData' => $userData, 'error' => $error ?? null]);
                         return;
                     }
                     $passResponse = $this->api->put("/usuarios/{$userId}", [
@@ -197,7 +196,7 @@ class PerfilUserController extends Controller
                         if ($entResponse['ok']) {
                             $userData = array_merge($userData, $entResponse['data']);
                         }
-                        require __DIR__ . '/../views/perfilEntrenadorEdicion.view.php';
+                        $this->render('perfilEntrenadorEdicion.html.twig', ['userData' => $userData, 'error' => $error ?? null]);
                         return;
                     }
                 } else {
@@ -217,7 +216,7 @@ class PerfilUserController extends Controller
                 if ($entResponse['ok']) {
                     $userData = array_merge($userData, $entResponse['data']);
                 }
-                require __DIR__ . '/../views/perfilEntrenadorEdicion.view.php';
+                $this->render('perfilEntrenadorEdicion.html.twig', ['userData' => $userData, 'error' => $error ?? null]);
                 break;
 
             case 'GIMNASIO':
@@ -228,7 +227,7 @@ class PerfilUserController extends Controller
                         if ($gimResponse['ok']) {
                             $userData = array_merge($userData, $gimResponse['data']);
                         }
-                        require __DIR__ . '/../views/perfilGimnasioEdicion.view.php';
+                        $this->render('perfilGimnasioEdicion.html.twig', ['userData' => $userData, 'error' => $error ?? null]);
                         return;
                     }
                     $passResponse = $this->api->put("/usuarios/{$userId}", [
@@ -241,7 +240,7 @@ class PerfilUserController extends Controller
                         if ($gimResponse['ok']) {
                             $userData = array_merge($userData, $gimResponse['data']);
                         }
-                        require __DIR__ . '/../views/perfilGimnasioEdicion.view.php';
+                        $this->render('perfilGimnasioEdicion.html.twig', ['userData' => $userData, 'error' => $error ?? null]);
                         return;
                     }
                 }
@@ -262,7 +261,7 @@ class PerfilUserController extends Controller
                 if ($gimResponse['ok']) {
                     $userData = array_merge($userData, $gimResponse['data']);
                 }
-                require __DIR__ . '/../views/perfilGimnasioEdicion.view.php';
+                $this->render('perfilGimnasioEdicion.html.twig', ['userData' => $userData, 'error' => $error ?? null]);
                 break;
 
             default:

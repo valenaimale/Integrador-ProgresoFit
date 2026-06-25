@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar perfil de gimnasio — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/perfil.css">
+<link rel="stylesheet" href="/assets/css/formularios.css">
+{% endblock %}
+
+{% block head_scripts %}
+<script src="/assets/js/constructorElementos.js"></script>
+<script src="/assets/js/editar-perfil-gimnasio.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="perfil-grid">
+    <section class="perfil-hero">
+        <figure>
+            <img src="foto-gimnasio.jpg" alt="Foto del gimnasio">
+        </figure>
+    </section>
+
+    <div>
+        <dl class="info-lista">
+            <dt>Email</dt>
+            <dd><a href="mailto:{{ userData.email|default('') }}">{{ userData.email|default('') }}</a></dd>
+            <dt>Miembro desde</dt>
+            <dd>{{ userData.created_at is defined and userData.created_at ? userData.created_at|date('d/m/Y') : '' }}</dd>
+        </dl>
+
+        <form method="POST" id="form-editar-perfil-gim" action="/editar-perfil" class="info-lista" novalidate>
+            <fieldset>
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" value="{{ userData.nombre|default('') }}" placeholder="Ej.: Sport Club Lujan">
+                <label for="telefono">Telefono (opcional)</label>
+                <input type="tel" id="telefono" name="telefono" value="{{ userData.telefono|default('') }}" placeholder="Ej.: 11 3703 4068">
+                <label for="direccion">Direccion</label>
+                <input type="text" id="direccion" name="direccion" value="{{ userData.direccion|default('') }}" placeholder="Ej.: Calle Falsa 1234">
+                <label for="horarios">Horarios (opcional)</label>
+                <input type="text" id="horarios" name="horarios" value="{{ userData.horarios|default('') }}" placeholder="Ej.: 9hs a 12hs">
+                <label for="logo">Logo (opcional)</label>
+                <input type="file" id="logo" name="logo" accept="image/jpeg, image/png, image/webp">
+                <label for="descripcion">Descripcion (opcional)</label>
+                <textarea id="descripcion" name="descripcion">{{ userData.descripcion|default('') }}</textarea>
+                <label for="servicios">Servicios (opcional)</label>
+                <input type="text" id="servicios" name="servicios" value="{{ userData.servicios|default('') }}" placeholder="Ej.: clases de pileta, funcional, zumba y musculacion">
+                <label for="contra_actual">Contraseña actual</label>
+                <input type="password" id="contra_actual" name="contra_actual">
+                <label for="contra_nueva">Nueva Contraseña</label>
+                <input type="password" id="contra_nueva" name="contra_nueva">
+                <label for="contra_nueva_repetida">Repetir nueva Contraseña</label>
+                <input type="password" id="contra_nueva_repetida" name="contra_nueva_repetida">
+            </fieldset>
+            {% if error is defined and error %}
+                <p class="text-rojo">{{ error }}</p>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

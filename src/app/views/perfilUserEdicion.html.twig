@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar perfil — ProgresoFit{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="/assets/css/perfil.css">
+<link rel="stylesheet" href="/assets/css/formularios.css">
+{% endblock %}
+
+{% block head_scripts %}
+<script src="/assets/js/constructorElementos.js"></script>
+<script src="/assets/js/editar-perfil-alumno.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="perfil-grid">
+    <section class="perfil-hero">
+        <figure>
+            <img src="foto-gimnasio.jpg" alt="Foto de perfil">
+        </figure>
+    </section>
+
+    <div>
+        <dl class="info-lista">
+            <dt>Email</dt>
+            <dd><a href="mailto:{{ userData.email|default('') }}">{{ userData.email|default('') }}</a></dd>
+            <dt>Miembro desde</dt>
+            <dd>{{ userData.created_at is defined and userData.created_at ? userData.created_at|date('d/m/Y') : '' }}</dd>
+        </dl>
+
+        <form method="POST" action="/editar-perfil" id="form-editar-perfil-alumno" class="info-lista" novalidate>
+            <fieldset>
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" value="{{ userData.nombre|default('') }}" placeholder="ej.: Sport Club">
+                <label for="fotodeperfil">Foto de perfil (opcional)</label>
+                <input type="file" id="fotodeperfil" name="fotodeperfil" accept="image/jpeg, image/png, image/webp">
+                <label for="contra_actual">Contraseña actual</label>
+                <input type="password" id="contra_actual" name="contra_actual">
+                <label for="contra_nueva">Nueva Contraseña</label>
+                <input type="password" id="contra_nueva" name="contra_nueva">
+                <label for="contra_nueva_repetida">Repetir nueva Contraseña</label>
+                <input type="password" id="contra_nueva_repetida" name="contra_nueva_repetida">
+            </fieldset>
+            {% if error is defined and error %}
+                <p class="text-rojo">{{ error }}</p>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
