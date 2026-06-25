@@ -39,14 +39,14 @@
                                 <form action="/entrenadores/desuscribirse" method="post">
                                     <input type="hidden" name="entrenador_id" value="{{ e.id }}">
                                     <button type="submit" class="btn btn-suscripto btn-sm">
-                                        <span class="label-default">✓ Suscripto</span>
-                                        <span class="label-hover">Cancelar</span>
+                                        <span class="label-default">✓ Siguiendo</span>
+                                        <span class="label-hover">Dejar de seguir</span>
                                     </button>
                                 </form>
                             {% else %}
                                 <form action="/entrenadores/suscribirse" method="post">
                                     <input type="hidden" name="entrenador_id" value="{{ e.id }}">
-                                    <button type="submit" class="btn btn-primary btn-sm">Suscribirme</button>
+                                    <button type="submit" class="btn btn-primary btn-sm">Seguir</button>
                                 </form>
                             {% endif %}
                         </div>

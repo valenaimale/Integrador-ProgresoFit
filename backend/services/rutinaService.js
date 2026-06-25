@@ -6,6 +6,9 @@ export async function listarRutinas(user) {
   if (user.rol === 'ALUMNO') {
     return await rutinaRepository.findByAlumno(user.id);
   }
+  if (user.rol === 'ENTRENADOR') {
+    return await rutinaRepository.findByEntrenador(user.id);
+  }
   return await rutinaRepository.findAll();
 }
 

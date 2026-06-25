@@ -169,6 +169,31 @@ ul, ol { list-style: none; }
 .bottom-nav a svg { width: 22px; height: 22px; }
 .bottom-nav a.active, .bottom-nav a:hover { color: var(--rojo); }
 
+.btn-nav-qr {
+  position: relative;
+  top: -18px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--rojo) !important;
+  color: var(--blanco) !important;
+  border: 3px solid var(--negro);
+  box-shadow: 0 4px 14px rgba(192,57,43,.55);
+  justify-content: center;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.btn-nav-qr svg { width: 24px; height: 24px; }
+.btn-nav-qr span { font-size: .55rem; margin-top: 1px; }
+
+.btn-nav-qr:hover,
+.btn-nav-qr.active {
+  background: var(--rojo-dark) !important;
+  color: var(--blanco) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(192,57,43,.65);
+}
+
 /* ── Main ──────────────────────────── */
 main {
   flex: 1;
@@ -228,19 +253,27 @@ section h2 {
 
 /* ── Grid de entrenadores ──────────── */
 .grid-entrenadores {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-block: 8px;
+}
+
+.grid-entrenadores > a {
+  display: flex;
+  flex: 0 0 auto;
 }
 
 .card-entrenador {
   background: var(--blanco);
   border-radius: var(--radio);
-  padding: 16px 12px;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 12px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
   box-shadow: var(--sombra-sm);
   transition: transform .2s, box-shadow .2s;
   border: 2px solid transparent;
+  min-width: 90px;
+  flex: 1;
 }
 
 .card-entrenador:hover {
@@ -267,6 +300,8 @@ section h2 {
   font-weight: 600;
   text-align: center;
   color: var(--negro);
+  margin: 0;
+  line-height: 1.2;
 }
 
 /* ── Posts destacados ──────────────── */
@@ -479,8 +514,7 @@ footer img { max-width: 80px; margin-bottom: 10px; }
 
 @media (min-width: 481px) {
   .grid-entrenadores {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 14px;
+    gap: 10px;
   }
 }
 

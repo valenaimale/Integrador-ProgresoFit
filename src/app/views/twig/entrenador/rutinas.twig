@@ -42,22 +42,9 @@
                             </form>
                         </div>
 
-                        {% if alumnos is not empty %}
-                            <div class="card-asignar">
-                                <form action="/entrenador/rutinas/asignar" method="post" class="form-asignar">
-                                    <input type="hidden" name="rutina_id" value="{{ rutina.id }}">
-                                    <select name="alumno_id" required>
-                                        <option value="">Asignar a un alumno...</option>
-                                        {% for alumno in alumnos %}
-                                            <option value="{{ alumno.id }}">{{ alumno.nombre ?? alumno.email }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <button type="submit" class="btn btn-dorado btn-sm">Asignar</button>
-                                </form>
-                            </div>
-                        {% else %}
-                            <p class="sin-ejercicios" style="margin-top:12px">No tenés alumnos registrados aún.</p>
-                        {% endif %}
+                        <div class="card-asignar">
+                            <a href="/entrenador/rutinas/gestionar?id={{ rutina.id }}" class="btn btn-dorado btn-sm">Asignar alumnos</a>
+                        </div>
                     </article>
                 </li>
             {% endfor %}

@@ -11,6 +11,19 @@ export async function findAll() {
   return rows;
 }
 
+export async function findByEntrenador(entrenadorId) {
+  const { rows } = await pool.query(
+    `SELECT r.id, r.titulo, r.descripcion, r.objetivo, r.created_at,
+            u.nombre AS entrenador_nombre
+     FROM rutinas r
+     LEFT JOIN usuarios u ON u.id = r.entrenador_id
+     WHERE r.entrenador_id = $1
+     ORDER BY r.created_at DESC`,
+    [entrenadorId]
+  );
+  return rows;
+}
+
 export async function findByAlumno(alumnoId) {
   const { rows } = await pool.query(
     `SELECT r.id, r.titulo, r.descripcion, r.objetivo, r.created_at,
@@ -83,7 +96,7 @@ export async function findById(id) {
   rutina.dias = Array.from(diasMap.values());
 
   const { rows: asignados } = await pool.query(
-    `SELECT u.id, u.nombre, u.email
+    `SELECT DISTINCT u.id, u.nombre, u.email
      FROM alumno_rutinas ar
      INNER JOIN usuarios u ON u.id = ar.alumno_id
      WHERE ar.rutina_id = $1`,
