@@ -44,7 +44,8 @@ class ApiClient
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_CUSTOMREQUEST  => $method,
-            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_TIMEOUT        => 90,
+            CURLOPT_CONNECTTIMEOUT => 60,
             CURLOPT_FOLLOWLOCATION => true,
         ]);
 
