@@ -33,15 +33,15 @@ export async function listarMisAlumnos(entrenadorId) {
   return await entrenadorRepository.findAlumnosByEntrenador(entrenadorId);
 }
 
-export async function registrarEntrenador({nombre, email, password, horario, descripcion, especialidad}){
+export async function registrarEntrenador({nombre, email, password, horario, descripcion, especialidad, foto_url}){
 
   if (!email || !password) throw new Error('Email y password son obligatorios');
-      
+
       const existing = await usuarioRepository.findByEmail(email);
       if (existing) throw new Error('El correo ya está registrado');
-      
+
       const hashed = await bcrypt.hash(password, 10);
-      const usuario = await usuarioRepository.create({ nombre, email, password: hashed, rol: 'ENTRENADOR' });
-      const entrenador = await entrenadorRepository.create({usuario_id: usuario.id, nombre, horario, email, descripcion, especialidad }); 
+      const usuario = await usuarioRepository.create({ nombre, email, password: hashed, rol: 'ENTRENADOR', foto_url });
+      const entrenador = await entrenadorRepository.create({usuario_id: usuario.id, nombre, horario, email, descripcion, especialidad });
       return entrenador;
 }

@@ -32,7 +32,7 @@ class RutinasController extends Controller
         $alumnos = [];
         if (in_array($user['rol'], ['ENTRENADOR', 'ADMIN'])) {
             // Obtener todos los alumnos para el selector de asignación
-            $resAlumnos = $this->api->get('/entrenadores/alumnos', $jwt);
+            $resAlumnos = $this->api->get('/usuarios/mis-alumnos', $jwt);
             $alumnos = $resAlumnos['ok'] ? $resAlumnos['data'] : [];
         }
 

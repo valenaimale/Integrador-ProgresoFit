@@ -17,7 +17,7 @@
 {% if error is defined and error %}
     <p style="color:var(--rojo); margin-bottom:1rem; font-weight:600;">{{ error }}</p>
 {% endif %}
-<form action="/crearCuentaGym" id="form-crear-cuenta-gim" method="post" novalidate>
+<form action="/crearCuentaGym" id="form-crear-cuenta-gim" method="post" enctype="multipart/form-data" novalidate>
     <fieldset>
         <legend>Datos del gimnasio:</legend>
         <label for="email">Email</label>

@@ -16,7 +16,7 @@
 <div class="perfil-grid">
     <section class="perfil-hero">
         <figure>
-            <img src="foto-gimnasio.jpg" alt="Foto del gimnasio">
+            <img src="{{ userData.foto_url ?? '/assets/img/imagenUser.jpg' }}" alt="Foto del gimnasio">
         </figure>
     </section>
 
@@ -28,7 +28,7 @@
             <dd>{{ userData.created_at is defined and userData.created_at ? userData.created_at|date('d/m/Y') : '' }}</dd>
         </dl>
 
-        <form method="POST" id="form-editar-perfil-gim" action="/editar-perfil" class="info-lista" novalidate>
+        <form method="POST" id="form-editar-perfil-gim" action="/editar-perfil" class="info-lista" enctype="multipart/form-data" novalidate>
             <fieldset>
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" name="nombre" value="{{ userData.nombre|default('') }}" placeholder="Ej.: Sport Club Lujan">

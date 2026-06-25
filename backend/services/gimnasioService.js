@@ -26,16 +26,16 @@ export async function createGimnasio(user, data) {
     }
     return await gimnasioRepository.create(data);
 }
-export async function registrarGimnasio({nombre, email, password, direccion, horarios, telefono, descripcion, servicios}){
+export async function registrarGimnasio({nombre, email, password, direccion, horarios, telefono, descripcion, servicios, foto_url}){
 
     if (!email || !password) throw new Error('Email y password son obligatorios');
-    
+
     const existing = await usuarioRepository.findByEmail(email);
     if (existing) throw new Error('El correo ya está registrado');
-    
+
     const hashed = await bcrypt.hash(password, 10);
     const usuario = await usuarioRepository.create({ nombre, email, password: hashed, rol: 'GIMNASIO' });
-    const gimnasio = await gimnasioRepository.create({usuario_id: usuario.id, nombre, direccion, horarios, telefono, email, descripcion, servicios }); 
+    const gimnasio = await gimnasioRepository.create({usuario_id: usuario.id, nombre, direccion, horarios, telefono, email, descripcion, servicios, foto_url });
     return gimnasio;
 }
 

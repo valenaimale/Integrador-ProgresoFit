@@ -77,8 +77,8 @@ export async function getMisAlumnos(req, res) {
 
 export async function registrar(req, res) {
   try {
-    const {nombre, email, password, horario, descripcion, especialidad} = req.body;
-    const user = await entrenadorService.registrarEntrenador({nombre, email, password, horario, descripcion, especialidad});
+    const {nombre, email, password, horario, descripcion, especialidad, foto_url} = req.body;
+    const user = await entrenadorService.registrarEntrenador({nombre, email, password, horario, descripcion, especialidad, foto_url});
     res.status(201).json({ message: 'Entrenador registrado exitosamente', user });
   } catch (error) {
     res.status(400).json({ error: error.message });

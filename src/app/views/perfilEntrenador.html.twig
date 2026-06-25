@@ -13,7 +13,7 @@
 <div class="perfil-grid">
     <section class="perfil-hero">
         <figure>
-            <img src="/assets/img/imagenUser.jpg" alt="Foto del entrenador">
+            <img src="{{ userData.foto_url ?? '/assets/img/imagenUser.jpg' }}" alt="Foto del entrenador">
         </figure>
     </section>
 
@@ -31,8 +31,8 @@
             {% endif %}
 
             {% if userData.descripcion %}
-                <dt>Descripcion</dt>
-                <dd>{{ userData.descripcion }}</dd>
+                <dt>Descripción</dt>
+                <dd class="dd-descripcion">{{ userData.descripcion }}</dd>
             {% endif %}
 
             {% if userData.horario %}

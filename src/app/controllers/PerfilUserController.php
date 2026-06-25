@@ -202,6 +202,23 @@ class PerfilUserController extends Controller
                 } else {
                     $this->api->put("/usuarios/{$userId}", ['nombre' => $_POST['nombre'] ?? ''], $jwt);
                 }
+                $foto_url = null;
+                if (isset($_FILES['fotodeperfil']) && $_FILES['fotodeperfil']['error'] === UPLOAD_ERR_OK) {
+                    $allowed = ['image/jpeg', 'image/png', 'image/webp'];
+                    $mime    = mime_content_type($_FILES['fotodeperfil']['tmp_name']);
+                    if (in_array($mime, $allowed)) {
+                        $ext       = pathinfo($_FILES['fotodeperfil']['name'], PATHINFO_EXTENSION);
+                        $filename  = uniqid('ent_', true) . '.' . strtolower($ext);
+                        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/';
+                        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                        if (move_uploaded_file($_FILES['fotodeperfil']['tmp_name'], $uploadDir . $filename)) {
+                            $foto_url = '/uploads/' . $filename;
+                        }
+                    }
+                }
+                if ($foto_url) {
+                    $this->api->put("/usuarios/{$userId}", ['foto_url' => $foto_url], $jwt);
+                }
                 $entResponse = $this->api->put("/entrenadores/{$userId}", [
                     'especialidad' => $_POST['especialidad'] ?? '',
                     'descripcion'  => $_POST['descripcion']  ?? '',
@@ -244,14 +261,29 @@ class PerfilUserController extends Controller
                         return;
                     }
                 }
-                $gimResponse = $this->api->put("/gimnasios/me", [
+                $foto_url = null;
+                if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
+                    $allowed = ['image/jpeg', 'image/png', 'image/webp'];
+                    $mime    = mime_content_type($_FILES['logo']['tmp_name']);
+                    if (in_array($mime, $allowed)) {
+                        $ext       = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
+                        $filename  = uniqid('gym_', true) . '.' . strtolower($ext);
+                        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/';
+                        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                        if (move_uploaded_file($_FILES['logo']['tmp_name'], $uploadDir . $filename)) {
+                            $foto_url = '/uploads/' . $filename;
+                        }
+                    }
+                }
+                $gimResponse = $this->api->put("/gimnasios/me", array_filter([
                     'nombre'      => $_POST['nombre']      ?? '',
                     'direccion'   => $_POST['direccion']   ?? '',
                     'horarios'    => $_POST['horarios']    ?? '',
                     'telefono'    => $_POST['telefono']    ?? '',
                     'descripcion' => $_POST['descripcion'] ?? '',
                     'servicios'   => $_POST['servicios']   ?? '',
-                ], $jwt);
+                    'foto_url'    => $foto_url,
+                ], fn($v) => $v !== null), $jwt);
                 if ($gimResponse['ok']) {
                     header('Location: /perfil');
                     exit;

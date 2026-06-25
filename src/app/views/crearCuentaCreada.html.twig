@@ -3,13 +3,18 @@
 {% block title %}ProgresoFit — Cuenta creada{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="/assets/css/formularios.css">
+<link rel="stylesheet" href="/assets/css/perfil.css">
 {% endblock %}
 
 {% block content %}
-<h2>Cuenta creada</h2>
-<p>Tu cuenta ha sido creada exitosamente.</p>
-<div class="volver-inicio">
-    <p>Volver <a href="/">inicio</a></p>
+<div class="feedback-card">
+    <div class="feedback-icono feedback-icono--exito">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+        </svg>
+    </div>
+    <h2 class="feedback-titulo">¡Cuenta creada con éxito!</h2>
+    <p class="feedback-desc">Ya podés acceder a todos los beneficios de ProgresoFit.</p>
+    <a href="/" class="btn btn-primary">Ir al inicio</a>
 </div>
 {% endblock %}

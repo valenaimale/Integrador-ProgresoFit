@@ -68,13 +68,10 @@
         <h3>Agregar día de entrenamiento</h3>
         <form action="/entrenador/rutinas/agregar-dia" method="post" class="form-inline-dia">
             <input type="hidden" name="rutina_id" value="{{ rutina.id }}">
+            <input type="hidden" name="orden" value="{{ rutina.dias|length + 1 }}">
             <div>
                 <label for="nombre_dia">Nombre del día *</label>
                 <input type="text" id="nombre_dia" name="nombre_dia" placeholder="Ej: Lunes — Piernas" required>
-            </div>
-            <div>
-                <label for="orden">Orden</label>
-                <input type="number" id="orden" name="orden" value="1" min="1" style="width:70px">
             </div>
             <button type="submit" class="btn btn-primary btn-sm" style="align-self:flex-end">Agregar día</button>
         </form>

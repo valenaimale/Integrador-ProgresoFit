@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   email      VARCHAR(255) NOT NULL,
   password   VARCHAR(255) NOT NULL,
   rol        rol_type NOT NULL DEFAULT 'ALUMNO',
+  foto_url   TEXT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT email UNIQUE (email)
 );
@@ -49,6 +50,7 @@ CREATE TABLE IF NOT EXISTS gimnasios (
   email       VARCHAR(255),
   descripcion TEXT,
   servicios   TEXT,
+  foto_url    TEXT DEFAULT NULL,
   activo      BOOLEAN DEFAULT TRUE,
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL

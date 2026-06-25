@@ -17,6 +17,11 @@ class GymController extends Controller
 
     public function listar()
     {
+        if (empty($_SESSION['user'])) {
+            header('Location: /inicio-sesion');
+            exit;
+        }
+
         $token     = $_SESSION['jwt'] ?? null;
         $response  = $this->api->get('/gimnasios', $token);
         $gimnasios = $response['ok'] ? $response['data'] : [];

@@ -135,7 +135,23 @@ class CrearCuentaController extends Controller
         }
 
         $especialidad = $_POST['especialidad'] ?? '';
-        $horario      = $_POST['horario'] ?? '';
+        $horario      = $_POST['horario']      ?? '';
+        $descripcion  = $_POST['descripcion']  ?? '';
+
+        $foto_url = null;
+        if (isset($_FILES['fotodeperfil']) && $_FILES['fotodeperfil']['error'] === UPLOAD_ERR_OK) {
+            $allowed = ['image/jpeg', 'image/png', 'image/webp'];
+            $mime    = mime_content_type($_FILES['fotodeperfil']['tmp_name']);
+            if (in_array($mime, $allowed)) {
+                $ext       = pathinfo($_FILES['fotodeperfil']['name'], PATHINFO_EXTENSION);
+                $filename  = uniqid('ent_', true) . '.' . strtolower($ext);
+                $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/';
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                if (move_uploaded_file($_FILES['fotodeperfil']['tmp_name'], $uploadDir . $filename)) {
+                    $foto_url = '/uploads/' . $filename;
+                }
+            }
+        }
 
         $response = $this->api->post('/entrenadores/registrar', [
             'nombre'       => $nombre,
@@ -143,6 +159,8 @@ class CrearCuentaController extends Controller
             'password'     => $contraseña,
             'especialidad' => $especialidad,
             'horario'      => $horario,
+            'descripcion'  => $descripcion,
+            'foto_url'     => $foto_url,
         ]);
 
         if ($response['ok']) {
@@ -189,6 +207,21 @@ class CrearCuentaController extends Controller
         $servicios   = $_POST['servicios']   ?? '';
         $descripcion = $_POST['descripcion'] ?? '';
 
+        $foto_url = null;
+        if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
+            $allowed = ['image/jpeg', 'image/png', 'image/webp'];
+            $mime    = mime_content_type($_FILES['logo']['tmp_name']);
+            if (in_array($mime, $allowed)) {
+                $ext       = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
+                $filename  = uniqid('gym_', true) . '.' . strtolower($ext);
+                $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/';
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                if (move_uploaded_file($_FILES['logo']['tmp_name'], $uploadDir . $filename)) {
+                    $foto_url = '/uploads/' . $filename;
+                }
+            }
+        }
+
         $response = $this->api->post('/gimnasios/registrar', [
             'nombre'      => $nombre,
             'email'       => $email,
@@ -198,6 +231,7 @@ class CrearCuentaController extends Controller
             'telefono'    => $telefono,
             'servicios'   => $servicios,
             'descripcion' => $descripcion,
+            'foto_url'    => $foto_url,
         ]);
 
         if ($response['ok']) {

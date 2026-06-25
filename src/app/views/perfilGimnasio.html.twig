@@ -14,7 +14,7 @@
     <div class="perfil-grid">
         <section class="perfil-hero">
             <figure>
-                <img src="/assets/img/imagenUser.jpg" alt="Foto del gimnasio">
+                <img src="{{ gym.foto_url ?? '/assets/img/imagenUser.jpg' }}" alt="Foto del gimnasio">
             </figure>
         </section>
 
@@ -28,9 +28,24 @@
                     <dd>{{ gym.direccion }}</dd>
                 {% endif %}
 
+                {% if gym.descripcion %}
+                    <dt>Descripción</dt>
+                    <dd class="dd-descripcion">{{ gym.descripcion }}</dd>
+                {% endif %}
+
+                {% if gym.servicios %}
+                    <dt>Servicios</dt>
+                    <dd class="dd-descripcion">{{ gym.servicios }}</dd>
+                {% endif %}
+
                 {% if gym.horarios %}
                     <dt>Horarios</dt>
                     <dd>{{ gym.horarios }}</dd>
+                {% endif %}
+
+                {% if gym.telefono %}
+                    <dt>Teléfono</dt>
+                    <dd>{{ gym.telefono }}</dd>
                 {% endif %}
             </dl>
 

@@ -42,8 +42,8 @@ export async function create(req, res) {
 //usuario_id, nombre, direccion, horarios, telefono, email, descripcion, servicios
 export async function registrar(req, res) {
   try {
-    const {nombre, email, password, direccion, horarios, telefono, descripcion, servicios} = req.body;
-    const user = await gimnasioService.registrarGimnasio({nombre, email, password, direccion, horarios, telefono, descripcion, servicios});
+    const {nombre, email, password, direccion, horarios, telefono, descripcion, servicios, foto_url} = req.body;
+    const user = await gimnasioService.registrarGimnasio({nombre, email, password, direccion, horarios, telefono, descripcion, servicios, foto_url});
     res.status(201).json({ message: 'Gimnasio registrado exitosamente', user });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -62,11 +62,11 @@ export async function update(req, res) {
 
 export async function updateMe(req, res) {
     try {
-        const { nombre, direccion, horarios, telefono, descripcion, servicios } = req.body;
+        const { nombre, direccion, horarios, telefono, descripcion, servicios, foto_url } = req.body;
         const gimnasio_id = req.user.gimnasio_id;
         if (!gimnasio_id) return res.status(403).json({ error: 'No tenés un perfil de gimnasio asociado' });
 
-        const actualizado = await gimnasioService.updateGimnasio(req.user, gimnasio_id, { nombre, direccion, horarios, telefono, descripcion, servicios });
+        const actualizado = await gimnasioService.updateGimnasio(req.user, gimnasio_id, { nombre, direccion, horarios, telefono, descripcion, servicios, foto_url });
         res.json(actualizado);
     } catch (error) {
         res.status(403).json({ error: error.message });

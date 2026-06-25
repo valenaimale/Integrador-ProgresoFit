@@ -2,7 +2,7 @@ import { pool } from '../database/connection.js';
 
 export async function findAll() {
   const { rows } = await pool.query(
-    `SELECT u.id, u.nombre, u.email,
+    `SELECT u.id, u.nombre, u.email, u.foto_url,
             e.id AS perfil_id, e.especialidad, e.descripcion, e.horario,
             g.id AS gimnasio_id, g.nombre AS gimnasio_nombre
      FROM usuarios u
@@ -16,7 +16,7 @@ export async function findAll() {
 
 export async function findByUsuarioId(usuarioId) {
   const { rows: [row] } = await pool.query(
-    `SELECT u.id, u.nombre, u.email,
+    `SELECT u.id, u.nombre, u.email, u.foto_url,
             e.id AS perfil_id, e.especialidad, e.descripcion, e.horario,
             g.id AS gimnasio_id, g.nombre AS gimnasio_nombre
      FROM usuarios u

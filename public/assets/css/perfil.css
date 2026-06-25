@@ -459,6 +459,86 @@
   opacity: .7;
 }
 
+/* ── Feedback card (éxito / error) ───────────────────── */
+
+.feedback-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  background: var(--blanco);
+  border-radius: var(--radio);
+  padding: 32px 24px;
+  max-width: 480px;
+  width: 100%;
+  align-self: center;
+  margin: 24px auto;
+  box-shadow: var(--sombra);
+  border: 1px solid var(--crema-dark);
+}
+
+@media (min-width: 500px) {
+  .feedback-card {
+    padding: 48px 40px;
+    margin: 40px auto;
+  }
+}
+
+.feedback-icono {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feedback-icono--exito {
+  background: #2ecc71;
+  color: #fff;
+}
+
+.feedback-icono--error {
+  background: var(--rojo);
+  color: #fff;
+}
+
+.feedback-icono svg {
+  width: 28px;
+  height: 28px;
+}
+
+@media (min-width: 500px) {
+  .feedback-icono { width: 72px; height: 72px; }
+  .feedback-icono svg { width: 36px; height: 36px; }
+}
+
+.feedback-titulo {
+  font-family: var(--font-titulo);
+  font-size: 1.8rem;
+  color: var(--negro);
+  margin: 0;
+}
+
+.feedback-desc {
+  font-size: .95rem;
+  color: var(--gris);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Descripción larga en perfiles ───────────────────── */
+
+.dd-descripcion {
+  font-size: .95rem !important;
+  font-weight: 400 !important;
+  color: var(--gris) !important;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
 /* ── Responsive (mobile-first) ─── */
 
 /* Mobile base */
